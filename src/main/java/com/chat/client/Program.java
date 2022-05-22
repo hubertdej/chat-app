@@ -7,7 +7,6 @@ import com.chat.client.ui.WindowFactory;
 
 class Program {
     public static void main(String[] args) {
-        Preview local = new Preview();
-        Gui.run(() -> new PresenterFactory(new WindowFactory()).openLoggedView(local));
+        Gui.run(() -> new PresenterFactory(new WindowFactory()).openAuthenticationView());
     }
 }

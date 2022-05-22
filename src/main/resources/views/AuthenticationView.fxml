@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.chat.client.ui.AuthenticationWindow"
+      fx:id="root"
+      alignment="CENTER"
+      spacing="50"
+      style="-fx-padding: 50 50 50 50;">
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Login to your Account"/>
+        <TextField fx:id="loginEmailTextField" promptText="Email"/>
+        <PasswordField fx:id="loginPasswordTextField" promptText="Password"/>
+        <HBox alignment="BASELINE_RIGHT">
+            <Button fx:id="loginButton" text="Sign in"/>
+        </HBox>
+    </VBox>
+    <Separator orientation="VERTICAL" maxHeight="200"/>
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Create your Account"/>
+        <TextField fx:id="registerEmailTextField" promptText="Email"/>
+        <TextField fx:id="registerUsernameTextField" promptText="Username"/>
+        <PasswordField fx:id="registerPasswordTextField" promptText="Password"/>
+        <HBox alignment="BASELINE_RIGHT">
+            <Button fx:id="registerButton" text="Sign up"/>
+        </HBox>
+    </VBox>
+</HBox>
