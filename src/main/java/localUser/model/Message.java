@@ -13,4 +13,5 @@ public class Message {
     public String getText() {
         return text;
     }
+    public Timestamp getTimestamp() { return timestamp; }
 }

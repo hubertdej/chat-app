@@ -26,13 +26,10 @@ public class ConversationPresenter {
         for (Message message : conversation.getMessages()) {
             addMessage(message);
         }
-//        preview.addObserver(storeObserver);
         view.open();
     }
 
     public void close() {
-//        store.removeObserver(storeObserver);
-//        for (Item item : store.items()) item.removeObserver(itemObserver);
         view.close();
     }
 
@@ -43,11 +40,11 @@ public class ConversationPresenter {
     public void sendMessage(String text) {
         conversation.getMessages().add(new Message(text, new Timestamp(System.currentTimeMillis())));
         /* serverAdapter.sendMessage() */
+        view.displayMessage(text);
         System.out.println(text);
     }
     private void addMessage(Message message) {
         view.addMessage(message.getText());
-//        conversation.addObserver(itemObserver);
     }
 
 

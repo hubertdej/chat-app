@@ -44,6 +44,11 @@ public class ConversationWindow implements ConversationView {
     }
 
     @Override
+    public void displayMessage(String text) {
+        list.getItems().add(text);
+    }
+
+    @Override
     public void addMessage(String text) {
         list.getItems().add(text);
     }
