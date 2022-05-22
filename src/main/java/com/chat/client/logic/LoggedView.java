@@ -1,4 +1,4 @@
-package localUser.logic;
+package com.chat.client.logic;
 
 public interface LoggedView {
     void initialize(PreviewPresenter presenter);

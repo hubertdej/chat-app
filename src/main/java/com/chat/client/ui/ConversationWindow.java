@@ -1,4 +1,4 @@
-package localUser.ui;
+package com.chat.client.ui;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,10 +8,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import localUser.logic.ConversationPresenter;
-import localUser.logic.ConversationView;
-
-import java.sql.Timestamp;
+import com.chat.client.logic.ConversationPresenter;
+import com.chat.client.logic.ConversationView;
 
 public class ConversationWindow implements ConversationView {
     private Stage stage;

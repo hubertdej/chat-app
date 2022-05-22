@@ -1,9 +1,9 @@
-package localUser;
+package com.chat.client;
 
-import localUser.logic.PresenterFactory;
-import localUser.model.Preview;
-import localUser.ui.Gui;
-import localUser.ui.WindowFactory;
+import com.chat.client.logic.PresenterFactory;
+import com.chat.client.model.Preview;
+import com.chat.client.ui.Gui;
+import com.chat.client.ui.WindowFactory;
 
 class Program {
     public static void main(String[] args) {

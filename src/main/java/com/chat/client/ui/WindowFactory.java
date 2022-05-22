@@ -1,6 +1,6 @@
-package localUser.ui;
+package com.chat.client.ui;
 
-import localUser.logic.ViewFactory;
+import com.chat.client.logic.ViewFactory;
 
 public class WindowFactory implements ViewFactory {
     public ConversationWindow createConversationView() { return new ConversationWindow(); }

@@ -1,5 +1,6 @@
-package localUser.ui;
+package com.chat.client.ui;
 
+import com.chat.client.logic.LoggedView;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,8 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import localUser.logic.LoggedView;
-import localUser.logic.PreviewPresenter;
+import com.chat.client.logic.PreviewPresenter;
 
 public class LoggedWindow implements LoggedView {
     private Stage stage;

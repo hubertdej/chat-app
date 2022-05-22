@@ -1,4 +1,4 @@
-package localUser.ui;
+package com.chat.client.ui;
 
 import javafx.application.Platform;
 

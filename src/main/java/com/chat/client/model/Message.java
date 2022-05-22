@@ -1,4 +1,4 @@
-package localUser.model;
+package com.chat.client.model;
 
 import java.sql.Timestamp;
 
