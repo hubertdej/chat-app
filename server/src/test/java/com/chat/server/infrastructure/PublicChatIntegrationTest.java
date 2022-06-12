@@ -1,6 +1,7 @@
 package com.chat.server.infrastructure;
 
 import com.chat.server.infrastructure.websocket.Message;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,7 +16,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -34,7 +34,7 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 public class PublicChatIntegrationTest {
 
 
-    @LocalServerPort
+    @org.springframework.boot.test.web.server.LocalServerPort
     private int port;
 
     private SockJsClient sockJsClient;
@@ -69,7 +69,7 @@ public class PublicChatIntegrationTest {
         }
     }
 
-    private class TestSessionHandler extends StompSessionHandlerAdapter {
+    private static class TestSessionHandler extends StompSessionHandlerAdapter {
 
         private final AtomicReference<Throwable> failure;
         private final CountDownLatch latch;
@@ -82,15 +82,15 @@ public class PublicChatIntegrationTest {
         }
 
         @Override
-        public void afterConnected(final StompSession session, StompHeaders connectedHeaders) {
+        public void afterConnected(final StompSession session, @NotNull StompHeaders connectedHeaders) {
             session.subscribe("/topic/public", new StompFrameHandler() {
                 @Override
-                public Type getPayloadType(StompHeaders headers) {
+                public @NotNull Type getPayloadType(@NotNull StompHeaders headers) {
                     return Message.class;
                 }
 
                 @Override
-                public void handleFrame(StompHeaders headers, Object payload) {
+                public void handleFrame(@NotNull StompHeaders headers, Object payload) {
                     Message message = (Message) payload;
                     try {
                         assertEquals(expectedMessage, message.getContent());
@@ -116,12 +116,12 @@ public class PublicChatIntegrationTest {
         }
 
         @Override
-        public void handleException(StompSession s, StompCommand c, StompHeaders h, byte[] p, Throwable ex) {
+        public void handleException(@NotNull StompSession s, StompCommand c, @NotNull StompHeaders h, byte @NotNull [] p, @NotNull Throwable ex) {
             this.failure.set(ex);
         }
 
         @Override
-        public void handleTransportError(StompSession session, Throwable ex) {
+        public void handleTransportError(@NotNull StompSession session, @NotNull Throwable ex) {
             this.failure.set(ex);
         }
     }
