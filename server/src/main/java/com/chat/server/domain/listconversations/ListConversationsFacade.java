@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ListConversationPreviewsFacade {
+public class ListConversationsFacade {
     private final ConversationRepository conversationRepository;
     private final ConversationStorageFacade conversationStorageFacade;
 
-    public ListConversationPreviewsFacade(ConversationRepository conversationRepository, ConversationStorageFacade conversationStorageFacade) {
+    public ListConversationsFacade(ConversationRepository conversationRepository, ConversationStorageFacade conversationStorageFacade) {
         this.conversationRepository = conversationRepository;
         this.conversationStorageFacade = conversationStorageFacade;
     }

@@ -2,7 +2,7 @@ package com.chat.server.infrastructure.rest;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
-import com.chat.server.domain.listconversations.ListConversationPreviewsFacade;
+import com.chat.server.domain.listconversations.ListConversationsFacade;
 import com.chat.server.domain.listconversations.dto.ConversationPreviewDto;
 import com.chat.server.infrastructure.rest.dto.AddConversationRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,16 +23,16 @@ import java.util.UUID;
         "com.chat.server.domain.authentication"})
 public class ConversationController {
     private final ConversationStorageFacade conversationStorageFacade;
-    private final ListConversationPreviewsFacade listConversationPreviewsFacade;
+    private final ListConversationsFacade listConversationsFacade;
     private final AuthenticationFacade authenticationFacade;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public ConversationController(ConversationStorageFacade conversationStorageFacade,
-                                  ListConversationPreviewsFacade listConversationPreviewsFacade,
+                                  ListConversationsFacade listConversationsFacade,
                                   AuthenticationFacade authenticationFacade) {
         this.conversationStorageFacade = conversationStorageFacade;
-        this.listConversationPreviewsFacade = listConversationPreviewsFacade;
+        this.listConversationsFacade = listConversationsFacade;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -49,7 +49,7 @@ public class ConversationController {
     public ResponseEntity<String> listConversationPreviews(@RequestBody User user){
         if(!authenticationFacade.authenticate(user.getUsername(), user.getPassword()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        List<ConversationPreviewDto> previews = listConversationPreviewsFacade.listConversationPreviews(user.getUsername());
+        List<ConversationPreviewDto> previews = listConversationsFacade.listConversationPreviews(user.getUsername());
         try{
             String marshalled = mapper.writeValueAsString(previews);
             return ResponseEntity.ok(marshalled);

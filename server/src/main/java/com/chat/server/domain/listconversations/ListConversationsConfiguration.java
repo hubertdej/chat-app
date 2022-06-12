@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class ListConversationPreviewsConfiguration {
+class ListConversationsConfiguration {
     @Bean
-    ListConversationPreviewsFacade listConversationPreviewsFacade(ConversationStorageFacade conversationStorageFacade){
+    ListConversationsFacade listConversationsFacade(ConversationStorageFacade conversationStorageFacade){
         ConversationRepository conversationRepository = new InMemoryConversationRepository();
-        return new ListConversationPreviewsFacade(conversationRepository, conversationStorageFacade);
+        return new ListConversationsFacade(conversationRepository, conversationStorageFacade);
     }
 }

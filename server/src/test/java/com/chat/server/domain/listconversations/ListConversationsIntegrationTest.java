@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class ListConversationsPreviewIntegrationTest {
+public class ListConversationsIntegrationTest {
     @Autowired
-    ListConversationPreviewsFacade listConversationPreviewsFacade;
+    ListConversationsFacade listConversationsFacade;
     @Autowired
     ConversationStorageFacade conversationStorageFacade;
     String john = "john";
@@ -27,7 +27,7 @@ public class ListConversationsPreviewIntegrationTest {
         UUID conversationId = conversationStorageFacade.add("convo", List.of(john));
 
         //when: user asks to list john's conversations
-        List<UUID> conversationIds = listConversationPreviewsFacade.listConversations(john);
+        List<UUID> conversationIds = listConversationsFacade.listConversations(john);
 
         //then: "convo" id is returned
         assertListEquals(conversationIds, List.of(conversationId));
@@ -42,6 +42,6 @@ public class ListConversationsPreviewIntegrationTest {
         conversationStorageFacade.remove(conversationId);
 
         //then: "convo" is removed from conversation preview storage
-        assertTrue(listConversationPreviewsFacade.listConversations(john).isEmpty());
+        assertTrue(listConversationsFacade.listConversations(john).isEmpty());
     }
 }

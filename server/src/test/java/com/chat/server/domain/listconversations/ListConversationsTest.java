@@ -16,11 +16,11 @@ import static com.chat.server.domain.conversationstorage.ConversationStorageTest
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ListConversationPreviewsTest {
+public class ListConversationsTest {
     private final String john = "john";
     private final String barry = "barry";
     private final ConversationStorageFacade conversationStorageFacade = mock(ConversationStorageFacade.class);
-    private final ListConversationPreviewsFacade listConversationPreviewsFacade = new ListConversationPreviewsConfiguration().listConversationPreviewsFacade(conversationStorageFacade);
+    private final ListConversationsFacade listConversationsFacade = new ListConversationsConfiguration().listConversationsFacade(conversationStorageFacade);
     private final ApplicationContextRunner runner = new ApplicationContextRunner();
 
     @Test
@@ -29,11 +29,11 @@ public class ListConversationPreviewsTest {
 
         //when: user adds a conversation to repository
         UUID conversationId = UUID.randomUUID();
-        listConversationPreviewsFacade.add(john, conversationId);
+        listConversationsFacade.add(john, conversationId);
 
         //then: conversation is listed
         assertListEquals(
-                listConversationPreviewsFacade.listConversations(john),
+                listConversationsFacade.listConversations(john),
                 List.of(conversationId));
     }
 
@@ -50,10 +50,10 @@ public class ListConversationPreviewsTest {
                 members,
                 List.of(messageDto));
         when(conversationStorageFacade.get(conversationId)).thenReturn(Optional.of(conversationDto));
-        listConversationPreviewsFacade.add(john, conversationId);
+        listConversationsFacade.add(john, conversationId);
 
         //when: user asks for john conversations previews
-        List<ConversationPreviewDto> previews = listConversationPreviewsFacade.listConversationPreviews(john);
+        List<ConversationPreviewDto> previews = listConversationsFacade.listConversationPreviews(john);
 
         //then: module returns john&barry's conversation preview
         ConversationPreviewDto expectedPreview =  new ConversationPreviewDto(conversationId, name, members, messageDto);
