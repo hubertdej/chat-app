@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import java.util.List;
 import java.util.UUID;
 
+import static com.chat.server.domain.conversationstorage.ConversationStorageTest.assertListEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest({ConversationController.class,RegistrationController.class})
@@ -24,15 +25,6 @@ public class ConversationControllerIntegrationTest extends IntegrationTest{
     private final String password = "pwd";
     private final List<String> members = List.of(john, barry);
     private final String name = "convo";
-
-
-    public void assertListEquals(List<?> first, List<?> second){
-        Assertions.assertEquals(first.size(), second.size());
-        assertTrue(first.containsAll(second));
-        assertTrue(second.containsAll(first));
-    }
-
-
 
     @Test
     void addConversationTest() throws Exception {

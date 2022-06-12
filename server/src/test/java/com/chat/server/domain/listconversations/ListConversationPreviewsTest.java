@@ -4,7 +4,6 @@ import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.listconversations.dto.ConversationPreviewDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.chat.server.domain.conversationstorage.ConversationStorageTest.assertListEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,12 +22,6 @@ public class ListConversationPreviewsTest {
     private final ConversationStorageFacade conversationStorageFacade = mock(ConversationStorageFacade.class);
     private final ListConversationPreviewsFacade listConversationPreviewsFacade = new ListConversationPreviewsConfiguration().listConversationPreviewsFacade(conversationStorageFacade);
     private final ApplicationContextRunner runner = new ApplicationContextRunner();
-
-    public void assertListEquals(List<?> first, List<?> second){
-        Assertions.assertEquals(first.size(), second.size());
-        assertTrue(first.containsAll(second));
-        assertTrue(second.containsAll(first));
-    }
 
     @Test
     void conversationIsListedAfterAdding(){

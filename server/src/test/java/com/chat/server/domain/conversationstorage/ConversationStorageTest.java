@@ -19,7 +19,7 @@ public class ConversationStorageTest {
     ApplicationEventPublisher applicationEventPublisher = mock(ApplicationEventPublisher.class);
     ConversationStorageFacade conversationStorageFacade = new ConversationStorageConfiguration().conversationStorageFacade(applicationEventPublisher);
 
-    void assertListEquals(List<?> first, List<?> second){
+    public static void assertListEquals(List<?> first, List<?> second){
         Assertions.assertEquals(first.size(), second.size());
         assertTrue(first.containsAll(second));
         assertTrue(second.containsAll(first));
