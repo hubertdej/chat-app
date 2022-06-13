@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation 'org.webjars:bootstrap:3.3.7'
     implementation 'org.webjars:jquery:3.1.1-1'
+    implementation 'org.jetbrains:annotations:20.1.0'
 
     testAnnotationProcessor'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
