@@ -11,7 +11,7 @@ public class WindowFactory implements ViewFactory {
         try {
             loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FXMLException(e);
         }
         return loader.getController();
     }
