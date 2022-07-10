@@ -1,8 +1,8 @@
-package com.chat.client.logic;
+package com.chat.client.presentation;
 
 
-import com.chat.client.model.Conversation;
-import com.chat.client.model.Message;
+import com.chat.client.domain.Conversation;
+import com.chat.client.domain.Message;
 
 import java.sql.Timestamp;
 

@@ -1,6 +1,6 @@
-package com.chat.client.ui;
+package com.chat.client.javafxui;
 
-import com.chat.client.logic.ViewFactory;
+import com.chat.client.presentation.ViewFactory;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;

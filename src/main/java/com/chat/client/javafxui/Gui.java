@@ -1,4 +1,4 @@
-package com.chat.client.ui;
+package com.chat.client.javafxui;
 
 import javafx.application.Platform;
 

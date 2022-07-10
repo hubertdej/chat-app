@@ -1,4 +1,4 @@
-package com.chat.client.model;
+package com.chat.client.domain;
 
 import java.util.regex.Pattern;
 

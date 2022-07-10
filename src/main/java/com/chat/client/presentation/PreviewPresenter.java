@@ -1,7 +1,7 @@
-package com.chat.client.logic;
+package com.chat.client.presentation;
 
-import com.chat.client.model.Conversation;
-import com.chat.client.model.Preview;
+import com.chat.client.domain.Conversation;
+import com.chat.client.domain.Preview;
 
 public class PreviewPresenter {
     private final Preview preview;

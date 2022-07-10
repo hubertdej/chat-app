@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <HBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.chat.client.ui.AuthenticationWindow"
+      fx:controller="com.chat.client.javafxui.AuthenticationWindow"
       fx:id="root"
       alignment="CENTER"
       spacing="50"

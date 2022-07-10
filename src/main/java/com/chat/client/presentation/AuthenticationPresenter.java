@@ -1,7 +1,7 @@
-package com.chat.client.logic;
+package com.chat.client.presentation;
 
-import com.chat.client.model.EmailValidator;
-import com.chat.client.model.Preview;
+import com.chat.client.domain.EmailValidator;
+import com.chat.client.domain.Preview;
 
 public class AuthenticationPresenter {
     public interface Factory {

@@ -1,4 +1,4 @@
-package com.chat.client.ui;
+package com.chat.client.javafxui;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,8 +8,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import com.chat.client.logic.ConversationPresenter;
-import com.chat.client.logic.ConversationView;
+import com.chat.client.presentation.ConversationPresenter;
+import com.chat.client.presentation.ConversationView;
 
 public class ConversationWindow implements ConversationView {
     private Stage stage;

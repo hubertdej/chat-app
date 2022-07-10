@@ -1,9 +1,8 @@
 package com.chat.client;
 
-import com.chat.client.logic.PresenterFactory;
-import com.chat.client.model.Preview;
-import com.chat.client.ui.Gui;
-import com.chat.client.ui.WindowFactory;
+import com.chat.client.presentation.PresenterFactory;
+import com.chat.client.javafxui.Gui;
+import com.chat.client.javafxui.WindowFactory;
 
 class Program {
     public static void main(String[] args) {

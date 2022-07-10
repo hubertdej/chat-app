@@ -1,4 +1,4 @@
-package com.chat.client.logic;
+package com.chat.client.presentation;
 
 public interface ConversationView {
     void initialize(ConversationPresenter presenter);

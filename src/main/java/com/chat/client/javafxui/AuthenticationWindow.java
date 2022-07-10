@@ -1,7 +1,7 @@
-package com.chat.client.ui;
+package com.chat.client.javafxui;
 
-import com.chat.client.logic.AuthenticationPresenter;
-import com.chat.client.logic.AuthenticationView;
+import com.chat.client.presentation.AuthenticationPresenter;
+import com.chat.client.presentation.AuthenticationView;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
