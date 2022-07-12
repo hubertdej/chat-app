@@ -19,7 +19,6 @@ public class AuthenticationWindow implements AuthenticationView {
     @FXML private TextField registerEmailTextField;
     @FXML private TextField registerUsernameTextField;
     @FXML private PasswordField registerPasswordTextField;
-    @FXML private PasswordField registerConfirmPasswordTextField;
     @FXML private Button registerButton;
 
     private final Stage stage = new Stage();
