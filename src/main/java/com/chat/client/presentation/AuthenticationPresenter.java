@@ -1,6 +1,5 @@
 package com.chat.client.presentation;
 
-import com.chat.client.domain.EmailValidator;
 import com.chat.client.domain.Preview;
 
 public class AuthenticationPresenter {
@@ -10,7 +9,6 @@ public class AuthenticationPresenter {
 
     private final AuthenticationView view;
     private final Factory factory;
-    private final EmailValidator emailValidator = new EmailValidator();
 
     public AuthenticationPresenter(AuthenticationView view, Factory factory) {
         this.view = view;
@@ -21,20 +19,12 @@ public class AuthenticationPresenter {
         view.open();
     }
 
-    public void login(String email, String password) {
-        if (!emailValidator.isValid(email)) {
-            view.indicateLoginFailed();
-            return;
-        }
+    public void login(String username, String password) {
         factory.openLoggedView(new Preview());
         view.close();
     }
 
-    public void register(String email, String username, String password) {
-        if (!emailValidator.isValid(email)) {
-            view.indicateRegistrationFailed();
-            return;
-        }
+    public void register(String username, String password) {
         factory.openLoggedView(new Preview());
         view.close();
     }

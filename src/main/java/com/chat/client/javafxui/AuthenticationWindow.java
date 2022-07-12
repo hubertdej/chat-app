@@ -13,10 +13,9 @@ import javafx.stage.Stage;
 
 public class AuthenticationWindow implements AuthenticationView {
     @FXML private HBox root;
-    @FXML private TextField loginEmailTextField;
+    @FXML private TextField loginUsernameTextField;
     @FXML private PasswordField loginPasswordTextField;
     @FXML private Button loginButton;
-    @FXML private TextField registerEmailTextField;
     @FXML private TextField registerUsernameTextField;
     @FXML private PasswordField registerPasswordTextField;
     @FXML private Button registerButton;
@@ -28,16 +27,15 @@ public class AuthenticationWindow implements AuthenticationView {
         stage.setScene(new Scene(root));
 
         loginButton.setOnMouseClicked(event -> {
-            var email = loginEmailTextField.getText();
+            var username = loginUsernameTextField.getText();
             var password = loginPasswordTextField.getText();
-            presenter.login(email, password);
+            presenter.login(username, password);
         });
 
         registerButton.setOnMouseClicked(event -> {
-            var email = registerEmailTextField.getText();
             var username = registerUsernameTextField.getText();
             var password = registerPasswordTextField.getText();
-            presenter.register(email, username, password);
+            presenter.register(username, password);
         });
     }
 

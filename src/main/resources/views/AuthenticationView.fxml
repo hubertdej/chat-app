@@ -9,7 +9,7 @@
       style="-fx-padding: 50 50 50 50;">
     <VBox alignment="CENTER" spacing="10">
         <Label text="Login to your Account"/>
-        <TextField fx:id="loginEmailTextField" promptText="Email"/>
+        <TextField fx:id="loginUsernameTextField" promptText="Username"/>
         <PasswordField fx:id="loginPasswordTextField" promptText="Password"/>
         <HBox alignment="BASELINE_RIGHT">
             <Button fx:id="loginButton" text="Sign in"/>
@@ -18,7 +18,6 @@
     <Separator orientation="VERTICAL" maxHeight="200"/>
     <VBox alignment="CENTER" spacing="10">
         <Label text="Create your Account"/>
-        <TextField fx:id="registerEmailTextField" promptText="Email"/>
         <TextField fx:id="registerUsernameTextField" promptText="Username"/>
         <PasswordField fx:id="registerPasswordTextField" promptText="Password"/>
         <HBox alignment="BASELINE_RIGHT">
