@@ -5,5 +5,6 @@ public interface AuthenticationView {
     void open();
     void close();
     void indicateLoginFailed();
+    void indicateRegistrationSuccessful();
     void indicateRegistrationFailed();
 }

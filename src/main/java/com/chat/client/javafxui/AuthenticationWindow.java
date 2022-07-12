@@ -45,6 +45,11 @@ public class AuthenticationWindow implements AuthenticationView {
     }
 
     @Override
+    public void indicateRegistrationSuccessful() {
+        new Alert(Alert.AlertType.INFORMATION, "Registration successful. You can now login.").showAndWait();
+    }
+
+    @Override
     public void indicateRegistrationFailed() {
         new Alert(Alert.AlertType.ERROR, "Registration failed.").showAndWait();
     }
