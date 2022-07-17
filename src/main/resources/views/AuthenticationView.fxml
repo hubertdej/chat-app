@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<HBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.chat.client.javafxui.AuthenticationWindow"
-      fx:id="root"
-      alignment="CENTER"
-      spacing="50"
-      style="-fx-padding: 50 50 50 50;">
-    <VBox alignment="CENTER" spacing="10">
-        <Label text="Login to your Account"/>
-        <TextField fx:id="loginUsernameTextField" promptText="Username"/>
-        <PasswordField fx:id="loginPasswordTextField" promptText="Password"/>
-        <HBox alignment="BASELINE_RIGHT">
-            <Button fx:id="loginButton" text="Sign in"/>
-        </HBox>
-    </VBox>
-    <Separator orientation="VERTICAL" maxHeight="200"/>
-    <VBox alignment="CENTER" spacing="10">
-        <Label text="Create your Account"/>
-        <TextField fx:id="registerUsernameTextField" promptText="Username"/>
-        <PasswordField fx:id="registerPasswordTextField" promptText="Password"/>
-        <HBox alignment="BASELINE_RIGHT">
-            <Button fx:id="registerButton" text="Sign up"/>
-        </HBox>
-    </VBox>
-</HBox>
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+<Stage xmlns="http://javafx.com/javafx/11.0.1"
+       xmlns:fx="http://javafx.com/fxml/1"
+       fx:controller="com.chat.client.javafxui.AuthenticationWindow"
+       fx:id="stage">
+    <scene>
+        <Scene>
+            <HBox alignment="CENTER"
+                  spacing="50"
+                  style="-fx-padding: 50 50 50 50;">
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Login to your Account"/>
+                    <TextField fx:id="loginUsernameTextField" promptText="Username"/>
+                    <PasswordField fx:id="loginPasswordTextField" promptText="Password"/>
+                    <HBox alignment="BASELINE_RIGHT">
+                        <Button fx:id="loginButton" text="Sign in"/>
+                    </HBox>
+                </VBox>
+                <Separator orientation="VERTICAL" maxHeight="200"/>
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Create your Account"/>
+                    <TextField fx:id="registerUsernameTextField" promptText="Username"/>
+                    <PasswordField fx:id="registerPasswordTextField" promptText="Password"/>
+                    <HBox alignment="BASELINE_RIGHT">
+                        <Button fx:id="registerButton" text="Sign up"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </Scene>
+    </scene>
+</Stage>

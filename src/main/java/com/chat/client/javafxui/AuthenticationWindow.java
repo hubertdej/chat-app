@@ -3,16 +3,14 @@ package com.chat.client.javafxui;
 import com.chat.client.presentation.AuthenticationPresenter;
 import com.chat.client.presentation.AuthenticationView;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class AuthenticationWindow implements AuthenticationView {
-    @FXML private HBox root;
+    @FXML private Stage stage;
     @FXML private TextField loginUsernameTextField;
     @FXML private PasswordField loginPasswordTextField;
     @FXML private Button loginButton;
@@ -20,12 +18,8 @@ public class AuthenticationWindow implements AuthenticationView {
     @FXML private PasswordField registerPasswordTextField;
     @FXML private Button registerButton;
 
-    private final Stage stage = new Stage();
-
     @Override
     public void initialize(AuthenticationPresenter presenter) {
-        stage.setScene(new Scene(root));
-
         loginButton.setOnMouseClicked(event -> {
             var username = loginUsernameTextField.getText();
             var password = loginPasswordTextField.getText();
