@@ -28,21 +28,32 @@ public class AuthenticationPresenter {
     }
 
     public void login(String username, String password) {
+        view.lockChanges();
         callbackDispatcher.addCallback(
                 accountRepository.loginUserAsync(username, password),
                 account -> {
                     factory.openLoggedView(new Preview());
                     view.close();
                 },
-                $ -> view.indicateLoginFailed()
+                $ -> {
+                    view.indicateLoginFailed();
+                    view.unlockChanges();
+                }
         );
     }
 
     public void register(String username, String password) {
+        view.lockChanges();
         callbackDispatcher.addCallback(
                 accountRepository.registerUserAsync(username, password),
-                $ -> view.indicateRegistrationSuccessful(),
-                $ -> view.indicateRegistrationFailed()
+                $ -> {
+                    view.indicateRegistrationSuccessful();
+                    view.unlockChanges();
+                },
+                $ -> {
+                    view.indicateRegistrationFailed();
+                    view.unlockChanges();
+                }
         );
     }
 }

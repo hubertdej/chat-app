@@ -34,6 +34,18 @@ public class AuthenticationWindow implements AuthenticationView {
     }
 
     @Override
+    public void lockChanges() {
+        loginButton.setDisable(true);
+        registerButton.setDisable(true);
+    }
+
+    @Override
+    public void unlockChanges() {
+        loginButton.setDisable(false);
+        registerButton.setDisable(false);
+    }
+
+    @Override
     public void indicateLoginFailed() {
         new Alert(Alert.AlertType.ERROR, "Login failed.").showAndWait();
     }
