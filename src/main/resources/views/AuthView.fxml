@@ -5,7 +5,7 @@
 <?import javafx.scene.Scene?>
 <Stage xmlns="http://javafx.com/javafx/11.0.1"
        xmlns:fx="http://javafx.com/fxml/1"
-       fx:controller="com.chat.client.javafxui.AuthenticationWindow"
+       fx:controller="com.chat.client.javafxui.AuthWindow"
        fx:id="stage">
     <scene>
         <Scene>

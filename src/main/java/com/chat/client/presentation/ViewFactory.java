@@ -1,7 +1,7 @@
 package com.chat.client.presentation;
 
 public interface ViewFactory {
-    AuthenticationView createAuthenticationView();
+    AuthView createAuthView();
     ConversationView createConversationView();
     LoggedView createLoggedView();
 }

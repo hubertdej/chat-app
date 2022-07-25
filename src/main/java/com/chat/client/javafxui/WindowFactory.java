@@ -17,8 +17,8 @@ public class WindowFactory implements ViewFactory {
     }
 
     @Override
-    public AuthenticationWindow createAuthenticationView() {
-        return loadFXML("AuthenticationView.fxml");
+    public AuthWindow createAuthView() {
+        return loadFXML("AuthView.fxml");
     }
 
     @Override

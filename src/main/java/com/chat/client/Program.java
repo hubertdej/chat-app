@@ -15,6 +15,6 @@ class Program {
         AccountRepository accountRepository = new FakeRestClient();
         CallbackDispatcher callbackDispatcher = new GuiCallbackDispatcher();
 
-        Gui.run(() -> new PresenterFactory(viewFactory, accountRepository, callbackDispatcher).openAuthenticationView());
+        Gui.run(() -> new PresenterFactory(viewFactory, accountRepository, callbackDispatcher).openAuthView());
     }
 }

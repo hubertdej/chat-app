@@ -1,7 +1,7 @@
 package com.chat.client.presentation;
 
-public interface AuthenticationView {
-    void initialize(AuthenticationPresenter presenter);
+public interface AuthView {
+    void initialize(AuthPresenter presenter);
     void open();
     void close();
     void lockChanges();

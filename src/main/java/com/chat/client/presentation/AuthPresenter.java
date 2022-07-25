@@ -3,20 +3,20 @@ package com.chat.client.presentation;
 import com.chat.client.domain.AccountRepository;
 import com.chat.client.domain.Preview;
 
-public class AuthenticationPresenter {
+public class AuthPresenter {
     public interface Factory {
         void openLoggedView(Preview preview);
     }
 
-    private final AuthenticationView view;
+    private final AuthView view;
     private final Factory factory;
     private final AccountRepository accountRepository;
     private final CallbackDispatcher callbackDispatcher;
 
-    public AuthenticationPresenter(AuthenticationView view,
-                                   Factory factory,
-                                   AccountRepository accountRepository,
-                                   CallbackDispatcher callbackDispatcher) {
+    public AuthPresenter(AuthView view,
+                         Factory factory,
+                         AccountRepository accountRepository,
+                         CallbackDispatcher callbackDispatcher) {
         this.view = view;
         this.factory = factory;
         this.accountRepository = accountRepository;
