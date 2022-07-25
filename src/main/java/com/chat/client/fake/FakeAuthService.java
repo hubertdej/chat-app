@@ -1,7 +1,7 @@
 package com.chat.client.fake;
 
 import com.chat.client.domain.Account;
-import com.chat.client.domain.AccountRepository;
+import com.chat.client.domain.application.AuthService;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,7 +10,7 @@ import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public class FakeRestClient implements AccountRepository {
+public class FakeAuthService implements AuthService {
     private final HttpClient httpClient = HttpClient.newBuilder().build();
     private final URI uri = URI.create("https://postman-echo.com/post");
 

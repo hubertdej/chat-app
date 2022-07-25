@@ -1,23 +1,24 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.*;
+import com.chat.client.domain.application.AuthService;
 
 public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory {
     private final ViewFactory viewFactory;
-    private final AccountRepository accountRepository;
+    private final AuthService authService;
     private final CallbackDispatcher callbackDispatcher;
 
     public PresenterFactory(ViewFactory viewFactory,
-                            AccountRepository accountRepository,
+                            AuthService authService,
                             CallbackDispatcher callbackDispatcher) {
         this.viewFactory = viewFactory;
-        this.accountRepository = accountRepository;
+        this.authService = authService;
         this.callbackDispatcher = callbackDispatcher;
     }
 
     public void openAuthView() {
         var view = viewFactory.createAuthView();
-        var presenter = new AuthPresenter(view, this, accountRepository, callbackDispatcher);
+        var presenter = new AuthPresenter(view, this, authService, callbackDispatcher);
         view.initialize(presenter);
         presenter.open();
     }
