@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+<Stage xmlns="http://javafx.com/javafx/11.0.1"
+       xmlns:fx="http://javafx.com/fxml/1"
+       fx:controller="com.chat.client.javafxui.ChatlistWindow"
+       fx:id="stage"
+       title="Chats">
+    <scene>
+        <Scene>
+            <GridPane prefWidth="250">
+                <VBox spacing="10"
+                      style="-fx-padding: 10 0 0 0;"
+                      GridPane.rowIndex="0">
+                    <AnchorPane>
+                        <Label text="Chats"
+                               style="-fx-font-size: 20;"
+                               AnchorPane.leftAnchor="10"/>
+                    </AnchorPane>
+                    <TextField fx:id="filterTextField"
+                               promptText="Search"/>
+                </VBox>
+                <ListView fx:id="chatsListView"
+                          GridPane.rowIndex="1"
+                          GridPane.hgrow="ALWAYS"
+                          GridPane.vgrow="ALWAYS"/>
+                <HBox alignment="CENTER_RIGHT"
+                      style="-fx-padding: 10 10 10 10;"
+                      GridPane.rowIndex="2">
+                    <Button fx:id="createButton" text="Create new"/>
+                </HBox>
+            </GridPane>
+        </Scene>
+    </scene>
+</Stage>

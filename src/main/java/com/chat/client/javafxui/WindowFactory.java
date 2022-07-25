@@ -1,7 +1,6 @@
 package com.chat.client.javafxui;
 
-import com.chat.client.presentation.AuthView;
-import com.chat.client.presentation.ViewFactory;
+import com.chat.client.presentation.*;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
@@ -20,6 +19,21 @@ public class WindowFactory implements ViewFactory {
     @Override
     public AuthView createAuthView() {
         return loadFXML(AuthView.class);
+    }
+
+    @Override
+    public ChatlistView createChatlistView() {
+        return loadFXML(ChatlistView.class);
+    }
+
+    @Override
+    public CreationView createCreationView() {
+        return loadFXML(CreationView.class);
+    }
+
+    @Override
+    public ChatView createChatView() {
+        return loadFXML(ChatView.class);
     }
 
     @Override

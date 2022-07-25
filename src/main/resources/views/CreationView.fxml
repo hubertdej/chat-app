@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+<Stage xmlns="http://javafx.com/javafx/11.0.1"
+       xmlns:fx="http://javafx.com/fxml/1"
+       fx:controller="com.chat.client.javafxui.CreationWindow"
+       fx:id="stage"
+       title="Create a new chat">
+    <scene>
+        <Scene>
+            <GridPane prefWidth="300" prefHeight="300">
+                <VBox spacing="10"
+                      style="-fx-padding: 10 0 0 0;"
+                      GridPane.rowIndex="0">
+                    <AnchorPane>
+                        <Label text="Create a new chat"
+                               style="-fx-font-size: 20;"
+                               AnchorPane.leftAnchor="10"/>
+                    </AnchorPane>
+                    <TextField fx:id="filterTextField"
+                               promptText="Search"/>
+                </VBox>
+                <ListView fx:id="usersListView"
+                          GridPane.rowIndex="1"
+                          GridPane.hgrow="ALWAYS"
+                          GridPane.vgrow="ALWAYS"/>
+                <ScrollPane minHeight="44"
+                            hbarPolicy="ALWAYS"
+                            vbarPolicy="NEVER"
+                            GridPane.rowIndex="2"
+                            GridPane.vgrow="ALWAYS">
+                    <HBox fx:id="userHBox"
+                          alignment="CENTER"/>
+                </ScrollPane>
+                <HBox alignment="CENTER_RIGHT"
+                      spacing="10"
+                      style="-fx-padding: 10 10 10 10;"
+                      GridPane.rowIndex="3">
+                    <Button fx:id="createButton" text="Create" defaultButton="true"/>
+                    <Button fx:id="cancelButton" text="Cancel" cancelButton="true"/>
+                </HBox>
+            </GridPane>
+        </Scene>
+    </scene>
+</Stage>

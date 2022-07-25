@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+<Stage xmlns="http://javafx.com/javafx/11.0.1"
+       xmlns:fx="http://javafx.com/fxml/1"
+       fx:controller="com.chat.client.javafxui.ChatWindow"
+       fx:id="stage">
+    <scene>
+        <Scene>
+            <GridPane prefWidth="400" prefHeight="400">
+                <ListView fx:id="messagesListView"
+                          GridPane.rowIndex="0"
+                          GridPane.columnIndex="0"
+                          GridPane.columnSpan="2"
+                          GridPane.hgrow="ALWAYS"
+                          GridPane.vgrow="ALWAYS"/>
+                <TextArea fx:id="messageTextArea"
+                          prefHeight="80"
+                          GridPane.rowIndex="1"
+                          GridPane.columnIndex="0"/>
+                <VBox alignment="CENTER"
+                      style="-fx-padding: 10 10 10 10;"
+                      GridPane.rowIndex="1"
+                      GridPane.columnIndex="1">
+                    <Button fx:id="sendButton" text="Send" minWidth="50"/>
+                </VBox>
+            </GridPane>
+        </Scene>
+    </scene>
+</Stage>

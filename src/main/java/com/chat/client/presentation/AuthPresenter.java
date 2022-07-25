@@ -1,12 +1,12 @@
 package com.chat.client.presentation;
 
+import com.chat.client.domain.Account;
 import com.chat.client.domain.application.AuthService;
-import com.chat.client.domain.Preview;
 import com.chat.client.domain.application.CallbackDispatcher;
 
 public class AuthPresenter {
     public interface Factory {
-        void openLoggedView(Preview preview);
+        void openChatlistView(Account account);
     }
 
     private final AuthView view;
@@ -33,7 +33,7 @@ public class AuthPresenter {
         callbackDispatcher.addCallback(
                 authService.loginUserAsync(username, password),
                 account -> {
-                    factory.openLoggedView(new Preview());
+                    factory.openChatlistView(account);
                     view.close();
                 },
                 $ -> {
