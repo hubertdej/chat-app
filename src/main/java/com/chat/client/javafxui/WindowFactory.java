@@ -1,13 +1,14 @@
 package com.chat.client.javafxui;
 
+import com.chat.client.presentation.AuthView;
 import com.chat.client.presentation.ViewFactory;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
 
 public class WindowFactory implements ViewFactory {
-    private <T> T loadFXML(String name) {
-        var loader = new FXMLLoader(ClassLoader.getSystemResource("views/" + name));
+    private <T> T loadFXML(Class<T> cls) {
+        var loader = new FXMLLoader(ClassLoader.getSystemResource("views/" + cls.getSimpleName() + ".fxml"));
         try {
             loader.load();
         } catch (IOException e) {
@@ -17,8 +18,8 @@ public class WindowFactory implements ViewFactory {
     }
 
     @Override
-    public AuthWindow createAuthView() {
-        return loadFXML("AuthView.fxml");
+    public AuthView createAuthView() {
+        return loadFXML(AuthView.class);
     }
 
     @Override
