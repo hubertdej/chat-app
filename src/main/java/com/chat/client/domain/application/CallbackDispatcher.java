@@ -1,4 +1,4 @@
-package com.chat.client.presentation;
+package com.chat.client.domain.application;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;

@@ -2,7 +2,7 @@ package com.chat.client;
 
 import com.chat.client.domain.application.AuthService;
 import com.chat.client.javafxui.GuiCallbackDispatcher;
-import com.chat.client.presentation.CallbackDispatcher;
+import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.presentation.PresenterFactory;
 import com.chat.client.javafxui.Gui;
 import com.chat.client.javafxui.WindowFactory;

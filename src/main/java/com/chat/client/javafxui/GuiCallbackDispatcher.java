@@ -1,6 +1,6 @@
 package com.chat.client.javafxui;
 
-import com.chat.client.presentation.CallbackDispatcher;
+import com.chat.client.domain.application.CallbackDispatcher;
 import javafx.application.Platform;
 
 import java.util.concurrent.CompletableFuture;

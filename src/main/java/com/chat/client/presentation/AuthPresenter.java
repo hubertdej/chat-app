@@ -2,6 +2,7 @@ package com.chat.client.presentation;
 
 import com.chat.client.domain.application.AuthService;
 import com.chat.client.domain.Preview;
+import com.chat.client.domain.application.CallbackDispatcher;
 
 public class AuthPresenter {
     public interface Factory {
