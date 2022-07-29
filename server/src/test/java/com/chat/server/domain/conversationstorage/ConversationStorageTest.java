@@ -1,8 +1,8 @@
 package com.chat.server.domain.conversationstorage;
 
-import com.chat.server.domain.conversationstorage.dto.ConversationAddedEvent;
+import com.chat.server.domain.listconversationids.dto.ConversationIdAddedEvent;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
+import com.chat.server.domain.listconversationids.dto.ConversationIdRemovedEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,8 +35,8 @@ public class ConversationStorageTest {
         Optional<ConversationDto> conversationDto = conversationStorageFacade.get(conversationId);
 
         //then: module returns john and barry conversation
-        Assertions.assertEquals(conversationId, conversationDto.orElseThrow().conversationId());
-        assertListEquals(conversationDto.orElseThrow().members(), members);
+        Assertions.assertEquals(conversationId, conversationDto.orElseThrow().getConversationId());
+        assertListEquals(conversationDto.orElseThrow().getMembers(), members);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ConversationStorageTest {
         UUID conversationId = conversationStorageFacade.add(members);
 
         //then: ConversationAddedEvent is published
-        ConversationAddedEvent event = new ConversationAddedEvent(conversationId, "john,barry", members);
+        ConversationIdAddedEvent event = new ConversationIdAddedEvent(conversationId, "john,barry", members);
         verify(applicationEventPublisher, times(1)).publishEvent(event);
     }
 
@@ -73,7 +73,7 @@ public class ConversationStorageTest {
         conversationStorageFacade.remove(conversationId);
 
         //then: ConversationRemovedEvent is published
-        ConversationRemovedEvent event = new ConversationRemovedEvent(conversationId, members);
+        ConversationIdRemovedEvent event = new ConversationIdRemovedEvent(conversationId, members);
         verify(applicationEventPublisher, times(1)).publishEvent(event);
     }
 }
