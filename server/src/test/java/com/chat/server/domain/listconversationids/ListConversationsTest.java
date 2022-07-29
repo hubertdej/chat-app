@@ -1,13 +1,12 @@
-package com.chat.server.domain.listconversations;
+package com.chat.server.domain.listconversationids;
 
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listconversations.dto.ConversationPreviewDto;
+import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,7 +19,7 @@ public class ListConversationsTest {
     private final String john = "john";
     private final String barry = "barry";
     private final ConversationStorageFacade conversationStorageFacade = mock(ConversationStorageFacade.class);
-    private final ListConversationsFacade listConversationsFacade = new ListConversationsConfiguration().listConversationsFacade(conversationStorageFacade);
+    private final ListConversationIdsFacade listConversationIdsFacade = new ListConversationIdsConfiguration().listConversationIdsFacade(conversationStorageFacade);
     private final ApplicationContextRunner runner = new ApplicationContextRunner();
 
     @Test
@@ -29,11 +28,11 @@ public class ListConversationsTest {
 
         //when: user adds a conversation to repository
         UUID conversationId = UUID.randomUUID();
-        listConversationsFacade.add(john, conversationId);
+        listConversationIdsFacade.add(john, conversationId);
 
         //then: conversation is listed
         assertListEquals(
-                listConversationsFacade.listConversations(john),
+                listConversationIdsFacade.listConversations(john),
                 List.of(conversationId));
     }
 
@@ -43,17 +42,17 @@ public class ListConversationsTest {
         UUID conversationId = UUID.randomUUID();
         String name = "convo";
         List<String> members = List.of(john, barry);
-        MessageDto messageDto = new MessageDto(john, conversationId, "hey barry", new Date());
+        MessageDto messageDto = new MessageDto(john, conversationId, "hey barry", null);
         ConversationDto conversationDto = new ConversationDto(
                 conversationId,
                 name,
                 members,
                 List.of(messageDto));
         when(conversationStorageFacade.get(conversationId)).thenReturn(Optional.of(conversationDto));
-        listConversationsFacade.add(john, conversationId);
+        listConversationIdsFacade.add(john, conversationId);
 
         //when: user asks for john conversations previews
-        List<ConversationPreviewDto> previews = listConversationsFacade.listConversationPreviews(john);
+        List<ConversationPreviewDto> previews = listConversationIdsFacade.listConversationPreviews(john);
 
         //then: module returns john&barry's conversation preview
         ConversationPreviewDto expectedPreview =  new ConversationPreviewDto(conversationId, name, members, messageDto);

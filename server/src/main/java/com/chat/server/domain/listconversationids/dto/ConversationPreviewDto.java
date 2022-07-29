@@ -1,4 +1,4 @@
-package com.chat.server.domain.listconversations.dto;
+package com.chat.server.domain.listconversationids.dto;
 
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 

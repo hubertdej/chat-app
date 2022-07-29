@@ -1,11 +1,11 @@
-package com.chat.server.domain.listconversations;
+package com.chat.server.domain.listconversationids;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-interface ConversationRepository {
+interface ConversationIdRepository {
 
     void add(String username, UUID conversationId);
 
@@ -14,7 +14,8 @@ interface ConversationRepository {
     List<UUID> get(String username);
 }
 
-class InMemoryConversationRepository implements ConversationRepository{
+class InMemoryConversationIdRepository implements ConversationIdRepository {
+    //TODO use set instead of list
     private final HashMap<String, List<UUID>> storage = new HashMap<>();
 
     @Override

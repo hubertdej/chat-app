@@ -1,4 +1,4 @@
-package com.chat.server.domain.listconversations;
+package com.chat.server.domain.listconversationids;
 
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ListConversationsIntegrationTest {
     @Autowired
-    ListConversationsFacade listConversationsFacade;
+    ListConversationIdsFacade listConversationIdsFacade;
     @Autowired
     ConversationStorageFacade conversationStorageFacade;
     String john = "john";
@@ -27,7 +27,7 @@ public class ListConversationsIntegrationTest {
         UUID conversationId = conversationStorageFacade.add("convo", List.of(john));
 
         //when: user asks to list john's conversations
-        List<UUID> conversationIds = listConversationsFacade.listConversations(john);
+        List<UUID> conversationIds = listConversationIdsFacade.listConversations(john);
 
         //then: "convo" id is returned
         assertListEquals(conversationIds, List.of(conversationId));
@@ -42,6 +42,6 @@ public class ListConversationsIntegrationTest {
         conversationStorageFacade.remove(conversationId);
 
         //then: "convo" is removed from conversation preview storage
-        assertTrue(listConversationsFacade.listConversations(john).isEmpty());
+        assertTrue(listConversationIdsFacade.listConversations(john).isEmpty());
     }
 }
