@@ -1,7 +1,6 @@
 package com.chat.server.infrastructure.rest;
 
 import org.junit.jupiter.api.Test;
-import org.spockframework.runtime.IStackTraceFilter;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.ResultActions;
 
