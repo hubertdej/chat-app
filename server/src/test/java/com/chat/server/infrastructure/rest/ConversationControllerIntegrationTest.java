@@ -2,10 +2,9 @@ package com.chat.server.infrastructure.rest;
 
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.listconversations.dto.ConversationPreviewDto;
+import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,7 +14,7 @@ import java.util.UUID;
 import static com.chat.server.domain.conversationstorage.ConversationStorageTest.assertListEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest({ConversationController.class,RegistrationController.class})
+@WebMvcTest({ConversationController.class, RegistrationController.class})
 public class ConversationControllerIntegrationTest extends IntegrationTest{
     @Autowired
     private ConversationStorageFacade conversationStorageFacade;
@@ -38,9 +37,9 @@ public class ConversationControllerIntegrationTest extends IntegrationTest{
         ConversationDto conversationDto = conversationStorageFacade.get(conversationID).orElseThrow();
 
         //then: module returns john and barry's conversation
-        assertEquals(conversationID, conversationDto.conversationId());
-        assertListEquals(members, conversationDto.members());
-        assertEquals(name, conversationDto.name());
+        assertEquals(conversationID, conversationDto.getConversationId());
+        assertListEquals(members, conversationDto.getMembers());
+        assertEquals(name, conversationDto.getName());
     }
 
     @Test

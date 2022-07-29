@@ -2,8 +2,8 @@ package com.chat.server.infrastructure.rest;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
-import com.chat.server.domain.listconversations.ListConversationsFacade;
-import com.chat.server.domain.listconversations.dto.ConversationPreviewDto;
+import com.chat.server.domain.listconversationids.ListConversationIdsFacade;
+import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
 import com.chat.server.infrastructure.rest.dto.AddConversationRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,21 +18,21 @@ import java.util.UUID;
 
 @RestController
 @ComponentScan({"com.chat.server.domain.conversationstorage",
-        "com.chat.server.domain.listconversations",
+        "com.chat.server.domain.listconversationids",
         "com.chat.server.domain.registration",
         "com.chat.server.domain.authentication"})
 public class ConversationController {
     private final ConversationStorageFacade conversationStorageFacade;
-    private final ListConversationsFacade listConversationsFacade;
+    private final ListConversationIdsFacade listConversationIdsFacade;
     private final AuthenticationFacade authenticationFacade;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public ConversationController(ConversationStorageFacade conversationStorageFacade,
-                                  ListConversationsFacade listConversationsFacade,
+                                  ListConversationIdsFacade listConversationIdsFacade,
                                   AuthenticationFacade authenticationFacade) {
         this.conversationStorageFacade = conversationStorageFacade;
-        this.listConversationsFacade = listConversationsFacade;
+        this.listConversationIdsFacade = listConversationIdsFacade;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -49,7 +49,7 @@ public class ConversationController {
     public ResponseEntity<String> listConversationPreviews(@RequestBody User user){
         if(!authenticationFacade.authenticate(user.getUsername(), user.getPassword()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        List<ConversationPreviewDto> previews = listConversationsFacade.listConversationPreviews(user.getUsername());
+        List<ConversationPreviewDto> previews = listConversationIdsFacade.listConversationPreviews(user.getUsername());
         try{
             String marshalled = mapper.writeValueAsString(previews);
             return ResponseEntity.ok(marshalled);
