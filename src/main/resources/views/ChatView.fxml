@@ -10,11 +10,14 @@
     <scene>
         <Scene>
             <GridPane prefWidth="400" prefHeight="400">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                    <ColumnConstraints hgrow="NEVER" minWidth="70" />
+                </columnConstraints>
                 <ListView fx:id="messagesListView"
                           GridPane.rowIndex="0"
                           GridPane.columnIndex="0"
                           GridPane.columnSpan="2"
-                          GridPane.hgrow="ALWAYS"
                           GridPane.vgrow="ALWAYS"/>
                 <TextArea fx:id="messageTextArea"
                           prefHeight="80"
@@ -24,7 +27,7 @@
                       style="-fx-padding: 10 10 10 10;"
                       GridPane.rowIndex="1"
                       GridPane.columnIndex="1">
-                    <Button fx:id="sendButton" text="Send" minWidth="50"/>
+                    <Button fx:id="sendButton" text="Send"/>
                 </VBox>
             </GridPane>
         </Scene>
