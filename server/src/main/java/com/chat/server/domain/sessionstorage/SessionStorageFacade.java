@@ -44,8 +44,6 @@ public class SessionStorageFacade {
             throw new NoSuchConversationException();
         List<String> members = conversationDtoOptional.get().getMembers();
         for(String member : members){
-            if(Objects.equals(member, messageDto.getFrom()))
-                continue;
             WebSocketSession session = sessions.get(member);
             if(session == null)
                 continue;
