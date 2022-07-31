@@ -8,13 +8,9 @@ import java.util.stream.Collectors;
 public class CreationPresenter {
     private final CreationView view;
     private final ChatsRepository chatsRepository;
-    private final UsersRepository usersRepository;
 
-    public CreationPresenter(CreationView view,
-                             ChatsRepository chatsRepository,
-                             UsersRepository usersRepository) {
+    public CreationPresenter(CreationView view, ChatsRepository chatsRepository) {
         this.view = view;
-        this.usersRepository = usersRepository;
         this.chatsRepository = chatsRepository;
     }
 
@@ -48,18 +44,15 @@ public class CreationPresenter {
         view.close();
     }
 
-    private void addUser(User user) {
-        view.addUser(user);
-    }
-
-
     public void open() {
-        usersRepository.addObserver(this::addUser);
         view.open();
+        view.addUser(new User("Aska"));
+        view.addUser(new User("Bartolomeu"));
+        view.addUser(new User("Cecil"));
+        view.addUser(new User("Dorothy"));
     }
 
     public void close() {
-        usersRepository.removeObserver(this::addUser);
         view.close();
     }
 }

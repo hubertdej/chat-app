@@ -2,7 +2,6 @@ package com.chat.client;
 
 import com.chat.client.domain.application.AuthService;
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.UsersRepository;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.fake.FakeMessagingClient;
 import com.chat.client.javafxui.GuiCallbackDispatcher;
@@ -20,7 +19,6 @@ class Program {
         ViewFactory viewFactory = new WindowFactory();
         AuthService authService = new FakeAuthService();
         ChatsRepository chatsRepository = new ChatsRepository();
-        UsersRepository usersRepository = new UsersRepository();
         CallbackDispatcher callbackDispatcher = new GuiCallbackDispatcher();
         MessagingClient messagingClient = new FakeMessagingClient(Platform::runLater);
 
@@ -29,7 +27,6 @@ class Program {
                         viewFactory,
                         authService,
                         chatsRepository,
-                        usersRepository,
                         callbackDispatcher,
                         messagingClient
                 ).openAuthView()

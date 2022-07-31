@@ -9,20 +9,17 @@ public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, 
     private final ViewFactory viewFactory;
     private final AuthService authService;
     private final ChatsRepository chatsRepository;
-    private final UsersRepository usersRepository;
     private final CallbackDispatcher callbackDispatcher;
     private final MessagingClient messagingClient;
 
     public PresenterFactory(ViewFactory viewFactory,
                             AuthService authService,
                             ChatsRepository chatsRepository,
-                            UsersRepository usersRepository,
                             CallbackDispatcher callbackDispatcher,
                             MessagingClient messagingClient) {
         this.viewFactory = viewFactory;
         this.authService = authService;
         this.chatsRepository = chatsRepository;
-        this.usersRepository = usersRepository;
         this.callbackDispatcher = callbackDispatcher;
         this.messagingClient = messagingClient;
     }
@@ -38,7 +35,7 @@ public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, 
     @Override
     public void openCreationView() {
         var view = viewFactory.createCreationView();
-        var presenter = new CreationPresenter(view, chatsRepository, usersRepository);
+        var presenter = new CreationPresenter(view, chatsRepository);
         view.initialize(presenter);
         presenter.open();
     }
