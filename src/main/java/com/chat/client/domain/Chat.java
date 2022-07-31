@@ -2,6 +2,7 @@ package com.chat.client.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Chat {
     public interface Observer {
@@ -12,6 +13,7 @@ public class Chat {
 
     public void addObserver(Observer observer) {
         observers.add(observer);
+        for (var message : snapshot) { observer.notifyUpdate(message); }
     }
 
     public void removeObserver(Observer observer) {
@@ -27,10 +29,18 @@ public class Chat {
         }
     }
 
+    private final UUID uuid;
     private final String name;
+    private final List<User> recipients;
 
-    public Chat(String name) {
+    public Chat(UUID uuid, String name, List<User> recipients) {
+        this.uuid = uuid;
         this.name = name;
+        this.recipients = recipients;
+    }
+
+    public UUID getUUID() {
+        return uuid;
     }
 
     public String getName() {

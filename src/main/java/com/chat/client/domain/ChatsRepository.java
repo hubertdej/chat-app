@@ -3,6 +3,7 @@ package com.chat.client.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ChatsRepository {
     public interface Observer {
@@ -20,15 +21,14 @@ public class ChatsRepository {
 
     private final List<Chat> snapshot = new ArrayList<>();
 
-    public void addChat(String name) {
-        var chat = new Chat(name);
+    public void addChat(Chat chat) {
         snapshot.add(chat);
         for (var observer : observers) {
             observer.notifyUpdate(chat);
         }
     }
 
-    public Optional<Chat> getByName(String name) {
-        return snapshot.stream().filter(chat -> chat.getName().equals(name)).findFirst();
+    public Optional<Chat> getByUUID(UUID uuid) {
+        return snapshot.stream().filter(chat -> chat.getUUID().equals(uuid)).findFirst();
     }
 }

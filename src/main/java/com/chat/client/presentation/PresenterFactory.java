@@ -1,24 +1,28 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.*;
-import com.chat.client.domain.application.AuthService;
-import com.chat.client.domain.application.CallbackDispatcher;
-import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.domain.application.*;
 
 public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, ChatlistPresenter.Factory {
     private final ViewFactory viewFactory;
     private final AuthService authService;
+    private final UsersService usersService;
+    private final ChatsService chatsService;
     private final ChatsRepository chatsRepository;
     private final CallbackDispatcher callbackDispatcher;
     private final MessagingClient messagingClient;
 
     public PresenterFactory(ViewFactory viewFactory,
                             AuthService authService,
+                            UsersService usersService,
+                            ChatsService chatsService,
                             ChatsRepository chatsRepository,
                             CallbackDispatcher callbackDispatcher,
                             MessagingClient messagingClient) {
         this.viewFactory = viewFactory;
         this.authService = authService;
+        this.usersService = usersService;
+        this.chatsService = chatsService;
         this.chatsRepository = chatsRepository;
         this.callbackDispatcher = callbackDispatcher;
         this.messagingClient = messagingClient;
@@ -35,7 +39,7 @@ public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, 
     @Override
     public void openCreationView() {
         var view = viewFactory.createCreationView();
-        var presenter = new CreationPresenter(view, chatsRepository);
+        var presenter = new CreationPresenter(view, usersService, chatsService, chatsRepository, callbackDispatcher);
         view.initialize(presenter);
         presenter.open();
     }

@@ -10,6 +10,8 @@ public interface CreationView {
     void filterUsers(String filter);
     void enableCreation();
     void disableCreation();
+    void indicateLoadingUsersFailed();
+    void indicateChatCreationFailed();
     void open();
     void close();
 }

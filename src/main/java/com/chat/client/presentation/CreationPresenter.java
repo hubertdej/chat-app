@@ -1,17 +1,32 @@
 package com.chat.client.presentation;
 
-import com.chat.client.domain.*;
+import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.User;
+import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.ChatsService;
+import com.chat.client.domain.application.UsersService;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class CreationPresenter {
     private final CreationView view;
+    private final UsersService usersService;
+    private final ChatsService chatsService;
     private final ChatsRepository chatsRepository;
+    private final CallbackDispatcher callbackDispatcher;
 
-    public CreationPresenter(CreationView view, ChatsRepository chatsRepository) {
+    public CreationPresenter(CreationView view,
+                             UsersService usersService,
+                             ChatsService chatsService,
+                             ChatsRepository chatsRepository,
+                             CallbackDispatcher callbackDispatcher) {
         this.view = view;
+        this.usersService = usersService;
+        this.chatsService = chatsService;
         this.chatsRepository = chatsRepository;
+        this.callbackDispatcher = callbackDispatcher;
     }
 
     public void filterUsers(String filter) {
@@ -38,18 +53,31 @@ public class CreationPresenter {
         }
     }
 
-    public void createChat() {
-        var usernames = selectedUsers.stream().map(User::name).collect(Collectors.toList());
-        chatsRepository.addChat(String.join(", ", usernames));
-        view.close();
+    public void createChat(String name) {
+        var recipients = selectedUsers.stream().toList();
+
+        // TODO: Lock view.
+        callbackDispatcher.addCallback(
+                chatsService.createChatAsync(name, recipients),
+                chat -> {
+                    chatsRepository.addChat(chat);
+                    view.close();
+                },
+                $ -> view.indicateChatCreationFailed()
+        );
     }
 
     public void open() {
         view.open();
-        view.addUser(new User("Aska"));
-        view.addUser(new User("Bartolomeu"));
-        view.addUser(new User("Cecil"));
-        view.addUser(new User("Dorothy"));
+
+        callbackDispatcher.addCallback(
+                usersService.getUsersAsync(),
+                users -> users.forEach(view::addUser),
+                $ -> {
+                    view.indicateLoadingUsersFailed();
+                    view.close();
+                }
+        );
     }
 
     public void close() {
