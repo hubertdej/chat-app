@@ -57,5 +57,6 @@ public class ChatlistPresenter {
         messagingClient.close();
         factory.openAuthView();
         view.close();
+        // TODO: All other windows should close too.
     }
 }

@@ -44,6 +44,7 @@ public class ChatlistWindow implements ChatlistView {
 
         chatsListView.setFocusTraversable(false); // chatsListView.addEventFilter(KeyEvent.ANY, Event::consume);
 
+        // TODO: Disable the possibility of opening multiple windows of the same chat.
         createButton.setOnMouseClicked(event -> presenter.createChat());
 
         stage.setOnCloseRequest(event -> {
