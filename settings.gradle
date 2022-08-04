@@ -1,1 +1,5 @@
-rootProject.name = 'project'
+rootProject.name = "project-team-8-1"
+include ':client'
+include ':server-web'
+include ':server-model'
+
