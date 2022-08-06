@@ -83,8 +83,6 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
             barryMessages.poll(5, TimeUnit.SECONDS);
             Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
         }
-
-
     }
 
     @Test
@@ -99,8 +97,10 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
             WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            WebsocketMessageResponse received = barryMessages.poll(5, TimeUnit.SECONDS);
-            Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
+            WebsocketMessageResponse receivedBarry = barryMessages.poll(3, TimeUnit.SECONDS);
+            WebsocketMessageResponse receivedJohn = johnMessages.poll(3, TimeUnit.SECONDS);
+            Assertions.assertEquals(messageToBarry.getContent(), receivedBarry.getContent());
+            Assertions.assertEquals(messageToBarry.getContent(), receivedJohn.getContent());
         }
     }
 
