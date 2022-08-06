@@ -41,7 +41,7 @@ class Program {
             ConversationStorageFacade conversationStorage = new ConversationStorageFacade(
                     new InMemoryConversationRepository()
             );
-            SessionStorageFacade sessionStorage = new SessionStorageFacade(conversationStorage, new ConcurrentHashMap<>());
+            SessionStorageFacade sessionStorage = new SessionStorageFacade(conversationStorage);
 //            ListConversationIdsFacade listConversationIds = new ListConversationIdsFacade(
 //                    new InMemoryConversationIdRepository(),
 //                    conversationStorage

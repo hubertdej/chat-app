@@ -1,7 +1,9 @@
 package com.chat.server.infrastructure.websocket;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
+import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
+import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.messagereceiver.dto.FromMessageDto;
 import com.chat.server.domain.sessionstorage.MessagingSessionException;
@@ -16,6 +18,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
@@ -27,17 +30,24 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final SessionStorageFacade sessionStorageFacade;
 
 
-    public WebSocketHandler(MessageReceiverFacade messageReceiverFacade, AuthenticationFacade authenticationFacade, SessionStorageFacade sessionStorageFacade) {
+    private final Map<WebSocketSession, SessionStorageFacade.Observer> observers;
+
+    public WebSocketHandler(MessageReceiverFacade messageReceiverFacade, AuthenticationFacade authenticationFacade, SessionStorageFacade sessionStorageFacade, Map<WebSocketSession, SessionStorageFacade.Observer> observers) {
         this.messageReceiverFacade = messageReceiverFacade;
         this.authenticationFacade = authenticationFacade;
         this.sessionStorageFacade = sessionStorageFacade;
+        this.observers = observers;
     }
 
     @Override
     public void handleTextMessage(@NotNull WebSocketSession session, TextMessage textMessage) throws IOException, NoSuchConversationException, MessagingSessionException {
         System.out.println("server received: " + textMessage.getPayload());
         FromMessageDto webSocketMessageDto = objectMapper.readValue(textMessage.getPayload(), FromMessageDto.class);
-        messageReceiverFacade.receiveMessage(new WebSocketSessionWrapper(session, objectMapper), webSocketMessageDto);
+        if (webSocketMessageDto instanceof MessageDto messageDto) {
+            messageReceiverFacade.receiveMessage(messageDto);
+        } else if (webSocketMessageDto instanceof ListConversationsRequestDto requestDto) {
+            messageReceiverFacade.receiveRequest(new WebConversationsRequester(session, objectMapper), requestDto);
+        }
     }
 
     @Override
@@ -46,7 +56,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String password = getPasswordHeader(session);
         if(authenticationFacade.authenticate(username, password)){
             System.out.printf("user %s successfully authenticated%n", username);
-            sessionStorageFacade.add(username, new WebSocketSessionWrapper(session, objectMapper));
+            var proxy = new ProxyMessanger(session, objectMapper);
+            observers.put(session, proxy);
+            sessionStorageFacade.addObserver(username, proxy);
         } else {
             System.out.printf("user %s couldn't be authenticated", username);
             session.close();
@@ -56,7 +68,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull CloseStatus status) {
         String username = getUsernameHeader(session);
-        sessionStorageFacade.remove(username);
+        sessionStorageFacade.removeObserver(username, observers.get(session));
         System.out.println("connection closed " + status);
     }
 

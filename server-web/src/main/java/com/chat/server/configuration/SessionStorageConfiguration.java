@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionStorageConfiguration {
     @Bean
     public SessionStorageFacade sessionStorageFacade(ConversationStorageFacade conversationStorageFacade){
-        return new SessionStorageFacade(conversationStorageFacade, new ConcurrentHashMap<>());
+        return new SessionStorageFacade(conversationStorageFacade);
     }
 
 

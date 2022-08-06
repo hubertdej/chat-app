@@ -5,41 +5,42 @@ import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionStorageFacade {
     private final ConversationStorageFacade conversationStorageFacade;
-    private final ConcurrentHashMap<String, ServerMessagingSession> sessions;
+
 
     public SessionStorageFacade(
-            ConversationStorageFacade conversationStorageFacade,
-            ConcurrentHashMap<String, ServerMessagingSession> sessions) {
+            ConversationStorageFacade conversationStorageFacade) {
         this.conversationStorageFacade = conversationStorageFacade;
-        this.sessions = sessions;
     }
 
-    public void add(String username, ServerMessagingSession session){
-        System.out.println("adding session for " + username);
-        sessions.put(username, session);
-    }
-    public void remove(String username){
-        System.out.println("removing session of " + username);
-        sessions.remove(username);
+    public interface Observer {
+        void notifyNewMessage(MessageDto dto);
     }
 
-    public void propagate(MessageDto messageDto) throws NoSuchConversationException, MessagingSessionException {
+    private final Map<String, List<Observer>> observers = new ConcurrentHashMap<>();
+    public void addObserver(String username, Observer observer) {
+        observers.putIfAbsent(username, new ArrayList<>());
+        observers.get(username).add(observer);
+    }
+    public void removeObserver(String username, Observer observer) {
+        observers.get(username).remove(observer); // NullPointerException if there are no observers for the username
+    }
+
+    public void propagate(MessageDto messageDto) {
         Optional<ConversationDto> conversationDtoOptional = conversationStorageFacade.get(messageDto.getTo());
-        if(conversationDtoOptional.isEmpty())
-            throw new NoSuchConversationException();
+        if (conversationDtoOptional.isEmpty())
+            throw new RuntimeException(new NoSuchConversationException()); // imo to powinno rozszerzac RuntimeException
+
         List<String> members = conversationDtoOptional.get().getMembers();
-        for(String member : members){
-            ServerMessagingSession session = sessions.get(member);
-            if(session == null)
-                continue;
-            System.out.println("propagating message to " + member);
-            session.sendMessage(messageDto);
+        for (String member : members) {
+            for (var observer : observers.getOrDefault(member, List.of())) {
+                observer.notifyNewMessage(messageDto);
+//                System.out.println("propagating message to " + member);
+            }
         }
     }
 }
