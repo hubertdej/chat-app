@@ -1,7 +1,6 @@
 package com.chat.server.domain.conversationstorage.dto;
 
 
-import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,11 +24,6 @@ public final class ConversationDto {
         this.name = name;
         this.members = members.stream().toList();
         this.messages = messages.stream().toList();
-    }
-
-    public ConversationPreviewDto conversationPreviewDto() {
-        MessageDto lastMessage = messages.size() > 0 ? messages.get(getMessages().size() - 1) : null;
-        return new ConversationPreviewDto(conversationId, name, members, lastMessage);
     }
 
     public UUID getConversationId() {

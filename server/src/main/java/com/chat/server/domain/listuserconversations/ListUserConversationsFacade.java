@@ -2,9 +2,10 @@ package com.chat.server.domain.listuserconversations;
 
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
 import com.chat.server.domain.listuserconversations.dto.ConversationAddedEvent;
 import com.chat.server.domain.listuserconversations.dto.ConversationRemovedEvent;
+import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
+import com.chat.server.domain.listuserconversations.dto.MessageAddedEvent;
 import org.springframework.context.event.EventListener;
 
 import java.sql.Timestamp;
@@ -86,5 +87,10 @@ public class ListUserConversationsFacade {
     @EventListener
     public void handleConversationRemovedEvent(ConversationRemovedEvent conversationRemovedEvent){
         conversationRemovedEvent.members().forEach(username -> remove(username, conversationRemovedEvent.conversationId()));
+    }
+
+    @EventListener
+    public void addMessageToConversation(MessageAddedEvent messageAddedEvent){
+        userConversationRepository.addMessage(messageAddedEvent.messageDto(), messageAddedEvent.members());
     }
 }

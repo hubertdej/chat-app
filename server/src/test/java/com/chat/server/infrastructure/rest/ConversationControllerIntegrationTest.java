@@ -2,8 +2,6 @@ package com.chat.server.infrastructure.rest;
 
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,25 +40,4 @@ public class ConversationControllerIntegrationTest extends IntegrationTest{
         assertEquals(name, conversationDto.getName());
     }
 
-    @Test
-    void previewsAreListedForRegisteredUser() throws Exception {
-        //given: john is registered
-        registerUser(john, password);
-        //given: john has a conversation with barry
-        conversationStorageFacade.add(name, members);
-
-        //when: user asks for previews by post request
-        String response = listConversationPreviews(john, password)
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        List<ConversationPreviewDto> previews = mapper.readValue(response, new TypeReference<>() {});
-
-        //then: module returns john and barry's conversation preview
-        assertEquals(1, previews.size());
-        ConversationPreviewDto preview = previews.get(0);
-        assertEquals(name, preview.name());
-        assertListEquals(members, preview.members());
-        assertNull(preview.messageDto());
-    }
 }

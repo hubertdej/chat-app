@@ -4,7 +4,7 @@ package com.chat.server.infrastructure.websocket;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
+import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.infrastructure.rest.IntegrationTest;
@@ -28,7 +28,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -53,13 +52,14 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
     String barryPass = "barrypass";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private WebSocketSession openSession(String username, String password, BlockingQueue<WebsocketMessageResponse> messages) throws ExecutionException, InterruptedException {
+// {"from": %s, "lastMessage": {}}
+    private WebSocketSession openSession(String username, String password, BlockingQueue<MessageDto> messages) throws ExecutionException, InterruptedException {
         StandardWebSocketClient client = new StandardWebSocketClient();
         URI uri =URI.create("ws://localhost:" + port + "/chat");
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         headers.add("username", username);
         headers.add("password", password);
+        headers.add("list-user-conversations-request", String.format("{\"from\": \"%s\", \"lastMessage\": {}}", username));
         return client.doHandshake(new ClientSocketHandler(messages), headers, uri).get();
     }
 
@@ -70,18 +70,24 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
         UUID conversationId = UUID.fromString(uuid);
         MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
-        ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto(john, Map.of());
-        BlockingQueue<WebsocketMessageResponse> johnMessages = new LinkedBlockingQueue<>();
-        BlockingQueue<WebsocketMessageResponse> barryMessages = new LinkedBlockingQueue<>();
-        try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
-            WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
+//        ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto(john, Map.of());
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
+        try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
+//            WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(listConversationsRequestDto)));
+            Thread.sleep(1000);
+//            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
+//            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(listConversationsRequestDto)));
+            try(WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
+                MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
+                Assertions.assertNotNull(received);
+                Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
+            }
 
-            WebsocketMessageResponse received = barryMessages.poll(5, TimeUnit.SECONDS);
-            barryMessages.poll(5, TimeUnit.SECONDS);
-            Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
+//            MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
+//            barryMessages.poll(5, TimeUnit.SECONDS);
+//            Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
         }
     }
 
@@ -92,13 +98,13 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
         UUID conversationId = UUID.fromString(uuid);
         MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
-        BlockingQueue<WebsocketMessageResponse> johnMessages = new LinkedBlockingQueue<>();
-        BlockingQueue<WebsocketMessageResponse> barryMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
             WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            WebsocketMessageResponse receivedBarry = barryMessages.poll(3, TimeUnit.SECONDS);
-            WebsocketMessageResponse receivedJohn = johnMessages.poll(3, TimeUnit.SECONDS);
+            MessageDto receivedBarry = barryMessages.poll(3, TimeUnit.SECONDS);
+            MessageDto receivedJohn = johnMessages.poll(3, TimeUnit.SECONDS);
             Assertions.assertEquals(messageToBarry.getContent(), receivedBarry.getContent());
             Assertions.assertEquals(messageToBarry.getContent(), receivedJohn.getContent());
         }
@@ -109,7 +115,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         String john = "john";
         String johnPass = "johnpass";
         registerUser(john, johnPass);
-        BlockingQueue<WebsocketMessageResponse> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
         ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto("john", null);
         System.out.println(objectMapper.writeValueAsString(listConversationsRequestDto));
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
@@ -118,9 +124,9 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
     }
 
     private class ClientSocketHandler extends TextWebSocketHandler {
-        BlockingQueue<WebsocketMessageResponse> messages;
+        BlockingQueue<MessageDto> messages;
 
-        public ClientSocketHandler(BlockingQueue<WebsocketMessageResponse> messages) {
+        public ClientSocketHandler(BlockingQueue<MessageDto> messages) {
             this.messages = messages;
         }
 
@@ -138,18 +144,9 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
 
         @Override
         protected void handleTextMessage(@NotNull WebSocketSession session, TextMessage message) throws Exception {
-            WebsocketResponse websocketResponse = objectMapper.readValue(message.getPayload(), WebsocketResponse.class);
             System.out.println(message.getPayload());
-            if(websocketResponse instanceof WebsocketMessageResponse websocketMessageResponse){
-                messages.add(websocketMessageResponse);
-                System.out.println(websocketMessageResponse);
-            }
-            else if(websocketResponse instanceof WebsocketListConversationsResponse websocketListConversationsResponse){
-                System.out.println(websocketListConversationsResponse);
-            }
-
-//            messages.add(messageDto);
-//            System.out.println(messageDto);
+            MessageDto messageDto = objectMapper.readValue(message.getPayload(), MessageDto.class);
+            messages.add(messageDto);
         }
     }
 

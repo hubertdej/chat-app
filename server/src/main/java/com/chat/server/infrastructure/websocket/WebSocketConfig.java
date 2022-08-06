@@ -2,6 +2,7 @@ package com.chat.server.infrastructure.websocket;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
+import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
     AuthenticationFacade authenticationFacade;
     @Autowired
     SessionStorageFacade sessionStorageFacade;
+    @Autowired
+    ListUserConversationsFacade listUserConversationsFacade;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler(messageReceiverFacade, authenticationFacade, sessionStorageFacade), "/chat");
+        registry.addHandler(new WebSocketHandler(messageReceiverFacade, authenticationFacade, sessionStorageFacade, listUserConversationsFacade), "/chat");
     }
 }
