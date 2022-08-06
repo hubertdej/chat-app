@@ -1,3 +1,4 @@
 rootProject.name = "project-team-8-1"
-include 'client'
-include 'server'
+include ':client'
+include ':server-model'
+include ':server-web'
