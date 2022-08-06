@@ -3,29 +3,29 @@ package com.chat.client.presentation;
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.*;
 
+import java.util.function.Supplier;
+
 public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, ChatlistPresenter.Factory {
     private final ViewFactory viewFactory;
     private final AuthService authService;
     private final UsersService usersService;
     private final ChatsService chatsService;
-    private final ChatsRepository chatsRepository;
     private final CallbackDispatcher callbackDispatcher;
-    private final MessagingClient messagingClient;
+    private final Supplier<ChatsRepository> chatsRepositorySupplier;
+    private final Supplier<MessagingClient> messagingClientSupplier;
 
     public PresenterFactory(ViewFactory viewFactory,
                             AuthService authService,
                             UsersService usersService,
                             ChatsService chatsService,
-                            ChatsRepository chatsRepository,
-                            CallbackDispatcher callbackDispatcher,
-                            MessagingClient messagingClient) {
+                            CallbackDispatcher callbackDispatcher, Supplier<ChatsRepository> chatsRepositorySupplier, Supplier<MessagingClient> messagingClientSupplier) {
         this.viewFactory = viewFactory;
         this.authService = authService;
         this.usersService = usersService;
         this.chatsService = chatsService;
-        this.chatsRepository = chatsRepository;
         this.callbackDispatcher = callbackDispatcher;
-        this.messagingClient = messagingClient;
+        this.chatsRepositorySupplier = chatsRepositorySupplier;
+        this.messagingClientSupplier = messagingClientSupplier;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, 
     }
 
     @Override
-    public void openCreationView() {
+    public void openCreationView(ChatsRepository chatsRepository) {
         var view = viewFactory.createCreationView();
         var presenter = new CreationPresenter(view, usersService, chatsService, chatsRepository, callbackDispatcher);
         view.initialize(presenter);
@@ -47,15 +47,20 @@ public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, 
     @Override
     public void openChatlistView(Account account) {
         var view = viewFactory.createChatlistView();
-        var presenter = new ChatlistPresenter(view, this, account, chatsRepository, messagingClient);
+        var presenter = new ChatlistPresenter(
+                view,
+                this,
+                account,
+                chatsRepositorySupplier.get(),
+                messagingClientSupplier.get());
         view.initialize(presenter);
         presenter.open();
     }
 
     @Override
-    public void openChatView(Account account, Chat chat) {
+    public void openChatView(Account account, MessagingClient client, Chat chat) {
         var view = viewFactory.createChatView();
-        var presenter = new ChatPresenter(view, account, chat, messagingClient);
+        var presenter = new ChatPresenter(view, account, chat, client);
         view.initialize(presenter);
         presenter.open();
     }

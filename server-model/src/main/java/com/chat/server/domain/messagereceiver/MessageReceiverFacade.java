@@ -30,11 +30,11 @@ public class MessageReceiverFacade {
         this.listUserConversationsFacade = listUserConversationsFacade;
     }
 
-    public void receiveMessage(ServerMessagingSession session, FromMessageDto webSocketMessageDto) throws NoSuchConversationException, IOException, MessagingSessionException {
-        if(webSocketMessageDto instanceof MessageDto messageDto){
+    public void receiveMessage(ServerMessagingSession session, FromMessageDto fromMessageDto) throws NoSuchConversationException, IOException, MessagingSessionException {
+        if(fromMessageDto instanceof MessageDto messageDto){
             persist(messageDto);
             sessionStorageFacade.propagate(messageDto);
-        } else if(webSocketMessageDto instanceof ListConversationsRequestDto listConversationsRequestDto){
+        } else if(fromMessageDto instanceof ListConversationsRequestDto listConversationsRequestDto){
             List<ConversationDto> conversationDtoList = listUserConversationsFacade.listConversations(listConversationsRequestDto);
             ListConversationsResponse listConversationsResponse = new ListConversationsResponse(conversationDtoList);
             session.sendMessage(listConversationsResponse);

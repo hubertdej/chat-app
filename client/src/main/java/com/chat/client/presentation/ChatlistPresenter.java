@@ -8,8 +8,9 @@ import com.chat.client.domain.application.MessagingClient;
 public class ChatlistPresenter {
     public interface Factory {
         void openAuthView();
-        void openChatView(Account account, Chat chat);
-        void openCreationView();
+        void openChatView(Account account, MessagingClient client, Chat chat);
+        void openCreationView(ChatsRepository repository);
+
     }
 
     private final ChatlistView view;
@@ -39,11 +40,11 @@ public class ChatlistPresenter {
     }
 
     public void openChat(Chat chat) {
-        factory.openChatView(account, chat);
+        factory.openChatView(account, messagingClient, chat);
     }
 
     public void createChat() {
-        factory.openCreationView();
+        factory.openCreationView(chatsRepository);
     }
 
     public void open() {

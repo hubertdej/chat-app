@@ -1,8 +1,11 @@
 package com.chat.client.domain;
 
+import com.chat.client.domain.application.MessagingClient;
+
 public class Account {
     private final User user;
     private final String password;
+
 
     public Account(User user, String password) {
         this.user = user;

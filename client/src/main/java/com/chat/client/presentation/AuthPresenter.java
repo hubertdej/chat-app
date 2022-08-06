@@ -1,8 +1,10 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Account;
+import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.AuthService;
 import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.MessagingClient;
 
 public class AuthPresenter {
     public interface Factory {
