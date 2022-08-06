@@ -66,14 +66,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private String getUsernameHeader(WebSocketSession session){
         String username = session.getHandshakeHeaders().getFirst(USERNAME_HEADER);
-        if(username == null)
+        if(username == null || username.isEmpty())
             throw new MissingHeaderException("username header is missing");
         return username;
     }
 
     private String getPasswordHeader(WebSocketSession session){
         String password = session.getHandshakeHeaders().getFirst(PASSWORD_HEADER);
-        if(password == null)
+        if(password == null || password.isEmpty())
             throw new MissingHeaderException("password header is missing");
         return password;
     }
