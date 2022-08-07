@@ -2,10 +2,11 @@ package com.chat.client;
 
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.Dispatcher;
+import com.chat.client.javafxui.GuiDispatcher;
 import com.chat.client.network.RestService;
 import com.chat.client.network.WebSocketMessagingClient;
 import com.chat.client.javafxui.Gui;
-import com.chat.client.javafxui.GuiCallbackDispatcher;
 import com.chat.client.javafxui.WindowFactory;
 import com.chat.client.local.LocalAuthService;
 import com.chat.client.local.LocalChatsService;
@@ -34,7 +35,8 @@ class Program {
     private static void runClientWithServer() {
         Gui.run(() -> {
             ViewFactory viewFactory = new WindowFactory();
-            CallbackDispatcher callbackDispatcher = new GuiCallbackDispatcher();
+            Dispatcher dispatcher = new GuiDispatcher();
+            CallbackDispatcher callbackDispatcher = new CallbackDispatcher(dispatcher);
             RegistrationFacade registration = new RegistrationFacade(new InMemoryCredentialsRepository());
             AuthenticationFacade authentication = new AuthenticationFacade(registration);
             ConversationStorageFacade conversationStorage = new ConversationStorageFacade(
@@ -73,7 +75,8 @@ class Program {
         Gui.run(() -> {
             ViewFactory viewFactory = new WindowFactory();
             RestService service = new RestService();
-            CallbackDispatcher callbackDispatcher = new GuiCallbackDispatcher();
+            Dispatcher dispatcher = new GuiDispatcher();
+            CallbackDispatcher callbackDispatcher = new CallbackDispatcher(dispatcher);
             PresenterFactory factory = new PresenterFactory(
                     viewFactory,
                     service,
@@ -81,7 +84,7 @@ class Program {
                     service,
                     callbackDispatcher,
                     ChatsRepository::new,
-                    () -> new WebSocketMessagingClient(Platform::runLater, new ChatsUpdater(service, callbackDispatcher))
+                    () -> new WebSocketMessagingClient(dispatcher, new ChatsUpdater(service, callbackDispatcher))
             );
             factory.openAuthView();
             factory.openAuthView();
