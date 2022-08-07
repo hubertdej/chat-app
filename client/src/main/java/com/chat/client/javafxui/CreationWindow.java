@@ -44,8 +44,6 @@ public class CreationWindow implements CreationView {
             }
         });
 
-        createButton.setDisable(true);
-
         // TODO: Add a TextField for a chat name.
         createButton.setOnMouseClicked(event -> presenter.createChat("[chat name]"));
 

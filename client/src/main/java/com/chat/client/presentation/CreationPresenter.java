@@ -68,6 +68,7 @@ public class CreationPresenter {
     }
 
     public void open() {
+        view.disableCreation();
         view.open();
 
         callbackDispatcher.addCallback(
