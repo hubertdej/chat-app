@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class Chat {
     public interface Observer {
-        void notifyUpdate(ChatMessage observer);
+        void notifyUpdate(ChatMessage message);
     }
 
     private final List<Observer> observers = new ArrayList<>();
