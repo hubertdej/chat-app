@@ -35,10 +35,4 @@ public class WindowFactory implements ViewFactory {
     public ChatView createChatView() {
         return loadFXML(ChatView.class);
     }
-
-    @Override
-    public ConversationWindow createConversationView() { return new ConversationWindow(); }
-
-    @Override
-    public LoggedWindow createLoggedView() { return new LoggedWindow(); }
 }

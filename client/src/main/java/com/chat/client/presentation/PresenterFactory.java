@@ -5,7 +5,7 @@ import com.chat.client.domain.application.*;
 
 import java.util.function.Supplier;
 
-public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, ChatlistPresenter.Factory {
+public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresenter.Factory {
     private final ViewFactory viewFactory;
     private final AuthService authService;
     private final UsersService usersService;
@@ -62,22 +62,6 @@ public class PresenterFactory implements OpeningFactory, AuthPresenter.Factory, 
         var view = viewFactory.createChatView();
         var presenter = new ChatPresenter(view, account, chat, client);
         view.initialize(presenter);
-        presenter.open();
-    }
-
-    @Override
-    public void openLoggedView(Preview preview) {
-        LoggedView loggedView = viewFactory.createLoggedView();
-        PreviewPresenter presenter = new PreviewPresenter(preview, loggedView, this);
-        loggedView.initialize(presenter);
-        presenter.open();
-    }
-
-    @Override
-    public void openConversationView(Conversation conversation) {
-        ConversationView conversationView = viewFactory.createConversationView();
-        ConversationPresenter presenter = new ConversationPresenter(conversation, conversationView, this);
-        conversationView.initialize(presenter);
         presenter.open();
     }
 }
