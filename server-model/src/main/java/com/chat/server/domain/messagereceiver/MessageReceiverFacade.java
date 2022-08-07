@@ -25,7 +25,7 @@ public class MessageReceiverFacade {
         this.conversationStorageFacade = conversationStorageFacade;
         this.listUserConversationsFacade = listUserConversationsFacade;
     }
-    
+
     public void receiveRequest(ConversationsRequester requester, ListConversationsRequestDto dto) throws MessagingSessionException {
         List<ConversationDto> conversationDtoList = listUserConversationsFacade.listConversations(dto);
         ListConversationsResponse listConversationsResponse = new ListConversationsResponse(conversationDtoList);

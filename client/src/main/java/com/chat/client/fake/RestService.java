@@ -112,4 +112,9 @@ public class RestService implements AuthService, UsersService, ChatsService {
                 }
         );
     }
+
+    @Override
+    public CompletableFuture<List<String>> getMembersByUUID(UUID chatUUID) { //TODO IMPLEMENT
+        return null;
+    }
 }

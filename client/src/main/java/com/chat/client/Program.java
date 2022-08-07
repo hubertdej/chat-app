@@ -13,6 +13,7 @@ import com.chat.client.local.LocalMessageClient;
 import com.chat.client.local.LocalUsersService;
 import com.chat.client.presentation.PresenterFactory;
 import com.chat.client.presentation.ViewFactory;
+import com.chat.client.utils.ChatsUpdater;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
@@ -23,8 +24,6 @@ import com.chat.server.domain.registration.InMemoryCredentialsRepository;
 import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import javafx.application.Platform;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 class Program {
     public static void main(String[] args) {
@@ -55,14 +54,15 @@ class Program {
                     conversationStorage,
                     userConversations
             );
+            var chatsService = new LocalChatsService(conversationStorage);
             PresenterFactory factory = new PresenterFactory(
                     viewFactory,
                     new LocalAuthService(authentication, registration),
                     new LocalUsersService(registration),
-                    new LocalChatsService(conversationStorage),
+                    chatsService,
                     callbackDispatcher,
                     ChatsRepository::new,
-                    () -> new LocalMessageClient(sessionStorage, messageReceiver)
+                    () -> new LocalMessageClient(sessionStorage, messageReceiver, new ChatsUpdater(chatsService, callbackDispatcher))
             );
             factory.openAuthView();
             factory.openAuthView();
@@ -81,7 +81,7 @@ class Program {
                     service,
                     callbackDispatcher,
                     ChatsRepository::new,
-                    () -> new WebSocketMessagingClient(Platform::runLater)
+                    () -> new WebSocketMessagingClient(Platform::runLater, new ChatsUpdater(service, callbackDispatcher))
             );
             factory.openAuthView();
             factory.openAuthView();

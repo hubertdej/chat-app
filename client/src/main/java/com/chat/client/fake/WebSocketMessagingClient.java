@@ -3,6 +3,8 @@ package com.chat.client.fake;
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.Dispatcher;
 import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.utils.ChatsUpdater;
+import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.java_websocket.client.WebSocketClient;
@@ -17,6 +19,7 @@ public class WebSocketMessagingClient implements MessagingClient {
     private static final String ADDRESS = "ws://localhost:8080/chat";
 
     private final Dispatcher dispatcher;
+    private ChatsUpdater updater;
     private Account account;
     private ChatsRepository chatsRepository;
 
@@ -43,12 +46,10 @@ public class WebSocketMessagingClient implements MessagingClient {
             }
 
             dispatcher.dispatch(() -> {
-                chatsRepository.getByUUID(payload.to()).orElseGet(() -> {
-                    // TODO: Make a request for chat details.
-                    var chat = new Chat(payload.to(), "[chat name]", List.of());
-                    chatsRepository.addChat(chat);
-                    return chat;
-                }).addMessage(new ChatMessage(payload.content(), new User(payload.from())));
+                updater.handleMessage(
+                        payload.to(),
+                        chatsRepository,
+                        new ChatMessage(payload.content(), new User(payload.from())));
             });
         }
 
@@ -61,8 +62,9 @@ public class WebSocketMessagingClient implements MessagingClient {
         }
     };
 
-    public WebSocketMessagingClient(Dispatcher dispatcher) {
+    public WebSocketMessagingClient(Dispatcher dispatcher, ChatsUpdater updater) {
         this.dispatcher = dispatcher;
+        this.updater = updater;
     }
 
     @Override

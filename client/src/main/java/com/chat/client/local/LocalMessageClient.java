@@ -2,28 +2,29 @@ package com.chat.client.local;
 
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.utils.ChatsUpdater;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 
 public class LocalMessageClient implements MessagingClient {
     private final SessionStorageFacade sessionStorage;
     private final MessageReceiverFacade messageReceiver;
     private Account account;
     private ChatsRepository repository;
+    private ChatsUpdater updater;
 
     public LocalMessageClient(
             SessionStorageFacade sessionStorageFacade,
-            MessageReceiverFacade messageReceiverFacade) {
+            MessageReceiverFacade messageReceiverFacade, ChatsUpdater updater) {
         this.sessionStorage = sessionStorageFacade;
         this.messageReceiver = messageReceiverFacade;
+        this.updater = updater;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class LocalMessageClient implements MessagingClient {
     public void initialize(Account account, ChatsRepository chatsRepository) {
         this.account = account;
         this.repository = chatsRepository;
-        sessionStorage.addObserver(account.getUsername(), this::handleMessage);
+        sessionStorage.addObserver(account.getUsername(), handler);
 
         try {
             messageReceiver.receiveRequest(requester, new ListConversationsRequestDto(account.getUsername(), new HashMap<>()));
@@ -57,17 +58,12 @@ public class LocalMessageClient implements MessagingClient {
 
     @Override
     public void close() {
-        sessionStorage.removeObserver(account.getUsername(), this::handleMessage);
+        sessionStorage.removeObserver(account.getUsername(), handler);
     }
 
-    private void handleMessage(MessageDto dto) {
-        repository.getByUUID(dto.getTo()).orElseGet(() -> {
-            // TODO: Make a request for chat details.
-            var chat = new Chat(dto.getTo(), "[new chat]", List.of());
-            repository.addChat(chat);
-            return chat;
-        }).addMessage(new ChatMessage(dto.getContent(), new User(dto.getFrom())));
-    }
+    private final SessionStorageFacade.Observer handler = dto -> {
+        updater.handleMessage(dto.getTo(), repository, new ChatMessage(dto.getContent(), new User(dto.getFrom())));
+    };
 
     private ConversationsRequester requester = response -> { //TODO inject?
             var chats = response.conversations()
