@@ -2,8 +2,8 @@ package com.chat.client;
 
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.CallbackDispatcher;
-import com.chat.client.fake.RestService;
-import com.chat.client.fake.WebSocketMessagingClient;
+import com.chat.client.network.RestService;
+import com.chat.client.network.WebSocketMessagingClient;
 import com.chat.client.javafxui.Gui;
 import com.chat.client.javafxui.GuiCallbackDispatcher;
 import com.chat.client.javafxui.WindowFactory;

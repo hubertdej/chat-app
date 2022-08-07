@@ -1,4 +1,4 @@
-package com.chat.client.fake;
+package com.chat.client.network;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

@@ -1,17 +1,15 @@
-package com.chat.client.fake;
+package com.chat.client.network;
 
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.Dispatcher;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.utils.ChatsUpdater;
-import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 // TODO: Make this implementation safer (reconnecting etc.)

@@ -1,4 +1,4 @@
-package com.chat.client.fake;
+package com.chat.client.network;
 
 import com.chat.client.domain.Account;
 import com.chat.client.domain.Chat;
