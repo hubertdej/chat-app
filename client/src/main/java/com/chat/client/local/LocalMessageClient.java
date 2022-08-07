@@ -49,11 +49,12 @@ public class LocalMessageClient implements MessagingClient {
         this.repository = chatsRepository;
         sessionStorage.addObserver(account.getUsername(), handler);
 
-        try {
-            messageReceiver.receiveRequest(requester, new ListConversationsRequestDto(account.getUsername(), new HashMap<>()));
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+        // TODO: Re-implement once this functionality is properly supported on the server side.
+        // try {
+        //     messageReceiver.receiveRequest(requester, new ListConversationsRequestDto(account.getUsername(), new HashMap<>()));
+        // } catch (Exception e) {
+        //     throw new RuntimeException();
+        // }
     }
 
     @Override
