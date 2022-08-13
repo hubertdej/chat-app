@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
+import java.util.UUID;
 
 @AutoConfigureMockMvc
 abstract public class IntegrationTest {
@@ -44,6 +45,14 @@ abstract public class IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.TEXT_PLAIN)
                 .content(String.format("{\"username\":\"%s\",\"password\":\"%s\"}", username, password));
+        return mockMvc.perform(request);
+    }
+
+    public ResultActions getConversation(String username, String password, UUID conversationId) throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders.post("/get-conversation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.TEXT_PLAIN)
+                .content(String.format("{\"username\":\"%s\",\"password\":\"%s\", \"conversationId\":\"%s\"}", username, password, conversationId));
         return mockMvc.perform(request);
     }
 }

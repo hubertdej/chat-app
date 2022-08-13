@@ -2,19 +2,18 @@ package com.chat.server.infrastructure.rest;
 
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.List;
 import java.util.UUID;
 
 import static com.chat.server.domain.conversationstorage.ConversationStorageTest.assertListEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest({ConversationController.class, RegistrationController.class})
+@SpringBootTest
 public class ConversationControllerIntegrationTest extends IntegrationTest{
     @Autowired
     private ConversationStorageFacade conversationStorageFacade;
@@ -42,5 +41,24 @@ public class ConversationControllerIntegrationTest extends IntegrationTest{
         assertEquals(name, conversationDto.getName());
     }
 
+    @Test
+    void getConversationTest() throws Exception {
+        //given: john is registered
+        registerUser(john, password);
+        //given: john has a conversation with barry
+        String uuid = addConversation(name, members).andReturn().getResponse().getContentAsString();
+        UUID conversationID = UUID.fromString(uuid);
 
+        //when: user asks for john and barry's conversation
+        String response = getConversation(john, password, conversationID)
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        ConversationDto conversationDto = mapper.readValue(response, ConversationDto.class);
+
+        //then: module returns john and barry's conversation
+        assertEquals(conversationID, conversationDto.getConversationId());
+        assertListEquals(members, conversationDto.getMembers());
+        assertEquals(name, conversationDto.getName());
+    }
 }
