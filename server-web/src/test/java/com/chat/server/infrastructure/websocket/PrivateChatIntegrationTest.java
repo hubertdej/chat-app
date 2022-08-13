@@ -112,7 +112,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            Thread.sleep(2000);
+            johnMessages.poll(5, TimeUnit.SECONDS);
             try(WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
                 MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
                 Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
