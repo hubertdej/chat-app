@@ -8,21 +8,16 @@ import com.chat.server.domain.listconversationids.dto.ConversationIdRemovedEvent
 import com.chat.server.domain.listuserconversations.dto.ConversationAddedEvent;
 import com.chat.server.domain.listuserconversations.dto.ConversationRemovedEvent;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConversationStorageFacade {
-    ConversationRepository conversationRepository;
+    private final ConversationRepository conversationRepository;
 
-    List<IdObserver> idObservers = new ArrayList();
-    List<ConversationObserver> convObservers = new ArrayList<>();
+    private final List<IdObserver> idObservers = new ArrayList();
+    private final List<ConversationObserver> convObservers = new ArrayList<>();
 
     public ConversationStorageFacade(ConversationRepository conversationRepository) {
         this.conversationRepository = conversationRepository;
