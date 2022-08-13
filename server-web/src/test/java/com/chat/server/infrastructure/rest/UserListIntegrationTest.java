@@ -2,6 +2,7 @@ package com.chat.server.infrastructure.rest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
@@ -9,7 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@WebMvcTest({UserListController.class, RegistrationController.class})
+@SpringBootTest
 public class UserListIntegrationTest extends IntegrationTest{
 
     ResultActions listUsers() throws Exception {

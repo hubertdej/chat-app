@@ -4,13 +4,14 @@ import com.chat.server.domain.registration.RegistrationFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RegistrationController.class)
+@SpringBootTest
 public class RegistrationControllerIntegrationTest extends IntegrationTest {
     @Autowired
     private RegistrationFacade registrationFacade;
