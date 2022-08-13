@@ -56,7 +56,7 @@ public class ListUserConversationsFacade {
             int m = (lo + hi) / 2;
             Timestamp curTimestamp = messageDtos.get(m).getTimestamp();
             if(curTimestamp.compareTo(timestamp) == 0){
-                return m+1 < n-1 ? messageDtos.subList(m+1, n-1) : List.of();
+                return m+1 <= n-1 ? messageDtos.subList(m+1, n) : List.of();
             }
             else if(curTimestamp.compareTo(timestamp) < 0){
                 lo = m+1;
