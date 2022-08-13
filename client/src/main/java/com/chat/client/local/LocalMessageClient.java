@@ -61,7 +61,7 @@ public class LocalMessageClient implements MessagingClient {
     }
 
     private final SessionStorageFacade.Observer handler = dtos ->
-            dtos.forEach(dto -> updater.handleMessage(dto.getTo(), repository, new ChatMessage(dto.getContent(), new User(dto.getFrom()))));
+            dtos.forEach(dto -> updater.handleMessage(dto.to(), repository, new ChatMessage(dto.content(), new User(dto.from()))));
 
     private final ConversationsRequester requester = response -> { //TODO inject?
             var chats = response.conversations()

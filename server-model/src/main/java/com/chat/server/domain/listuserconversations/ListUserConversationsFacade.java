@@ -25,11 +25,11 @@ public class ListUserConversationsFacade {
     }
 
     public List<ConversationDto> listConversations(ListConversationsRequestDto listConversationsRequestDto) {
-        List<ConversationDto> conversationDtos = listConversations(listConversationsRequestDto.getFrom());
-        if(listConversationsRequestDto.getLastMessage().isEmpty())
+        List<ConversationDto> conversationDtos = listConversations(listConversationsRequestDto.from());
+        if(listConversationsRequestDto.lastMessage().isEmpty())
             return conversationDtos;
         List<ConversationDto> conversationDtosFromTimestamp = new ArrayList<>();
-        Map<UUID, Timestamp> lastMessages = listConversationsRequestDto.getLastMessage();
+        Map<UUID, Timestamp> lastMessages = listConversationsRequestDto.lastMessage();
         for(ConversationDto conversationDto : conversationDtos){
             if(lastMessages.containsKey(conversationDto.getConversationId())){
                 List<MessageDto> messageDtos = conversationDto.getMessages();
@@ -54,7 +54,7 @@ public class ListUserConversationsFacade {
         int ans = -1;
         while(lo < hi){
             int m = (lo + hi) / 2;
-            Timestamp curTimestamp = messageDtos.get(m).getTimestamp();
+            Timestamp curTimestamp = messageDtos.get(m).timestamp();
             if(curTimestamp.compareTo(timestamp) == 0){
                 return m+1 <= n-1 ? messageDtos.subList(m+1, n) : List.of();
             }

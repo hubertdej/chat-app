@@ -31,7 +31,7 @@ public class SessionStorageFacade {
     }
 
     public void propagate(MessageDto messageDto) {
-        Optional<ConversationDto> conversationDtoOptional = conversationStorageFacade.get(messageDto.getTo());
+        Optional<ConversationDto> conversationDtoOptional = conversationStorageFacade.get(messageDto.to());
         if (conversationDtoOptional.isEmpty())
             throw new RuntimeException(new NoSuchConversationException()); // imo to powinno rozszerzac RuntimeException
 

@@ -38,7 +38,7 @@ public class MessageReceiverFacade {
     }
 
     private void persist(MessageDto messageDto) throws NoSuchConversationException {
-        UUID conversationId = messageDto.getTo();
+        UUID conversationId = messageDto.to();
         conversationStorageFacade.add(conversationId, messageDto);
     }
 }

@@ -34,7 +34,7 @@ public class InMemoryUserConversationRepository implements UserConversationRepos
 
     private void addMessage(MessageDto messageDto, String member){
         Map<UUID, ConversationDto> conversationDtoMap = storage.getOrDefault(member, new HashMap<>());
-        ConversationDto conversationDto = conversationDtoMap.get(messageDto.getTo());
+        ConversationDto conversationDto = conversationDtoMap.get(messageDto.to());
         if(conversationDto != null) {
             List<MessageDto> messageDtos = new ArrayList<>(conversationDto.getMessages());
             messageDtos.add(messageDto);
@@ -43,7 +43,7 @@ public class InMemoryUserConversationRepository implements UserConversationRepos
                     conversationDto.getName(),
                     conversationDto.getMembers(),
                     messageDtos);
-            conversationDtoMap.put(messageDto.getTo(), newConversationDto);
+            conversationDtoMap.put(messageDto.to(), newConversationDto);
             storage.put(member, conversationDtoMap);
         }
         else

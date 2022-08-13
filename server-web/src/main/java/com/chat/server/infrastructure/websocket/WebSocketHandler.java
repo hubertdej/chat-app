@@ -6,7 +6,6 @@ import com.chat.server.domain.conversationstorage.dto.NoSuchConversationExceptio
 import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
-import com.chat.server.domain.messagereceiver.dto.FromMessageDto;
 import com.chat.server.domain.sessionstorage.MessagingSessionException;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.infrastructure.websocket.dto.MissingHeaderException;
@@ -52,12 +51,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(@NotNull WebSocketSession session, TextMessage textMessage) throws IOException, NoSuchConversationException, MessagingSessionException {
         System.out.println("server received: " + textMessage.getPayload());
-        FromMessageDto webSocketMessageDto = objectMapper.readValue(textMessage.getPayload(), FromMessageDto.class);
-        if (webSocketMessageDto instanceof MessageDto messageDto) {
-            messageReceiverFacade.receiveMessage(messageDto);
-        } else if (webSocketMessageDto instanceof ListConversationsRequestDto requestDto) {
-            messageReceiverFacade.receiveRequest(new WebConversationsRequester(session, objectMapper), requestDto);
-        }
+        MessageDto messageDto = objectMapper.readValue(textMessage.getPayload(), MessageDto.class);
+        messageReceiverFacade.receiveMessage(messageDto);
     }
 
     @Override

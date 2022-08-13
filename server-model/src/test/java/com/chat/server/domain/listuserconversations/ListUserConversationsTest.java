@@ -45,6 +45,6 @@ public class ListUserConversationsTest {
 
         //then: only message3 is returned
         Assertions.assertEquals(1, received.size());
-        Assertions.assertEquals(message3.getContent(), received.get(0).getContent());
+        Assertions.assertEquals(message3.content(), received.get(0).content());
     }
 }
