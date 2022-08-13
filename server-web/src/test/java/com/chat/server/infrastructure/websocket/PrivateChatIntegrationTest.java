@@ -2,16 +2,12 @@ package com.chat.server.infrastructure.websocket;
 
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.infrastructure.rest.IntegrationTest;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +50,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private WebSocketSession openSession(String username, String password, BlockingQueue<WebsocketMessageResponse> messages) throws ExecutionException, InterruptedException {
+    private WebSocketSession openSession(String username, String password, BlockingQueue<MessageDto> messages) throws ExecutionException, InterruptedException {
         StandardWebSocketClient client = new StandardWebSocketClient();
         URI uri =URI.create("ws://localhost:" + port + "/chat");
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
@@ -71,15 +67,15 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         UUID conversationId = UUID.fromString(uuid);
         MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
         ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto(john, Map.of());
-        BlockingQueue<WebsocketMessageResponse> johnMessages = new LinkedBlockingQueue<>();
-        BlockingQueue<WebsocketMessageResponse> barryMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
             WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(listConversationsRequestDto)));
 
-            WebsocketMessageResponse received = barryMessages.poll(5, TimeUnit.SECONDS);
+            MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
             barryMessages.poll(5, TimeUnit.SECONDS);
             Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
         }
@@ -94,12 +90,12 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
         UUID conversationId = UUID.fromString(uuid);
         MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
-        BlockingQueue<WebsocketMessageResponse> johnMessages = new LinkedBlockingQueue<>();
-        BlockingQueue<WebsocketMessageResponse> barryMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
             WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            WebsocketMessageResponse received = barryMessages.poll(5, TimeUnit.SECONDS);
+            MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
             Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
         }
     }
@@ -109,7 +105,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         String john = "john";
         String johnPass = "johnpass";
         registerUser(john, johnPass);
-        BlockingQueue<WebsocketMessageResponse> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
         ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto("john", null);
         System.out.println(objectMapper.writeValueAsString(listConversationsRequestDto));
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
@@ -118,9 +114,9 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
     }
 
     private class ClientSocketHandler extends TextWebSocketHandler {
-        BlockingQueue<WebsocketMessageResponse> messages;
+        BlockingQueue<MessageDto> messages;
 
-        public ClientSocketHandler(BlockingQueue<WebsocketMessageResponse> messages) {
+        public ClientSocketHandler(BlockingQueue<MessageDto> messages) {
             this.messages = messages;
         }
 
@@ -138,68 +134,9 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
 
         @Override
         protected void handleTextMessage(@NotNull WebSocketSession session, TextMessage message) throws Exception {
-            WebsocketResponse websocketResponse = objectMapper.readValue(message.getPayload(), WebsocketResponse.class);
-            System.out.println(message.getPayload());
-            if(websocketResponse instanceof WebsocketMessageResponse websocketMessageResponse){
-                messages.add(websocketMessageResponse);
-                System.out.println(websocketMessageResponse);
-            }
-            else if(websocketResponse instanceof WebsocketListConversationsResponse websocketListConversationsResponse){
-                System.out.println(websocketListConversationsResponse);
-            }
-
-//            messages.add(messageDto);
-//            System.out.println(messageDto);
-        }
-    }
-
-    @JsonTypeInfo(use= JsonTypeInfo.Id.DEDUCTION)
-    @JsonSubTypes({@JsonSubTypes.Type(WebsocketListConversationsResponse.class), @JsonSubTypes.Type(WebsocketMessageResponse.class)})
-    private static class WebsocketResponse {
-
-    }
-
-    private static class WebsocketListConversationsResponse extends WebsocketResponse{
-        private final List<ConversationDto> conversationDtoList;
-
-        @JsonCreator
-        public WebsocketListConversationsResponse(
-                @JsonProperty("conversations") List<ConversationDto> conversationDtoList) {
-            this.conversationDtoList = conversationDtoList;
-        }
-
-        public List<ConversationDto> getConversationDtoList() {
-            return conversationDtoList;
-        }
-    }
-
-    private static class WebsocketMessageResponse extends WebsocketResponse {
-        private final UUID to;
-        private final String content;
-        private final Timestamp timestamp;
-
-        @JsonCreator
-        public WebsocketMessageResponse(
-                @JsonProperty("from") String from,
-                @JsonProperty("to") UUID to,
-                @JsonProperty("content") String content,
-                @JsonProperty("timestamp") Timestamp timestamp) {
-            super();
-            this.to = to;
-            this.content = content;
-            this.timestamp = timestamp;
-        }
-
-        public UUID getTo() {
-            return to;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public Timestamp getTimestamp() {
-            return timestamp;
+            List<MessageDto> messageDtos = objectMapper.readValue(message.getPayload(), new TypeReference<>(){});
+            messages.addAll(messageDtos);
+            System.out.println("Client received: \n" + message.getPayload());
         }
     }
 }

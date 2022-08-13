@@ -18,7 +18,7 @@ public class SessionStorageFacade {
     }
 
     public interface Observer {
-        void notifyNewMessage(MessageDto dto);
+        void notifyNewMessage(List<MessageDto> dto);
     }
 
     private final Map<String, List<Observer>> observers = new ConcurrentHashMap<>();
@@ -38,7 +38,7 @@ public class SessionStorageFacade {
         List<String> members = conversationDtoOptional.get().getMembers();
         for (String member : members) {
             for (var observer : observers.getOrDefault(member, List.of())) {
-                observer.notifyNewMessage(messageDto);
+                observer.notifyNewMessage(List.of(messageDto));
 //                System.out.println("propagating message to " + member);
             }
         }
