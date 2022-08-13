@@ -1,4 +1,4 @@
-package com.chat.server.domain.listconversationids.dto;
+package com.chat.server.domain.listuserconversations.dto;
 
 import com.chat.server.domain.messagereceiver.dto.FromMessageDto;
 import com.fasterxml.jackson.annotation.JsonCreator;

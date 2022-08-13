@@ -3,7 +3,7 @@ package com.chat.server.infrastructure.websocket;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
+import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.infrastructure.rest.IntegrationTest;
@@ -80,8 +80,6 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
             barryMessages.poll(5, TimeUnit.SECONDS);
             Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
         }
-
-
     }
 
     @Test

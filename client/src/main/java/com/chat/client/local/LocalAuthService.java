@@ -1,20 +1,13 @@
 package com.chat.client.local;
 
 import com.chat.client.domain.Account;
-import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.AuthService;
 import com.chat.server.domain.authentication.AuthenticationFacade;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
-import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
-import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.registration.dto.UserDto;
 import com.chat.server.domain.registration.dto.UsernameTakenException;
-import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 
-import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 public class LocalAuthService implements AuthService {

@@ -4,8 +4,6 @@ import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
-import com.chat.server.domain.listconversationids.dto.ConversationIdAddedEvent;
-import com.chat.server.domain.listconversationids.dto.ConversationIdRemovedEvent;
 import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
 
 import java.util.ArrayList;
@@ -16,31 +14,19 @@ import java.util.UUID;
 public class ConversationStorageFacade {
     private final ConversationRepository conversationRepository;
 
-    private final List<IdObserver> idObservers = new ArrayList();
     private final List<ConversationObserver> convObservers = new ArrayList<>();
 
     public ConversationStorageFacade(ConversationRepository conversationRepository) {
         this.conversationRepository = conversationRepository;
     }
 
-    public void addIdObserver(IdObserver observer) {
-        idObservers.add(observer);
-    }
-
     public void addConversationObserver(ConversationObserver observer) {
         convObservers.add(observer);
     }
 
-    public void removeIdObserver(IdObserver observer) {
-        idObservers.remove(observer);
-    }
 
     public void removeConversationObserver(ConversationObserver observer) {
         convObservers.remove(observer);
-    }
-    public interface IdObserver {
-        void notifyAdd(ConversationIdAddedEvent event);
-        void notifyRemove(ConversationIdRemovedEvent event);
     }
     public interface ConversationObserver {
         void notifyUpdate(ConversationUpdatedEvent event);
@@ -54,7 +40,6 @@ public class ConversationStorageFacade {
     public UUID add(String name, List<String> members){
         Conversation conversation = new Conversation(UUID.randomUUID(), name, members, new ArrayList<>());
         conversationRepository.save(conversation);
-        publishConversationIdAddedEvent(conversation);
         publishConversationUpdatedEvent(conversation, null);
         return conversation.conversationId();
     }
@@ -68,24 +53,13 @@ public class ConversationStorageFacade {
     public void remove(UUID conversationId){
         var removedConversation = conversationRepository.remove(conversationId);
         if (removedConversation != null) {
-            var idRemovedEvent = new ConversationIdRemovedEvent(conversationId, removedConversation.members());
             var conversationRemovedEvent = new ConversationRemovedEvent(conversationId, removedConversation.members());
-
-            for (IdObserver o : idObservers) o.notifyRemove(idRemovedEvent);
             for (ConversationObserver o : convObservers) o.notifyRemove(conversationRemovedEvent);
         }
     }
 
     public Optional<ConversationDto> get(UUID conversationId){
         return conversationRepository.get(conversationId).map(Conversation::dto);
-    }
-
-    private void publishConversationIdAddedEvent(Conversation conversation) {
-        ConversationIdAddedEvent event = new ConversationIdAddedEvent(
-                conversation.conversationId(),
-                conversation.name(),
-                conversation.members());
-        for (ConversationStorageFacade.IdObserver o : idObservers) o.notifyAdd(event);
     }
 
     private void publishConversationUpdatedEvent(UUID conversationId, MessageDto newMessageDto) throws NoSuchConversationException{

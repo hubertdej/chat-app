@@ -4,13 +4,11 @@ import com.chat.client.domain.*;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.utils.ChatsUpdater;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 
 public class LocalMessageClient implements MessagingClient {
     private final SessionStorageFacade sessionStorage;

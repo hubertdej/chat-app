@@ -4,7 +4,7 @@ import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
+import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.MessagingSessionException;

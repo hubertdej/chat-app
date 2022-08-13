@@ -1,7 +1,7 @@
 package com.chat.server.domain.messagereceiver.dto;
 
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
+import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
