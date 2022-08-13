@@ -18,6 +18,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -29,14 +30,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final AuthenticationFacade authenticationFacade;
     private final SessionStorageFacade sessionStorageFacade;
 
+    private final Map<WebSocketSession, SessionStorageFacade.Observer> observers = new HashMap<>();
 
-    private final Map<WebSocketSession, SessionStorageFacade.Observer> observers;
-
-    public WebSocketHandler(MessageReceiverFacade messageReceiverFacade, AuthenticationFacade authenticationFacade, SessionStorageFacade sessionStorageFacade, Map<WebSocketSession, SessionStorageFacade.Observer> observers) {
+    public WebSocketHandler(MessageReceiverFacade messageReceiverFacade, AuthenticationFacade authenticationFacade, SessionStorageFacade sessionStorageFacade) {
         this.messageReceiverFacade = messageReceiverFacade;
         this.authenticationFacade = authenticationFacade;
         this.sessionStorageFacade = sessionStorageFacade;
-        this.observers = observers;
     }
 
     @Override
@@ -56,7 +55,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String password = getPasswordHeader(session);
         if(authenticationFacade.authenticate(username, password)){
             System.out.printf("user %s successfully authenticated%n", username);
-            var proxy = new ProxyMessanger(session, objectMapper);
+            var proxy = new ProxyMessenger(session, objectMapper);
             observers.put(session, proxy);
             sessionStorageFacade.addObserver(username, proxy);
         } else {
