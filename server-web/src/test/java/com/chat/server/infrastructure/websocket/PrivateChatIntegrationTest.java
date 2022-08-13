@@ -96,19 +96,6 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         }
     }
 
-    @Test
-    void testListConversationsRequestDeserialization() throws Exception {
-        String john = "john";
-        String johnPass = "johnpass";
-        registerUser(john, johnPass);
-        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
-        ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto("john", null);
-        System.out.println(objectMapper.writeValueAsString(listConversationsRequestDto));
-        try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
-            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(listConversationsRequestDto)));
-        }
-    }
-
     private class ClientSocketHandler extends TextWebSocketHandler {
         BlockingQueue<MessageDto> messages;
 
