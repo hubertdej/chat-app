@@ -61,28 +61,6 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void testWebsocketListUserConversations() throws Exception {
-        registerUser(john, johnPass);
-        registerUser(barry, barryPass);
-        String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
-        UUID conversationId = UUID.fromString(uuid);
-        MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
-        ListConversationsRequestDto listConversationsRequestDto = new ListConversationsRequestDto(john, Map.of());
-        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
-        BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
-        try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
-            WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
-            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
-            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(listConversationsRequestDto)));
-
-            MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
-            barryMessages.poll(5, TimeUnit.SECONDS);
-            Assertions.assertEquals(messageToBarry.content(), received.content());
-        }
-    }
-
-    @Test
     public void testMessagePropagation() throws Exception {
         registerUser(john, johnPass);
         registerUser(barry, barryPass);
