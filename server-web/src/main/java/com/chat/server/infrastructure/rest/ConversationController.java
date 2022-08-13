@@ -2,9 +2,11 @@ package com.chat.server.infrastructure.rest;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
+import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.listconversationids.ListConversationIdsFacade;
 import com.chat.server.domain.listconversationids.dto.ConversationPreviewDto;
 import com.chat.server.infrastructure.rest.dto.AddConversationRequestDto;
+import com.chat.server.infrastructure.rest.dto.GetConversationRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -52,6 +55,23 @@ public class ConversationController {
         List<ConversationPreviewDto> previews = listConversationIdsFacade.listConversationPreviews(user.getUsername());
         try{
             String marshalled = mapper.writeValueAsString(previews);
+            return ResponseEntity.ok(marshalled);
+        } catch(JsonProcessingException e){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @RequestMapping(value = "/get-conversation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getConversation(@RequestBody GetConversationRequestDto getConversationRequestDto){
+        if(!authenticationFacade.authenticate(getConversationRequestDto.username(), getConversationRequestDto.password()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Optional<ConversationDto> conversationDtoOptional = conversationStorageFacade.get(getConversationRequestDto.conversationId());
+        if(conversationDtoOptional.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        ConversationDto conversationDto = conversationDtoOptional.get();
+        try{
+            String marshalled = mapper.writeValueAsString(conversationDto);
             return ResponseEntity.ok(marshalled);
         } catch(JsonProcessingException e){
             return ResponseEntity.internalServerError().build();

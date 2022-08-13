@@ -42,25 +42,5 @@ public class ConversationControllerIntegrationTest extends IntegrationTest{
         assertEquals(name, conversationDto.getName());
     }
 
-    @Test
-    void previewsAreListedForRegisteredUser() throws Exception {
-        //given: john is registered
-        registerUser(john, password);
-        //given: john has a conversation with barry
-        conversationStorageFacade.add(name, members);
 
-        //when: user asks for previews by post request
-        String response = listConversationPreviews(john, password)
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        List<ConversationPreviewDto> previews = mapper.readValue(response, new TypeReference<>() {});
-
-        //then: module returns john and barry's conversation preview
-        assertEquals(1, previews.size());
-        ConversationPreviewDto preview = previews.get(0);
-        assertEquals(name, preview.name());
-        assertListEquals(members, preview.members());
-        assertNull(preview.messageDto());
-    }
 }
