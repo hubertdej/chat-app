@@ -53,29 +53,4 @@ public class ConversationStorageTest {
         //then: john and barry's conversation is no longer in module
         assertTrue(conversationStorageFacade.get(conversationId).isEmpty());
     }
-
-    @Test
-    void addingConversationPublishesEvent(){
-        //when: john and barry conversation is added
-        List<String> members = Arrays.asList("john", "barry");
-        UUID conversationId = conversationStorageFacade.add(members);
-
-        //then: ConversationAddedEvent is published
-        ConversationIdAddedEvent event = new ConversationIdAddedEvent(conversationId, "john,barry", members);
-        verify(applicationEventPublisher, times(1)).publishEvent(event);
-    }
-
-    @Test
-    void removingConversationPublishesEvent(){
-        //given: john and barry conversation is in repository
-        List<String> members = Arrays.asList("john", "barry");
-        UUID conversationId = conversationStorageFacade.add(members);
-
-        //when: john and barry conversation is removed
-        conversationStorageFacade.remove(conversationId);
-
-        //then: ConversationRemovedEvent is published
-        ConversationIdRemovedEvent event = new ConversationIdRemovedEvent(conversationId, members);
-        verify(applicationEventPublisher, times(1)).publishEvent(event);
-    }
 }
