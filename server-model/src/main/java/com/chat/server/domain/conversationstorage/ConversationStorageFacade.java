@@ -1,12 +1,12 @@
 package com.chat.server.domain.conversationstorage;
 
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
+import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
 import com.chat.server.domain.listconversationids.dto.ConversationIdAddedEvent;
 import com.chat.server.domain.listconversationids.dto.ConversationIdRemovedEvent;
-import com.chat.server.domain.listuserconversations.dto.ConversationAddedEvent;
-import com.chat.server.domain.listuserconversations.dto.ConversationRemovedEvent;
+import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class ConversationStorageFacade {
         void notifyRemove(ConversationIdRemovedEvent event);
     }
     public interface ConversationObserver {
-        void notifyAdd(ConversationAddedEvent event);
+        void notifyUpdate(ConversationUpdatedEvent event);
         void notifyRemove(ConversationRemovedEvent event);
     }
 
@@ -55,14 +55,14 @@ public class ConversationStorageFacade {
         Conversation conversation = new Conversation(UUID.randomUUID(), name, members, new ArrayList<>());
         conversationRepository.save(conversation);
         publishConversationIdAddedEvent(conversation);
-        publishConversationAddedEvent(conversation);
-
+        publishConversationUpdatedEvent(conversation, null);
         return conversation.conversationId();
     }
 
     public void add(UUID conversationId, MessageDto messageDto) throws NoSuchConversationException {
         Message message = new MessageCreator().create(messageDto);
         conversationRepository.addMessage(conversationId, message);
+        publishConversationUpdatedEvent(conversationId, messageDto);
     }
 
     public void remove(UUID conversationId){
@@ -88,12 +88,19 @@ public class ConversationStorageFacade {
         for (ConversationStorageFacade.IdObserver o : idObservers) o.notifyAdd(event);
     }
 
-    private void publishConversationAddedEvent(Conversation conversation) {
-        ConversationAddedEvent event = new ConversationAddedEvent(
+    private void publishConversationUpdatedEvent(UUID conversationId, MessageDto newMessageDto) throws NoSuchConversationException{
+        Optional<Conversation> conversationOptional = conversationRepository.get(conversationId);
+        if(conversationOptional.isEmpty())
+            throw new NoSuchConversationException();
+        publishConversationUpdatedEvent(conversationOptional.get(), newMessageDto);
+    }
+    private void publishConversationUpdatedEvent(Conversation conversation, MessageDto newMessageDto) {
+        ConversationUpdatedEvent conversationUpdatedEvent = new ConversationUpdatedEvent(
                 conversation.conversationId(),
                 conversation.name(),
                 conversation.members(),
-                conversation.messages().stream().map(Message::dto).toList());
-        for (ConversationStorageFacade.ConversationObserver o : convObservers) o.notifyAdd(event);
+                newMessageDto
+        );
+        for (ConversationStorageFacade.ConversationObserver o : convObservers) o.notifyUpdate(conversationUpdatedEvent);
     }
 }

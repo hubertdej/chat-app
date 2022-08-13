@@ -1,18 +1,14 @@
 package com.chat.server.domain.listuserconversations;
 
-import com.chat.server.domain.conversationstorage.ConversationRepository;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
+import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.listconversationids.dto.ListConversationsRequestDto;
-import com.chat.server.domain.listuserconversations.dto.ConversationAddedEvent;
-import com.chat.server.domain.listuserconversations.dto.ConversationRemovedEvent;
+import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ListUserConversationsFacade {
     private final UserConversationRepository userConversationRepository;
@@ -46,6 +42,11 @@ public class ListUserConversationsFacade {
         return conversationDtosFromTimestamp;
     }
 
+    public List<MessageDto> listMessages(ListConversationsRequestDto listConversationsRequestDto){
+        List<ConversationDto> conversationDtos = listConversations(listConversationsRequestDto);
+        return conversationDtos.stream().map(ConversationDto::getMessages).flatMap(Collection::stream).toList();
+    }
+
     private List<MessageDto> getFromTimestamp(List<MessageDto> messageDtos, Timestamp timestamp) {
         int n = messageDtos.size();
         int lo = 0;
@@ -72,6 +73,10 @@ public class ListUserConversationsFacade {
         userConversationRepository.add(username, conversationDto);
     }
 
+    private void addMessage(){
+
+    }
+
     private void remove(String username, UUID conversationId){
         userConversationRepository.remove(username, conversationId);
     }
@@ -79,13 +84,17 @@ public class ListUserConversationsFacade {
     private class ConversationEventHandler implements ConversationStorageFacade.ConversationObserver {
 
         @Override
-        public void notifyAdd(ConversationAddedEvent event) {
-            ConversationDto conversationDto = new ConversationDto(
-                    event.conversationId(),
-                    event.name(),
-                    event.members(),
-                    event.messages());
-            event.members().forEach(username -> add(username, conversationDto));
+        public void notifyUpdate(ConversationUpdatedEvent event) {
+            if(event.isNewConversation()) {
+                ConversationDto conversationDto = new ConversationDto(
+                        event.conversationId(),
+                        event.name(),
+                        event.members(),
+                        new ArrayList<>());
+                event.members().forEach(username -> add(username, conversationDto));
+            } else {
+                event.members().forEach(username -> userConversationRepository.addMessage(event.newMessageDto(), event.members()));
+            }
         }
 
         @Override

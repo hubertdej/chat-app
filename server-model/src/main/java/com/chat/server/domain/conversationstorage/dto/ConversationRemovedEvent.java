@@ -1,4 +1,4 @@
-package com.chat.server.domain.listuserconversations.dto;
+package com.chat.server.domain.conversationstorage.dto;
 
 import java.util.List;
 import java.util.UUID;

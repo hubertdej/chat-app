@@ -56,6 +56,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         headers.add("username", username);
         headers.add("password", password);
+        headers.add("list-user-conversations-request", String.format("{\"from\": \"%s\", \"lastMessage\": {}}", username));
         return client.doHandshake(new ClientSocketHandler(messages), headers, uri).get();
     }
 
@@ -97,6 +98,25 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
             MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
             Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
+        }
+    }
+
+    @Test
+    public void testHistorySendingOnSessionOpen() throws Exception {
+        registerUser(john, johnPass);
+        registerUser(barry, barryPass);
+        String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
+        UUID conversationId = UUID.fromString(uuid);
+        MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
+        BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
+        try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
+            johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
+            Thread.sleep(2000);
+            try(WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
+                MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
+                Assertions.assertEquals(messageToBarry.getContent(), received.getContent());
+            }
         }
     }
 
