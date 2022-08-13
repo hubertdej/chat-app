@@ -1,9 +1,7 @@
 package com.chat.server.domain.conversationstorage;
 
 import com.chat.server.configuration.ConversationStorageConfiguration;
-import com.chat.server.domain.listconversationids.dto.ConversationIdAddedEvent;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.listconversationids.dto.ConversationIdRemovedEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEventPublisher;
