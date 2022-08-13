@@ -60,11 +60,10 @@ public class LocalMessageClient implements MessagingClient {
         sessionStorage.removeObserver(account.getUsername(), handler);
     }
 
-    private final SessionStorageFacade.Observer handler = dto -> {
-        updater.handleMessage(dto.getTo(), repository, new ChatMessage(dto.getContent(), new User(dto.getFrom())));
-    };
+    private final SessionStorageFacade.Observer handler = dtos ->
+            dtos.forEach(dto -> updater.handleMessage(dto.getTo(), repository, new ChatMessage(dto.getContent(), new User(dto.getFrom()))));
 
-    private ConversationsRequester requester = response -> { //TODO inject?
+    private final ConversationsRequester requester = response -> { //TODO inject?
             var chats = response.conversations()
                     .stream().map(dto -> new Chat(
                             dto.getConversationId(),
