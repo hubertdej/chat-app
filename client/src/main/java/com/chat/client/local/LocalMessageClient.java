@@ -3,12 +3,10 @@ package com.chat.client.local;
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.utils.ChatsUpdater;
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
+import com.chat.server.domain.messagereceiver.dto.MessageReceivedDto;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
-
-import java.sql.Timestamp;
 
 public class LocalMessageClient implements MessagingClient {
     private final SessionStorageFacade sessionStorage;
@@ -29,11 +27,10 @@ public class LocalMessageClient implements MessagingClient {
     public void sendMessage(Chat chat, ChatMessage message) {
         try {
             messageReceiver.receiveMessage(
-                    new MessageDto(
+                    new MessageReceivedDto(
                             account.getUsername(),
                             chat.getUUID(),
-                            message.text(),
-                            new Timestamp(System.currentTimeMillis())
+                            message.text()
                     )
             );
         } catch (Exception e) {

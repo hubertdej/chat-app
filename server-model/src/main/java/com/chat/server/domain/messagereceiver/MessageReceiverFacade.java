@@ -6,10 +6,12 @@ import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
 import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
+import com.chat.server.domain.messagereceiver.dto.MessageReceivedDto;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.MessagingSessionException;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,9 +34,14 @@ public class MessageReceiverFacade {
         requester.forwardMessage(listConversationsResponse);
     }
 
-    public void receiveMessage(MessageDto dto) throws NoSuchConversationException {
-        persist(dto);
-        sessionStorageFacade.propagate(dto);
+    public void receiveMessage(MessageReceivedDto messageReceivedDto) throws NoSuchConversationException {
+        MessageDto messageDto = timestamp(messageReceivedDto);
+        persist(messageDto);
+        sessionStorageFacade.propagate(messageDto);
+    }
+
+    private MessageDto timestamp(MessageReceivedDto messageReceivedDto){
+        return new MessageDto(messageReceivedDto.from(),messageReceivedDto.to(), messageReceivedDto.content(), new Timestamp(System.currentTimeMillis()));
     }
 
     private void persist(MessageDto messageDto) throws NoSuchConversationException {

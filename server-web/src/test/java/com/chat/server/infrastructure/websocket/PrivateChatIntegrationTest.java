@@ -3,8 +3,8 @@ package com.chat.server.infrastructure.websocket;
 
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
+import com.chat.server.domain.messagereceiver.dto.MessageReceivedDto;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.infrastructure.rest.IntegrationTest;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,7 +66,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         registerUser(barry, barryPass);
         String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
         UUID conversationId = UUID.fromString(uuid);
-        MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
+        MessageReceivedDto messageToBarry = new MessageReceivedDto(john, conversationId, "hi barry");
         BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
         BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages);
@@ -83,7 +83,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
         registerUser(barry, barryPass);
         String uuid = addConversation("johnbarry", List.of(john, barry)).andReturn().getResponse().getContentAsString();
         UUID conversationId = UUID.fromString(uuid);
-        MessageDto messageToBarry = new MessageDto(john, conversationId, "hi barry", new Timestamp(System.currentTimeMillis()));
+        MessageReceivedDto messageToBarry = new MessageReceivedDto(john, conversationId, "hi barry");
         BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
         BlockingQueue<MessageDto> barryMessages = new LinkedBlockingQueue<>();
         try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
