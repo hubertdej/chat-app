@@ -21,8 +21,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     AuthenticationFacade authenticationFacade;
     @Autowired
     SessionStorageFacade sessionStorageFacade;
-    @Autowired
-    ConcurrentHashMap<WebSocketSession, SessionStorageFacade.Observer> observersMap; //TODO ok?
+
+    ConcurrentHashMap<WebSocketSession, SessionStorageFacade.Observer> observersMap = new ConcurrentHashMap<>();
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
