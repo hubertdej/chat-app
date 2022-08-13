@@ -15,19 +15,23 @@ import java.util.concurrent.ConcurrentHashMap;
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
+    private final MessageReceiverFacade messageReceiverFacade;
+    private final AuthenticationFacade authenticationFacade;
+    private final SessionStorageFacade sessionStorageFacade;
+
     @Autowired
-    MessageReceiverFacade messageReceiverFacade;
-    @Autowired
-    AuthenticationFacade authenticationFacade;
-    @Autowired
-    SessionStorageFacade sessionStorageFacade;
-    @Autowired
-    ConcurrentHashMap<WebSocketSession, SessionStorageFacade.Observer> observersMap; //TODO ok?
+    public WebSocketConfig(MessageReceiverFacade messageReceiverFacade,
+                           AuthenticationFacade authenticationFacade,
+                           SessionStorageFacade sessionStorageFacade) {
+        this.messageReceiverFacade = messageReceiverFacade;
+        this.authenticationFacade = authenticationFacade;
+        this.sessionStorageFacade = sessionStorageFacade;
+    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(
-                new WebSocketHandler(messageReceiverFacade, authenticationFacade, sessionStorageFacade, observersMap),
+                new WebSocketHandler(messageReceiverFacade, authenticationFacade, sessionStorageFacade),
                 "/chat"
         );
     }
