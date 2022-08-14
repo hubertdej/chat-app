@@ -4,7 +4,6 @@ import com.chat.client.domain.Chat;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 
 import java.util.List;
 import java.util.UUID;

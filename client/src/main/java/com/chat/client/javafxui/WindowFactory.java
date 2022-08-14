@@ -1,6 +1,10 @@
 package com.chat.client.javafxui;
 
-import com.chat.client.presentation.*;
+import com.chat.client.presentation.AuthView;
+import com.chat.client.presentation.ChatView;
+import com.chat.client.presentation.ChatlistView;
+import com.chat.client.presentation.CreationView;
+import com.chat.client.presentation.ViewFactory;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;

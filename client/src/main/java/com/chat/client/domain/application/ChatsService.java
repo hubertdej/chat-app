@@ -4,7 +4,6 @@ import com.chat.client.domain.Chat;
 import com.chat.client.domain.User;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 

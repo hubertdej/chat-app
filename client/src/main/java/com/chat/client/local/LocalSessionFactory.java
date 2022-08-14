@@ -1,6 +1,10 @@
 package com.chat.client.local;
 
-import com.chat.client.domain.*;
+import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.Credentials;
+import com.chat.client.domain.MessageFactory;
+import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.User;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
