@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 public class CreationWindow implements CreationView {
     @FXML private Stage stage;
+    @FXML private TextField chatNameTextField;
     @FXML private TextField filterTextField;
     @FXML private ListView<User> usersListView;
     @FXML private HBox userHBox;
@@ -44,8 +45,7 @@ public class CreationWindow implements CreationView {
             }
         });
 
-        // TODO: Add a TextField for a chat name.
-        createButton.setOnMouseClicked(event -> presenter.createChat("[chat name]"));
+        createButton.setOnMouseClicked(event -> presenter.createChat(chatNameTextField.getText()));
 
         cancelButton.setOnMouseClicked(event -> presenter.close());
     }

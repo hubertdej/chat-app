@@ -10,7 +10,7 @@
        title="Create a new chat">
     <scene>
         <Scene>
-            <GridPane prefWidth="300" prefHeight="300">
+            <GridPane prefWidth="300" prefHeight="400">
                 <VBox spacing="10"
                       style="-fx-padding: 10 0 0 0;"
                       GridPane.rowIndex="0">
@@ -19,8 +19,10 @@
                                style="-fx-font-size: 20;"
                                AnchorPane.leftAnchor="10"/>
                     </AnchorPane>
-                    <TextField fx:id="filterTextField"
-                               promptText="Search"/>
+                    <Separator/>
+                    <TextField fx:id="chatNameTextField" promptText="Chat name"/>
+                    <Separator/>
+                    <TextField fx:id="filterTextField" promptText="Search"/>
                 </VBox>
                 <ListView fx:id="usersListView"
                           GridPane.rowIndex="1"
