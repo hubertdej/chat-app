@@ -29,7 +29,7 @@ public class InMemoryUserConversationRepository implements UserConversationRepos
 
     @Override
     public List<ConversationDto> get(String username) {
-        return storage.get(username).values().stream().toList();
+        return storage.getOrDefault(username, Map.of()).values().stream().toList();
     }
 
     private void addMessage(MessageDto messageDto, String member){
