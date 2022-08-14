@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +62,15 @@ public class RestService implements AuthService, UsersService, ChatsService {
         );
     }
 
+
+    // TODO: Don't do that!
+    private Account account;
+
+    // TODO: Replace dummy implementation!
     @Override
     public CompletableFuture<Account> loginUserAsync(String username, String password) {
-        // TODO: replace dummy implementation
-        return CompletableFuture.supplyAsync(() -> new Account(new User(username), password));
+        account = new Account(new User(username), password);
+        return CompletableFuture.completedFuture(account);
     }
 
     @Override
@@ -113,8 +119,35 @@ public class RestService implements AuthService, UsersService, ChatsService {
         );
     }
 
+    // TODO: Extract to a class with injected credentials.
     @Override
-    public CompletableFuture<List<String>> getMembersByUUID(UUID chatUUID) { //TODO IMPLEMENT
-        return null;
+    public CompletableFuture<Chat> getChatDetails(UUID chatUUID) {
+        var request = buildPOSTRequest("/get-conversation", Map.ofEntries(
+                Map.entry("username", account.getUsername()),
+                Map.entry("password", account.getPassword()),
+                Map.entry("conversationId", chatUUID)
+        ));
+
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(
+                response -> {
+                    System.out.println("Response:\n" + response);
+                    System.out.println("Response body:\n" + response.body());
+                    System.out.println("Status: " + response.statusCode());
+
+                    record Message(String from, UUID to, String content, Timestamp timestamp) {
+                    }
+
+                    record ChatDetails(UUID conversationId, String name, String[] members, Message[] messages) {
+                    }
+
+                    try {
+                        var chatDetails = new ObjectMapper().readValue(response.body(), ChatDetails.class);
+                        assert(chatUUID.equals(chatDetails.conversationId));
+                        return new Chat(chatUUID, chatDetails.name, Arrays.stream(chatDetails.members).map(User::new).toList());
+                    } catch (JsonProcessingException e) {
+                        throw new JsonException(e);
+                    }
+                }
+        );
     }
 }

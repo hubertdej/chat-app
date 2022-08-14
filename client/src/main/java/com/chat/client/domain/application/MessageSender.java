@@ -4,5 +4,5 @@ import com.chat.client.domain.Chat;
 import com.chat.client.domain.ChatMessage;
 
 public interface MessageSender {
-    void sendMessage(Chat chat, ChatMessage message);
+    void sendMessage(Chat chat, String text);
 }

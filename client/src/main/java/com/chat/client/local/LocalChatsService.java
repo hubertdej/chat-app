@@ -22,8 +22,10 @@ public class LocalChatsService implements ChatsService {
     }
 
     @Override
-    public CompletableFuture<List<String>> getMembersByUUID(UUID chatUUID) {
-        var list = storageFacade.get(chatUUID).orElseThrow().getMembers();
-        return CompletableFuture.completedFuture(list);
+    public CompletableFuture<Chat> getChatDetails(UUID chatUUID) {
+        return CompletableFuture.supplyAsync(() -> {
+            var dto = storageFacade.get(chatUUID).orElseThrow();
+            return new Chat(dto.getConversationId(), dto.getName(), dto.getMembers().stream().map(User::new).toList());
+        });
     }
 }

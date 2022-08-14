@@ -8,6 +8,8 @@ import com.chat.server.domain.messagereceiver.dto.MessageReceivedDto;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 
+import java.util.List;
+
 public class LocalMessageClient implements MessagingClient {
     private final SessionStorageFacade sessionStorage;
     private final MessageReceiverFacade messageReceiver;
@@ -24,13 +26,13 @@ public class LocalMessageClient implements MessagingClient {
     }
 
     @Override
-    public void sendMessage(Chat chat, ChatMessage message) {
+    public void sendMessage(Chat chat, String text) {
         try {
             messageReceiver.receiveMessage(
                     new MessageReceivedDto(
                             account.getUsername(),
                             chat.getUUID(),
-                            message.text()
+                            text
                     )
             );
         } catch (Exception e) {
@@ -38,6 +40,7 @@ public class LocalMessageClient implements MessagingClient {
         }
     }
 
+    // TODO: Request for messages during initialization!
     @Override
     public void initialize(Account account, ChatsRepository chatsRepository) {
         this.account = account;
@@ -58,7 +61,7 @@ public class LocalMessageClient implements MessagingClient {
     }
 
     private final SessionStorageFacade.Observer handler = dtos ->
-            dtos.forEach(dto -> updater.handleMessage(dto.to(), repository, new ChatMessage(dto.content(), new User(dto.from()))));
+            dtos.forEach(dto -> updater.handleMessages(dto.to(), repository, List.of(new ChatMessage(dto.content(), new User(dto.from()), dto.timestamp()))));
 
     private final ConversationsRequester requester = response -> { //TODO inject?
             var chats = response.conversations()

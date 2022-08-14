@@ -11,5 +11,5 @@ import java.util.concurrent.CompletableFuture;
 public interface ChatsService {
     CompletableFuture<Chat> createChatAsync(String name, List<User> recipients);
 
-    CompletableFuture<List<String>> getMembersByUUID(UUID chatUUID);
+    CompletableFuture<Chat> getChatDetails(UUID chatUUID);
 }

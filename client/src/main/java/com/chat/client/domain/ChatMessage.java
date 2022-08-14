@@ -1,4 +1,6 @@
 package com.chat.client.domain;
 
-public record ChatMessage(String text, User sender) {
+import java.sql.Timestamp;
+
+public record ChatMessage(String text, User sender, Timestamp timestamp) {
 }

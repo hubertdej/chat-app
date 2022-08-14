@@ -1,6 +1,7 @@
 package com.chat.client.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,10 @@ public class ChatsRepository {
         for (var observer : observers) {
             observer.notifyUpdate(chat);
         }
+    }
+
+    public List<Chat> getChats() {
+        return Collections.unmodifiableList(snapshot);
     }
 
     public Optional<Chat> getByUUID(UUID uuid) {

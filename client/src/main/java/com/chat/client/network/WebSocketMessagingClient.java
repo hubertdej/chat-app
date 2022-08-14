@@ -5,28 +5,26 @@ import com.chat.client.domain.application.Dispatcher;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.utils.ChatsUpdater;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // TODO: Make this implementation safer (reconnecting etc.)
 public class WebSocketMessagingClient implements MessagingClient {
     private static final String ADDRESS = "ws://localhost:8080/chat";
 
     private final Dispatcher dispatcher;
-    private ChatsUpdater updater;
+    private final ChatsUpdater updater;
     private Account account;
     private ChatsRepository chatsRepository;
-
-    private record MessagePayload(
-       String from,
-       UUID to,
-       String content,
-       long timestamp
-    ) {}
 
     private final WebSocketClient webSocketClient = new WebSocketClient(URI.create(ADDRESS)) {
         @Override
@@ -35,20 +33,23 @@ public class WebSocketMessagingClient implements MessagingClient {
 
         @Override
         public void onMessage(String message) {
+            record MessagePayload(String from, UUID to, String content, Timestamp timestamp) {}
 
-            MessagePayload payload;
+            List<MessagePayload> messagePayloads;
             try {
-                payload = new ObjectMapper().readValue(message, MessagePayload.class);
+                messagePayloads = new ObjectMapper().readValue(message, new TypeReference<>() {});
             } catch (JsonProcessingException e) {
                 throw new JsonException(e);
             }
 
-            dispatcher.dispatch(() -> {
-                updater.handleMessage(
-                        payload.to(),
-                        chatsRepository,
-                        new ChatMessage(payload.content(), new User(payload.from())));
-            });
+            var messages = messagePayloads.stream().map(payload ->
+                    new ChatMessage(payload.content(), new User(payload.from()), payload.timestamp())
+            ).toList();
+
+            if (!messagePayloads.isEmpty()) {
+                var chatUUID = messagePayloads.get(0).to();
+                dispatcher.dispatch(() -> updater.handleMessages(chatUUID, chatsRepository, messages));
+            }
         }
 
         @Override
@@ -70,20 +71,31 @@ public class WebSocketMessagingClient implements MessagingClient {
         this.account = account;
         this.chatsRepository = chatsRepository;
 
-        // TODO: Send a token.
+        record Payload(String from, Map<UUID, Timestamp> lastMessage) {}
+
+        var map = chatsRepository.getChats().stream().collect(
+                Collectors.toMap(Chat::getUUID, chat -> chat.getLastMessage().timestamp())
+        );
+        var payload = new Payload(account.getUsername(), map);
+
+        String json;
+        try {
+            json = new ObjectMapper().writeValueAsString(payload);
+        } catch (JsonProcessingException e) {
+            throw new JsonException(e);
+        }
+
         webSocketClient.addHeader("username", account.getUsername());
         webSocketClient.addHeader("password", account.getPassword());
+        webSocketClient.addHeader("list-user-conversations-request", json);
         webSocketClient.connect();
     }
 
     @Override
-    public void sendMessage(Chat chat, ChatMessage message) {
-        var json = new ObjectMapper().valueToTree(new MessagePayload(
-                account.getUsername(),
-                chat.getUUID(),
-                message.text(),
-                System.currentTimeMillis()
-        ));
+    public void sendMessage(Chat chat, String text) {
+        record MessagePayload(String from, UUID to, String content) {}
+
+        var json = new ObjectMapper().valueToTree(new MessagePayload(account.getUsername(), chat.getUUID(), text));
 
         System.out.println("Sending a message:\n" + json.toPrettyString());
         webSocketClient.send(json.toString());

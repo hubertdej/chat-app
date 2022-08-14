@@ -26,7 +26,7 @@ public class ChatPresenter {
     }
 
     public void sendMessage(String text) {
-        messageSender.sendMessage(chat, new ChatMessage(text, account.getUser()));
+        messageSender.sendMessage(chat, text);
     }
 
     public void open() {
