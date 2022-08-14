@@ -73,10 +73,6 @@ public class ListUserConversationsFacade {
         userConversationRepository.add(username, conversationDto);
     }
 
-    private void addMessage(){
-
-    }
-
     private void remove(String username, UUID conversationId){
         userConversationRepository.remove(username, conversationId);
     }
@@ -93,7 +89,7 @@ public class ListUserConversationsFacade {
                         new ArrayList<>());
                 event.members().forEach(username -> add(username, conversationDto));
             } else {
-                event.members().forEach(username -> userConversationRepository.addMessage(event.newMessageDto(), event.members()));
+                event.members().forEach(username -> userConversationRepository.addMessage(event.newMessageDto(), username));
             }
         }
 

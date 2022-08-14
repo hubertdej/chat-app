@@ -8,7 +8,7 @@ import java.util.*;
 
 public interface UserConversationRepository {
     void add(String username, ConversationDto conversation);
-    void addMessage(MessageDto messageDto, List<String> members);
+    void addMessage(MessageDto messageDto, String member);
     void remove(String username, UUID conversationId);
     List<ConversationDto> get(String username);
 }

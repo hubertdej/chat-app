@@ -83,6 +83,7 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
             WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
             johnSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageToBarry)));
             MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
+//            Assertions.assertThrows(InterruptedException.class,() -> barryMessages.poll(5, TimeUnit.SECONDS));
             Assertions.assertEquals(messageToBarry.content(), received.content());
         }
     }
@@ -101,6 +102,8 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
             johnMessages.poll(5, TimeUnit.SECONDS);
             try(WebSocketSession barrySession = openSession(barry, barryPass, barryMessages)){
                 MessageDto received = barryMessages.poll(5, TimeUnit.SECONDS);
+                MessageDto secondReceived = barryMessages.poll(3, TimeUnit.SECONDS);
+                Assertions.assertNull(secondReceived);
                 Assertions.assertEquals(messageToBarry.content(), received.content());
             }
         }
