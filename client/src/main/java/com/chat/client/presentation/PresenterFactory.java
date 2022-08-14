@@ -1,43 +1,40 @@
 package com.chat.client.presentation;
 
-import com.chat.client.domain.*;
-import com.chat.client.domain.application.*;
-
-import java.util.function.Supplier;
+import com.chat.client.domain.Chat;
+import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.ChatsService;
+import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.domain.application.UsersService;
 
 public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresenter.Factory {
     private final ViewFactory viewFactory;
-    private final AuthService authService;
-    private final UsersService usersService;
-    private final ChatsService chatsService;
+    private final SessionManager sessionManager;
     private final CallbackDispatcher callbackDispatcher;
-    private final Supplier<ChatsRepository> chatsRepositorySupplier;
-    private final Supplier<MessagingClient> messagingClientSupplier;
 
     public PresenterFactory(ViewFactory viewFactory,
-                            AuthService authService,
-                            UsersService usersService,
-                            ChatsService chatsService,
-                            CallbackDispatcher callbackDispatcher, Supplier<ChatsRepository> chatsRepositorySupplier, Supplier<MessagingClient> messagingClientSupplier) {
+                            SessionManager sessionManager,
+                            CallbackDispatcher callbackDispatcher) {
         this.viewFactory = viewFactory;
-        this.authService = authService;
-        this.usersService = usersService;
-        this.chatsService = chatsService;
+        this.sessionManager = sessionManager;
         this.callbackDispatcher = callbackDispatcher;
-        this.chatsRepositorySupplier = chatsRepositorySupplier;
-        this.messagingClientSupplier = messagingClientSupplier;
     }
 
     @Override
     public void openAuthView() {
         var view = viewFactory.createAuthView();
-        var presenter = new AuthPresenter(view, this, authService, callbackDispatcher);
+        var presenter = new AuthPresenter(view, this, sessionManager, callbackDispatcher);
         view.initialize(presenter);
         presenter.open();
     }
 
     @Override
-    public void openCreationView(ChatsRepository chatsRepository) {
+    public void openCreationView(
+            UsersService usersService,
+            ChatsService chatsService,
+            ChatsRepository chatsRepository
+    ) {
         var view = viewFactory.createCreationView();
         var presenter = new CreationPresenter(view, usersService, chatsService, chatsRepository, callbackDispatcher);
         view.initialize(presenter);
@@ -45,22 +42,22 @@ public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresente
     }
 
     @Override
-    public void openChatlistView(Account account) {
+    public void openChatlistView(
+            UsersService usersService,
+            ChatsService chatsService,
+            ChatsRepository chatsRepository,
+            MessagingClient messagingClient
+    ) {
         var view = viewFactory.createChatlistView();
-        var presenter = new ChatlistPresenter(
-                view,
-                this,
-                account,
-                chatsRepositorySupplier.get(),
-                messagingClientSupplier.get());
+        var presenter = new ChatlistPresenter(view, this, usersService, chatsService, chatsRepository, messagingClient);
         view.initialize(presenter);
         presenter.open();
     }
 
     @Override
-    public void openChatView(Account account, MessagingClient client, Chat chat) {
+    public void openChatView(MessagingClient client, Chat chat) {
         var view = viewFactory.createChatView();
-        var presenter = new ChatPresenter(view, account, chat, client);
+        var presenter = new ChatPresenter(view, chat, client);
         view.initialize(presenter);
         presenter.open();
     }

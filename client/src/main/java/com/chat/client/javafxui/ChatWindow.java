@@ -29,7 +29,7 @@ public class ChatWindow implements ChatView {
                     this.setText(null);
                     return;
                 }
-                var alignment = presenter.isUs(message.sender()) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT;
+                var alignment = message.sentByLocalUser() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT;
                 this.setAlignment(alignment);
                 this.setText(message.sender().name() + ": " + message.text());
             }

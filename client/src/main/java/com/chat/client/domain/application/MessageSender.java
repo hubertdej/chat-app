@@ -1,8 +1,7 @@
 package com.chat.client.domain.application;
 
-import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
+import java.util.UUID;
 
 public interface MessageSender {
-    void sendMessage(Chat chat, String text);
+    void sendMessage(UUID chatUUID, String text);
 }

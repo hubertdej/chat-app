@@ -21,10 +21,12 @@ import java.util.stream.Collectors;
 public class WebSocketMessagingClient implements MessagingClient {
     private static final String ADDRESS = "ws://localhost:8080/chat";
 
+    private final User localUser;
+    private final Credentials credentials;
     private final Dispatcher dispatcher;
-    private final ChatsUpdater updater;
-    private Account account;
-    private ChatsRepository chatsRepository;
+    private final ChatsUpdater chatsUpdater;
+    private final ChatsRepository chatsRepository;
+    private final MessageFactory messageFactory;
 
     private final WebSocketClient webSocketClient = new WebSocketClient(URI.create(ADDRESS)) {
         @Override
@@ -43,12 +45,12 @@ public class WebSocketMessagingClient implements MessagingClient {
             }
 
             var messages = messagePayloads.stream().map(payload ->
-                    new ChatMessage(payload.content(), new User(payload.from()), payload.timestamp())
+                    messageFactory.createMessage(payload.content(), payload.from(), payload.timestamp())
             ).toList();
 
             if (!messagePayloads.isEmpty()) {
                 var chatUUID = messagePayloads.get(0).to();
-                dispatcher.dispatch(() -> updater.handleMessages(chatUUID, chatsRepository, messages));
+                dispatcher.dispatch(() -> chatsUpdater.handleMessages(chatUUID, chatsRepository, messages));
             }
         }
 
@@ -61,22 +63,30 @@ public class WebSocketMessagingClient implements MessagingClient {
         }
     };
 
-    public WebSocketMessagingClient(Dispatcher dispatcher, ChatsUpdater updater) {
+    public WebSocketMessagingClient(
+            User localUser,
+            Credentials credentials,
+            ChatsRepository chatsRepository,
+            Dispatcher dispatcher,
+            ChatsUpdater chatsUpdater,
+            MessageFactory messageFactory
+    ) {
+        this.localUser = localUser;
+        this.credentials = credentials;
+        this.chatsRepository = chatsRepository;
         this.dispatcher = dispatcher;
-        this.updater = updater;
+        this.chatsUpdater = chatsUpdater;
+        this.messageFactory = messageFactory;
     }
 
     @Override
-    public void initialize(Account account, ChatsRepository chatsRepository) {
-        this.account = account;
-        this.chatsRepository = chatsRepository;
-
+    public void initialize() {
         record Payload(String from, Map<UUID, Timestamp> lastMessage) {}
 
         var map = chatsRepository.getChats().stream().collect(
                 Collectors.toMap(Chat::getUUID, chat -> chat.getLastMessage().timestamp())
         );
-        var payload = new Payload(account.getUsername(), map);
+        var payload = new Payload(localUser.name(), map);
 
         String json;
         try {
@@ -85,17 +95,17 @@ public class WebSocketMessagingClient implements MessagingClient {
             throw new JsonException(e);
         }
 
-        webSocketClient.addHeader("username", account.getUsername());
-        webSocketClient.addHeader("password", account.getPassword());
+        webSocketClient.addHeader("username", credentials.username());
+        webSocketClient.addHeader("password", credentials.password());
         webSocketClient.addHeader("list-user-conversations-request", json);
         webSocketClient.connect();
     }
 
     @Override
-    public void sendMessage(Chat chat, String text) {
+    public void sendMessage(UUID chatUUID, String text) {
         record MessagePayload(String from, UUID to, String content) {}
 
-        var json = new ObjectMapper().valueToTree(new MessagePayload(account.getUsername(), chat.getUUID(), text));
+        var json = new ObjectMapper().valueToTree(new MessagePayload(localUser.name(), chatUUID, text));
 
         System.out.println("Sending a message:\n" + json.toPrettyString());
         webSocketClient.send(json.toString());

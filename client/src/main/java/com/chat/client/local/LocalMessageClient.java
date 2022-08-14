@@ -1,37 +1,49 @@
 package com.chat.client.local;
 
-import com.chat.client.domain.*;
+import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.MessageFactory;
+import com.chat.client.domain.User;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.utils.ChatsUpdater;
+import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.messagereceiver.dto.MessageReceivedDto;
-import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LocalMessageClient implements MessagingClient {
     private final SessionStorageFacade sessionStorage;
     private final MessageReceiverFacade messageReceiver;
-    private Account account;
-    private ChatsRepository repository;
-    private ChatsUpdater updater;
+    private final User localUser;
+    private final MessageFactory messageFactory;
+    private final ChatsRepository repository;
+    private final ChatsUpdater chatsUpdater;
 
     public LocalMessageClient(
+            User localUser,
+            ChatsRepository repository,
+            MessageFactory messageFactory,
+            ChatsUpdater chatsUpdater,
             SessionStorageFacade sessionStorageFacade,
-            MessageReceiverFacade messageReceiverFacade, ChatsUpdater updater) {
+            MessageReceiverFacade messageReceiverFacade
+    ) {
+        this.localUser = localUser;
+        this.repository = repository;
+        this.messageFactory = messageFactory;
+        this.chatsUpdater = chatsUpdater;
         this.sessionStorage = sessionStorageFacade;
         this.messageReceiver = messageReceiverFacade;
-        this.updater = updater;
     }
 
     @Override
-    public void sendMessage(Chat chat, String text) {
+    public void sendMessage(UUID chatUUID, String text) {
         try {
             messageReceiver.receiveMessage(
                     new MessageReceivedDto(
-                            account.getUsername(),
-                            chat.getUUID(),
+                            localUser.name(),
+                            chatUUID,
                             text
                     )
             );
@@ -42,10 +54,8 @@ public class LocalMessageClient implements MessagingClient {
 
     // TODO: Request for messages during initialization!
     @Override
-    public void initialize(Account account, ChatsRepository chatsRepository) {
-        this.account = account;
-        this.repository = chatsRepository;
-        sessionStorage.addObserver(account.getUsername(), handler);
+    public void initialize() {
+        sessionStorage.addObserver(localUser.name(), this::handler);
 
         // TODO: Re-implement once this functionality is properly supported on the server side.
         // try {
@@ -57,19 +67,23 @@ public class LocalMessageClient implements MessagingClient {
 
     @Override
     public void close() {
-        sessionStorage.removeObserver(account.getUsername(), handler);
+        sessionStorage.removeObserver(localUser.name(), this::handler);
     }
 
-    private final SessionStorageFacade.Observer handler = dtos ->
-            dtos.forEach(dto -> updater.handleMessages(dto.to(), repository, List.of(new ChatMessage(dto.content(), new User(dto.from()), dto.timestamp()))));
+    private void handler(List<MessageDto> dtos) {
+        dtos.forEach(dto -> {
+            var message = messageFactory.createMessage(dto.content(), dto.from(), dto.timestamp());
+            chatsUpdater.handleMessages(dto.to(), repository, List.of(message));
+        });
+    }
 
-    private final ConversationsRequester requester = response -> { //TODO inject?
-            var chats = response.conversations()
-                    .stream().map(dto -> new Chat(
-                            dto.getConversationId(),
-                            dto.getName(),
-                            dto.getMembers().stream().map(User::new).toList())
-                    ).toList();
-            for (Chat chat : chats) repository.addChat(chat);
-    };
+    // private final ConversationsRequester requester = response -> {
+    //     var chats = response.conversations()
+    //             .stream().map(dto -> new Chat(
+    //                     dto.getConversationId(),
+    //                     dto.getName(),
+    //                     dto.getMembers().stream().map(User::new).toList())
+    //             ).toList();
+    //     for (Chat chat : chats) repository.addChat(chat);
+    // };
 }

@@ -1,28 +1,29 @@
 package com.chat.client.presentation;
 
-import com.chat.client.domain.Account;
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.application.AuthService;
+import com.chat.client.domain.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.domain.application.UsersService;
 
 public class AuthPresenter {
     public interface Factory {
-        void openChatlistView(Account account);
+        void openChatlistView(UsersService usersService, ChatsService chatsService, ChatsRepository chatsRepository, MessagingClient messagingClient);
     }
 
     private final AuthView view;
     private final Factory factory;
-    private final AuthService authService;
+    private final SessionManager sessionManager;
     private final CallbackDispatcher callbackDispatcher;
 
     public AuthPresenter(AuthView view,
                          Factory factory,
-                         AuthService authService,
+                         SessionManager sessionManager,
                          CallbackDispatcher callbackDispatcher) {
         this.view = view;
         this.factory = factory;
-        this.authService = authService;
+        this.sessionManager = sessionManager;
         this.callbackDispatcher = callbackDispatcher;
     }
 
@@ -33,9 +34,14 @@ public class AuthPresenter {
     public void login(String username, String password) {
         view.lockChanges();
         callbackDispatcher.addCallback(
-                authService.loginUserAsync(username, password),
-                account -> {
-                    factory.openChatlistView(account);
+                sessionManager.createSessionAsync(username, password),
+                session -> {
+                    factory.openChatlistView(
+                            session.usersService(),
+                            session.chatsService(),
+                            session.chatsRepository(),
+                            session.messagingClient()
+                    );
                     view.close();
                 },
                 $ -> {
@@ -48,7 +54,7 @@ public class AuthPresenter {
     public void register(String username, String password) {
         view.lockChanges();
         callbackDispatcher.addCallback(
-                authService.registerUserAsync(username, password),
+                sessionManager.registerUserAsync(username, password),
                 $ -> {
                     view.indicateRegistrationSuccessful();
                     view.unlockChanges();

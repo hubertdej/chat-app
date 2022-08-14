@@ -1,7 +1,6 @@
 package com.chat.client.local;
 
-import com.chat.client.domain.Account;
-import com.chat.client.domain.User;
+import com.chat.client.domain.Credentials;
 import com.chat.client.domain.application.AuthService;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.registration.RegistrationFacade;
@@ -20,6 +19,7 @@ public class LocalAuthService implements AuthService {
         this.authenticator = authenticationFacade;
         this.registrar = registrationFacade;
     }
+
     @Override
     public CompletableFuture<Void> registerUserAsync(String username, String password) {
         return CompletableFuture.supplyAsync(() -> {
@@ -27,13 +27,14 @@ public class LocalAuthService implements AuthService {
             return null;
         });
     }
+
     @Override
-    public CompletableFuture<Account> loginUserAsync(String username, String password) {
+    public CompletableFuture<Credentials> loginUserAsync(String username, String password) {
         return CompletableFuture.supplyAsync(() -> {
             if (!authenticator.authenticate(username, password)) {
                 throw new AuthFailedException();
             }
-            return new Account(new User(username), password);
+            return new Credentials(username, password);
         });
     }
 }
