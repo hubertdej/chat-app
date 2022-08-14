@@ -9,7 +9,7 @@ import com.chat.client.domain.application.UsersService;
 public class ChatlistPresenter {
     public interface Factory {
         void openAuthView();
-        void openChatView(MessagingClient client, Chat chat);
+        void openChatView(Chat chat, MessagingClient client);
         void openCreationView(UsersService usersService, ChatsService chatsService, ChatsRepository chatsRepository);
     }
 
@@ -43,7 +43,7 @@ public class ChatlistPresenter {
     }
 
     public void openChat(Chat chat) {
-        factory.openChatView(messagingClient, chat);
+        factory.openChatView(chat, messagingClient);
     }
 
     public void createChat() {

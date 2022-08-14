@@ -55,7 +55,7 @@ public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresente
     }
 
     @Override
-    public void openChatView(MessagingClient client, Chat chat) {
+    public void openChatView(Chat chat, MessagingClient client) {
         var view = viewFactory.createChatView();
         var presenter = new ChatPresenter(view, chat, client);
         view.initialize(presenter);
