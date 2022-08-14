@@ -6,7 +6,6 @@ import com.chat.client.domain.application.AuthService;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.registration.dto.UserDto;
-import com.chat.server.domain.registration.dto.UsernameTakenException;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -23,23 +22,18 @@ public class LocalAuthService implements AuthService {
     }
     @Override
     public CompletableFuture<Void> registerUserAsync(String username, String password) {
-        try {
+        return CompletableFuture.supplyAsync(() -> {
             registrar.register(new UserDto(username, password));
-            return CompletableFuture.completedFuture(null);
-        } catch (UsernameTakenException e) {
-            throw new AuthFailedException();
-        }
+            return null;
+        });
     }
     @Override
     public CompletableFuture<Account> loginUserAsync(String username, String password) {
-        if(authenticator.authenticate(username, password)) {
-            var account = new Account(
-                    new User(username),
-                    password
-            );
-            return CompletableFuture.completedFuture(account);
-        } else {
-            throw new AuthFailedException();
-        }
+        return CompletableFuture.supplyAsync(() -> {
+            if (!authenticator.authenticate(username, password)) {
+                throw new AuthFailedException();
+            }
+            return new Account(new User(username), password);
+        });
     }
 }
