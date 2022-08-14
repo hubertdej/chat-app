@@ -61,6 +61,16 @@ public class PrivateChatIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void userWithoutConversationsCanOpenSession() throws Exception {
+        registerUser(john, johnPass);
+        BlockingQueue<MessageDto> johnMessages = new LinkedBlockingQueue<>();
+        try(WebSocketSession johnSession = openSession(john, johnPass, johnMessages)){
+            Thread.sleep(1000);
+            Assertions.assertTrue(johnSession.isOpen());
+        }
+    }
+
+    @Test
     public void testMessagePropagation() throws Exception {
         registerUser(john, johnPass);
         registerUser(barry, barryPass);
