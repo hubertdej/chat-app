@@ -72,7 +72,7 @@ public class LocalMessageClient implements MessagingClient {
 
     private void handler(List<MessageDto> dtos) {
         dtos.forEach(dto -> {
-            var message = messageFactory.createMessage(dto.content(), dto.from(), dto.timestamp());
+            var message = messageFactory.createMessage(dto.to(), dto.content(), dto.from(), dto.timestamp());
             chatsUpdater.handleMessages(dto.to(), repository, List.of(message));
         });
     }

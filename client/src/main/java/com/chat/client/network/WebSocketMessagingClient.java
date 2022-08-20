@@ -48,12 +48,13 @@ public class WebSocketMessagingClient implements MessagingClient {
                 throw new JsonException(e);
             }
 
-            var messages = messagePayloads.stream().map(payload ->
-                    messageFactory.createMessage(payload.content(), payload.from(), payload.timestamp())
-            ).toList();
-
             if (!messagePayloads.isEmpty()) {
                 var chatUUID = messagePayloads.get(0).to();
+
+                var messages = messagePayloads.stream().map(payload ->
+                        messageFactory.createMessage(chatUUID, payload.content(), payload.from(), payload.timestamp())
+                ).toList();
+
                 dispatcher.dispatch(() -> chatsUpdater.handleMessages(chatUUID, chatsRepository, messages));
             }
         }

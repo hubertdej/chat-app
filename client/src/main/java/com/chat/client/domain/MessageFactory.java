@@ -1,6 +1,7 @@
 package com.chat.client.domain;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 public class MessageFactory {
     private final User user;
@@ -9,7 +10,7 @@ public class MessageFactory {
         this.user = user;
     }
 
-    public ChatMessage createMessage(String text, String username, Timestamp timestamp) {
-        return new ChatMessage(text, new User(username), timestamp, username.equals(user.name()));
+    public ChatMessage createMessage(UUID chatUUID, String text, String username, Timestamp timestamp) {
+        return new ChatMessage(chatUUID, text, new User(username), timestamp, username.equals(user.name()));
     }
 }
