@@ -11,6 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class ChatlistWindow implements ChatlistView {
@@ -33,11 +36,25 @@ public class ChatlistWindow implements ChatlistView {
             protected void updateItem(Chat chat, boolean empty) {
                 super.updateItem(chat, empty);
                 if (empty || chat == null) {
-                    this.setText(null);
+                    this.setGraphic(null);
                     this.setOnMousePressed(null);
                     return;
                 }
-                this.setText(chat.getName());
+
+                var textFlow = new TextFlow();
+                var chatName = new Text(chat.getName());
+                textFlow.getChildren().add(chatName);
+
+                if (chat.hasMessages()) {
+                    textFlow.getChildren().add(new Text("\n"));
+                    var message = chat.getLastMessage();
+                    var messagePreview = new Text("%s: %s".formatted(message.sender().name(), message.text()));
+                    messagePreview.setStyle("-fx-font-size: 10");
+                    messagePreview.setFill(Color.DARKCYAN);
+                    textFlow.getChildren().add(messagePreview);
+                }
+
+                this.setGraphic(textFlow);
                 this.setOnMouseClicked(event -> presenter.openChat(chat));
             }
         });

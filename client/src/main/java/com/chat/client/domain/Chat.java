@@ -47,6 +47,10 @@ public class Chat {
         return name;
     }
 
+    public boolean hasMessages() {
+        return !snapshot.isEmpty();
+    }
+
     public ChatMessage getLastMessage() {
         return snapshot.get(snapshot.size() - 1);
     }
