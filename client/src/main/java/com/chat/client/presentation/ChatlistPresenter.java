@@ -1,6 +1,7 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
+import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -34,8 +35,17 @@ public class ChatlistPresenter {
         this.messagingClient = messagingClient;
     }
 
-    public void addChat(Chat chat) {
+    private final ChatsRepository.Observer chatsRepositoryObserver = this::addChat;
+    private final Chat.Observer chatUpdateObserver = this::updateChat;
+
+    private void addChat(Chat chat) {
         view.addChat(chat);
+        chat.addObserver(chatUpdateObserver);
+    }
+
+    private void updateChat(ChatMessage message) {
+        var chat = chatsRepository.getByUUID(message.chatUUID()).orElseThrow();
+        view.updateChat(chat);
     }
 
     public void filterChats(String filter) {
@@ -51,13 +61,14 @@ public class ChatlistPresenter {
     }
 
     public void open() {
-        chatsRepository.addObserver(this::addChat);
+        chatsRepository.addObserver(chatsRepositoryObserver);
         messagingClient.initialize();
         view.open();
     }
 
     public void close() {
-        chatsRepository.removeObserver(this::addChat);
+        chatsRepository.removeObserver(chatsRepositoryObserver);
+        chatsRepository.getChats().forEach(chat -> chat.removeObserver(chatUpdateObserver));
         messagingClient.close();
         factory.openAuthView();
         view.close();

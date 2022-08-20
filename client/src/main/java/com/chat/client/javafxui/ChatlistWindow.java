@@ -55,7 +55,13 @@ public class ChatlistWindow implements ChatlistView {
 
     @Override
     public void addChat(Chat chat) {
-        chats.add(chat);
+        chats.add(0, chat);
+    }
+
+    @Override
+    public void updateChat(Chat chat) {
+        chats.remove(chat);
+        chats.add(0, chat);
     }
 
     @Override

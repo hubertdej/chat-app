@@ -2,6 +2,7 @@ package com.chat.client.presentation;
 
 import com.chat.client.BaseTestCase;
 import com.chat.client.domain.Chat;
+import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -9,6 +10,10 @@ import com.chat.client.domain.application.UsersService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
+
+import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.BDDMockito.*;
 
@@ -17,18 +22,36 @@ class ChatlistPresenterTest extends BaseTestCase {
     @Mock private ChatlistPresenter.Factory factory;
     @Mock private UsersService usersService;
     @Mock private ChatsService chatsService;
-    @Mock private ChatsRepository chatsRepository;
     @Mock private MessagingClient messagingClient;
+    @Spy private final ChatsRepository chatsRepository = new ChatsRepository();
 
     @InjectMocks private ChatlistPresenter presenter;
 
     @Test
-    void testAddChat() {
-        var chat = mock(Chat.class);
+    void testChatsAreObserved() {
+        var chat = new Chat(UUID.randomUUID(), "chat name", List.of());
 
-        presenter.addChat(chat);
+        presenter.open();
+        chatsRepository.addChat(chat);
+        chat.addMessage(new ChatMessage(chat.getUUID(), "", null, null, false));
+        presenter.close();
+        chat.addMessage(new ChatMessage(chat.getUUID(), "", null, null, false));
 
-        then(view).should().addChat(chat);
+        then(view).should(times(1)).updateChat(chat);
+    }
+
+    @Test
+    void testChatsRepositoryIsObserved() {
+        var chat1 = mock(Chat.class);
+        var chat2 = mock(Chat.class);
+
+        presenter.open();
+        chatsRepository.addChat(chat1);
+        presenter.close();
+        chatsRepository.addChat(chat2);
+
+        then(view).should().addChat(chat1);
+        then(view).should(never()).addChat(chat2);
     }
 
     @Test
