@@ -5,11 +5,13 @@ import com.chat.client.domain.ChatMessage;
 import com.chat.client.presentation.ChatPresenter;
 import com.chat.client.presentation.ChatView;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class ChatWindow implements ChatView {
@@ -25,13 +27,29 @@ public class ChatWindow implements ChatView {
             protected void updateItem(ChatMessage message, boolean empty) {
                 super.updateItem(message, empty);
                 if (empty || message == null) {
-                    this.setAlignment(null);
-                    this.setText(null);
+                    this.setGraphic(null);
                     return;
                 }
-                var alignment = message.sentByLocalUser() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT;
-                this.setAlignment(alignment);
-                this.setText(message.sender().name() + ": " + message.text());
+
+                var textFlow = new TextFlow();
+
+                var senderText = new Text(message.sender().name());
+                senderText.setFill(message.sentByLocalUser() ? Color.MEDIUMSEAGREEN : Color.MEDIUMPURPLE);
+
+                var messageText = new Text(message.text());
+
+                var timestampText = new Text(message.timestamp().toString());
+                timestampText.setStyle("-fx-font-size: 8");
+                timestampText.setFill(Color.GREY);
+
+                textFlow.getChildren().addAll(
+                        senderText,
+                        new Text("\n"),
+                        messageText,
+                        new Text("\n"),
+                        timestampText
+                );
+                this.setGraphic(textFlow);
             }
         });
 
