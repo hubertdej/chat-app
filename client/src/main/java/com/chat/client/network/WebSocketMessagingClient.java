@@ -47,16 +47,16 @@ public class WebSocketMessagingClient implements MessagingClient {
             } catch (JsonProcessingException e) {
                 throw new JsonException(e);
             }
+            
+            messagePayloads.stream()
+                    .collect(Collectors.groupingBy(MessagePayload::to, Collectors.toList()))
+                    .forEach((chatUUID, payloadList) -> {
+                        var messages = payloadList.stream().map(payload ->
+                                messageFactory.createMessage(chatUUID, payload.content(), payload.from(), payload.timestamp())
+                        ).toList();
 
-            if (!messagePayloads.isEmpty()) {
-                var chatUUID = messagePayloads.get(0).to();
-
-                var messages = messagePayloads.stream().map(payload ->
-                        messageFactory.createMessage(chatUUID, payload.content(), payload.from(), payload.timestamp())
-                ).toList();
-
-                dispatcher.dispatch(() -> chatsUpdater.handleMessages(chatUUID, chatsRepository, messages));
-            }
+                        dispatcher.dispatch(() -> chatsUpdater.handleMessages(chatUUID, chatsRepository, messages));
+                    });
         }
 
         @Override
