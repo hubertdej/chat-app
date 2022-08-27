@@ -88,14 +88,4 @@ public class LocalMessageClient implements MessagingClient {
                     chatsUpdater.handleMessages(chatUUID, repository, messages);
                 });
     }
-
-    // private final ConversationsRequester requester = response -> {
-    //     var chats = response.conversations()
-    //             .stream().map(dto -> new Chat(
-    //                     dto.getConversationId(),
-    //                     dto.getName(),
-    //                     dto.getMembers().stream().map(User::new).toList())
-    //             ).toList();
-    //     for (Chat chat : chats) repository.addChat(chat);
-    // };
 }
