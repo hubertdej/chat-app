@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,10 @@ public class ChatsServiceImpl implements ChatsService {
     private final HttpRequestFactory httpRequestFactory = new HttpRequestFactory();
 
     @Override
-    public CompletableFuture<Chat> createChatAsync(String name, List<User> recipients) {
+    public CompletableFuture<Chat> createChatAsync(String name, List<User> friends) {
+        var recipients = new ArrayList<>(friends);
+        recipients.add(new User(credentials.username()));
+
         var request = httpRequestFactory.createPOSTRequest("/add-conversation", Map.ofEntries(
                 Map.entry("name", name),
                 Map.entry("members", recipients.stream().map(User::name).toList())

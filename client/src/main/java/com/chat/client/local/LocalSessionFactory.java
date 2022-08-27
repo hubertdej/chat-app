@@ -38,12 +38,12 @@ public class LocalSessionFactory implements SessionManager.Factory {
 
     @Override
     public ChatsService getChatsService(Credentials credentials) {
-        return new LocalChatsService(conversationStorageFacade);
+        return new LocalChatsService(conversationStorageFacade, new User(credentials.username()));
     }
 
     @Override
     public UsersService getUsersService(Credentials credentials) {
-        return new LocalUsersService(registrationFacade);
+        return new LocalUsersService(registrationFacade, new User(credentials.username()));
     }
 
     @Override
