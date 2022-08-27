@@ -1,6 +1,7 @@
 package com.chat.client.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,12 +32,12 @@ public class Chat implements Comparable<Chat> {
 
     private final UUID uuid;
     private final String name;
-    private final List<User> recipients;
+    private final List<User> members;
 
-    public Chat(UUID uuid, String name, List<User> recipients) {
+    public Chat(UUID uuid, String name, List<User> members) {
         this.uuid = uuid;
         this.name = name;
-        this.recipients = recipients;
+        this.members = members;
     }
 
     public UUID getUUID() {
@@ -53,6 +54,10 @@ public class Chat implements Comparable<Chat> {
 
     public ChatMessage getLastMessage() {
         return snapshot.get(snapshot.size() - 1);
+    }
+
+    public List<User> getMembers() {
+        return Collections.unmodifiableList(members);
     }
 
     @Override
