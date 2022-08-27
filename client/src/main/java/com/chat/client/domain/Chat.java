@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Chat {
+public class Chat implements Comparable<Chat> {
     public interface Observer {
         void notifyUpdate(ChatMessage message);
     }
@@ -53,5 +53,19 @@ public class Chat {
 
     public ChatMessage getLastMessage() {
         return snapshot.get(snapshot.size() - 1);
+    }
+
+    @Override
+    public int compareTo(Chat other) {
+        if (!this.hasMessages() && !other.hasMessages()) {
+            return this.getName().compareTo(other.getName());
+        }
+        if (!this.hasMessages()) {
+            return -1;
+        }
+        if (!other.hasMessages()) {
+            return 1;
+        }
+        return other.getLastMessage().timestamp().compareTo(this.getLastMessage().timestamp());
     }
 }
