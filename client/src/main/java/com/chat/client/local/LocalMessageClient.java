@@ -57,14 +57,16 @@ public class LocalMessageClient implements MessagingClient {
             throw new RuntimeException();
         }
     }
-    
+
     @Override
     public void initialize() {
         sessionStorage.addObserver(localUser.name(), sessionObserver);
         var map = repository.getChats().stream().collect(
                 Collectors.toMap(Chat::getUUID, chat -> chat.getLastMessage().timestamp())
         );
-        listUserConversationsFacade.listConversations(new ListConversationsRequestDto(localUser.name(), map));
+        var list = listUserConversationsFacade
+                .listMessages(new ListConversationsRequestDto(localUser.name(), map));
+        handler(list);
     }
 
     @Override
