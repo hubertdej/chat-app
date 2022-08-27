@@ -55,7 +55,7 @@ public class LocalMessageClient implements MessagingClient {
     // TODO: Request for messages during initialization!
     @Override
     public void initialize() {
-        sessionStorage.addObserver(localUser.name(), this::handler);
+        sessionStorage.addObserver(localUser.name(), sessionObserver);
 
         // TODO: Re-implement once this functionality is properly supported on the server side.
         // try {
@@ -67,8 +67,11 @@ public class LocalMessageClient implements MessagingClient {
 
     @Override
     public void close() {
-        sessionStorage.removeObserver(localUser.name(), this::handler);
+        sessionStorage.removeObserver(localUser.name(), sessionObserver);
     }
+
+
+    private final SessionStorageFacade.Observer sessionObserver = this::handler;
 
     private void handler(List<MessageDto> dtos) {
         dtos.forEach(dto -> {
