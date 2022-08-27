@@ -15,6 +15,7 @@ import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
+import com.chat.server.domain.listuserconversations.UserConversationRepository;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.registration.InMemoryCredentialsRepository;
 import com.chat.server.domain.registration.RegistrationFacade;
@@ -51,7 +52,8 @@ class Program {
                     registrationFacade,
                     callbackDispatcher,
                     sessionStorageFacade,
-                    messageReceiverFacade
+                    messageReceiverFacade,
+                    userConversationsFacade
             );
 
             var authService = new LocalAuthService(authenticationFacade, registrationFacade);
