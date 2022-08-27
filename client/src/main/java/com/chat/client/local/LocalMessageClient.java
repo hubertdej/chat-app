@@ -78,10 +78,15 @@ public class LocalMessageClient implements MessagingClient {
     private final SessionStorageFacade.Observer sessionObserver = this::handler;
 
     private void handler(List<MessageDto> dtos) {
-        dtos.forEach(dto -> {
-            var message = messageFactory.createMessage(dto.to(), dto.content(), dto.from(), dto.timestamp());
-            chatsUpdater.handleMessages(dto.to(), repository, List.of(message));
-        });
+        dtos.stream()
+                .collect(Collectors.groupingBy(MessageDto::to, Collectors.toList()))
+                .forEach((chatUUID, payloadList) -> {
+                    var messages = payloadList.stream().map(payload ->
+                            messageFactory.createMessage(chatUUID, payload.content(), payload.from(), payload.timestamp())
+                    ).toList();
+
+                    chatsUpdater.handleMessages(chatUUID, repository, messages);
+                });
     }
 
     // private final ConversationsRequester requester = response -> {
