@@ -7,10 +7,15 @@ import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ChatlistPresenter {
     public interface Factory {
         void openAuthView();
-        void openChatView(Chat chat, MessagingClient client);
+        ChatPresenterHandle openChatView(Chat chat, MessagingClient client);
         void openCreationView(UsersService usersService, ChatsService chatsService, ChatsRepository chatsRepository);
     }
 
@@ -52,8 +57,16 @@ public class ChatlistPresenter {
         view.filterChats(filter);
     }
 
+    private final Map<Chat, ChatPresenterHandle> chatHandles = new HashMap<>();
+
     public void openChat(Chat chat) {
-        factory.openChatView(chat, messagingClient);
+        if (chatHandles.containsKey(chat)) {
+            chatHandles.get(chat).focus();
+            return;
+        }
+        var handle = factory.openChatView(chat, messagingClient);
+        handle.addOnCloseObserver(() -> chatHandles.remove(chat));
+        chatHandles.put(chat, handle);
     }
 
     public void createChat() {
@@ -66,12 +79,16 @@ public class ChatlistPresenter {
         view.open();
     }
 
+    private List<ChatPresenterHandle> getHandles() {
+        return new ArrayList<>(chatHandles.values());
+    }
+
     public void close() {
         chatsRepository.removeObserver(chatsRepositoryObserver);
         chatsRepository.getChats().forEach(chat -> chat.removeObserver(chatUpdateObserver));
         messagingClient.close();
         factory.openAuthView();
+        getHandles().forEach(ChatPresenterHandle::close);
         view.close();
-        // TODO: All other windows should close too.
     }
 }

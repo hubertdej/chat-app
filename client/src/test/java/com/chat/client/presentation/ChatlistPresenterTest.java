@@ -27,6 +27,14 @@ class ChatlistPresenterTest extends BaseTestCase {
 
     @InjectMocks private ChatlistPresenter presenter;
 
+    private ChatPresenterHandle mockHandle() {
+        var handle = new ChatPresenterHandle() {
+            @Override
+            public void focus() {}
+        };
+        return spy(handle);
+    }
+
     @Test
     void testChatsAreObserved() {
         var chat = new Chat(UUID.randomUUID(), "chat name", List.of());
@@ -66,10 +74,38 @@ class ChatlistPresenterTest extends BaseTestCase {
     @Test
     void testOpenChat() {
         var chat = mock(Chat.class);
+        var handle = mock(ChatPresenterHandle.class);
+        given(factory.openChatView(any(), any())).willReturn(handle);
 
         presenter.openChat(chat);
 
         then(factory).should().openChatView(eq(chat), any());
+    }
+
+    @Test
+    void testFocusChatAfterSecondOpen() {
+        var chat = mock(Chat.class);
+        var handle = mock(ChatPresenterHandle.class);
+        given(factory.openChatView(any(), any())).willReturn(handle);
+
+        presenter.openChat(chat);
+        presenter.openChat(chat);
+
+        then(handle).should(times(1)).focus();
+    }
+
+    @Test
+    void testNoChatFocusAfterItWasClosed() {
+        var chat = mock(Chat.class);
+        var handle = mockHandle();
+        given(factory.openChatView(any(), any())).willReturn(handle);
+
+        presenter.openChat(chat);
+        handle.close();
+        presenter.openChat(chat);
+
+        then(factory).should(times(2)).openChatView(eq(chat), any());
+        then(handle).should(never()).focus();
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.chat.client.domain.Chat;
 import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.application.MessageSender;
 
-public class ChatPresenter {
+public class ChatPresenter extends ChatPresenterHandle {
     private final ChatView view;
     private final Chat chat;
     private final MessageSender messageSender;
@@ -32,8 +32,15 @@ public class ChatPresenter {
         view.open();
     }
 
+    @Override
     public void close() {
+        super.close();
         chat.removeObserver(chatObserver);
         view.close();
+    }
+
+    @Override
+    public void focus() {
+        view.focus();
     }
 }
