@@ -17,7 +17,7 @@ public class ListUserConversationsFacade {
             UserConversationRepository userConversationRepository,
             ConversationStorageFacade conversationStorageFacade) {
         this.userConversationRepository = userConversationRepository;
-        conversationStorageFacade.addConversationObserver(new ConversationEventHandler());
+        conversationStorageFacade.initialize(new ConversationEventHandler());
     }
 
     List<ConversationDto> listConversations(String username){

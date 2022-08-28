@@ -13,20 +13,13 @@ import java.util.UUID;
 
 public class ConversationStorageFacade {
     private final ConversationRepository conversationRepository;
-
     private final List<ConversationObserver> convObservers = new ArrayList<>();
 
     public ConversationStorageFacade(ConversationRepository conversationRepository) {
         this.conversationRepository = conversationRepository;
     }
-
-    public void addConversationObserver(ConversationObserver observer) {
+    public void initialize(ConversationObserver observer) {
         convObservers.add(observer);
-    }
-
-
-    public void removeConversationObserver(ConversationObserver observer) {
-        convObservers.remove(observer);
     }
     public interface ConversationObserver {
         void notifyUpdate(ConversationUpdatedEvent event);
