@@ -8,6 +8,8 @@ public interface CreationView {
     void selectUser(User user);
     void unselectUser(User user);
     void filterUsers(String filter);
+    void lockChanges();
+    void unlockChanges();
     void enableCreation();
     void disableCreation();
     void indicateLoadingUsersFailed();

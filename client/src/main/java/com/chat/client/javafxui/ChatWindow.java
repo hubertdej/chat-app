@@ -91,4 +91,9 @@ public class ChatWindow implements ChatView {
     public void close() {
         stage.close();
     }
+
+    @Override
+    public void focus() {
+        stage.requestFocus();
+    }
 }

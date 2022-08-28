@@ -12,4 +12,5 @@ public interface ChatView {
     void displayChatMembers(List<User> members);
     void open();
     void close();
+    void focus();
 }

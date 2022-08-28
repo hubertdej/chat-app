@@ -13,6 +13,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class CreationWindow implements CreationView {
@@ -80,6 +81,16 @@ public class CreationWindow implements CreationView {
     }
 
     @Override
+    public void lockChanges() {
+        stage.getScene().getRoot().setDisable(true);
+    }
+
+    @Override
+    public void unlockChanges() {
+        stage.getScene().getRoot().setDisable(false);
+    }
+
+    @Override
     public void enableCreation() {
         createButton.setDisable(false);
     }
@@ -101,6 +112,7 @@ public class CreationWindow implements CreationView {
 
     @Override
     public void open() {
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
 

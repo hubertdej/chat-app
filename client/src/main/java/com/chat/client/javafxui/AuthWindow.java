@@ -37,14 +37,12 @@ public class AuthWindow implements AuthView {
 
     @Override
     public void lockChanges() {
-        loginButton.setDisable(true);
-        registerButton.setDisable(true);
+        stage.getScene().getRoot().setDisable(true);
     }
 
     @Override
     public void unlockChanges() {
-        loginButton.setDisable(false);
-        registerButton.setDisable(false);
+        stage.getScene().getRoot().setDisable(false);
     }
 
     @Override
