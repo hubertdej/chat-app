@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Database implements DatabaseEngine {
+public class SqlEngine implements DatabaseEngine {
     private final String path;
 
-    Database(String path) {
+    SqlEngine(String path) {
         this.path = path;
     }
 
