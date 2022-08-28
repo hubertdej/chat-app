@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface ChatsService {
-    CompletableFuture<Chat> createChatAsync(String name, List<User> recipients);
+    CompletableFuture<Chat> createChatAsync(String name, List<User> friends);
 
     CompletableFuture<Chat> getChatDetails(UUID chatUUID);
 }

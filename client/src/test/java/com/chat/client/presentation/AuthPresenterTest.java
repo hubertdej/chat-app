@@ -29,6 +29,13 @@ class AuthPresenterTest extends BaseTestCase {
     }
 
     @Test
+    void testClose() {
+        presenter.close();
+
+        then(view).should().close();
+    }
+
+    @Test
     void testSuccessfulRegistration() {
         var username = "username";
         var password = "password";

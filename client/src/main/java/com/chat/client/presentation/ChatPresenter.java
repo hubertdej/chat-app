@@ -21,6 +21,7 @@ public class ChatPresenter {
     public void open() {
         chat.addObserver(view::addMessage);
         view.setTitle(chat.getName());
+        view.displayChatMembers(chat.getMembers());
         view.open();
     }
 

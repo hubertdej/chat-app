@@ -28,7 +28,7 @@ public class SessionFactory implements SessionManager.Factory {
 
     @Override
     public UsersService getUsersService(Credentials credentials) {
-        return new UsersServiceImpl();
+        return new UsersServiceImpl(credentials);
     }
 
     @Override

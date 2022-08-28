@@ -2,6 +2,7 @@ package com.chat.client.javafxui;
 
 
 import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.User;
 import com.chat.client.presentation.ChatPresenter;
 import com.chat.client.presentation.ChatView;
 import javafx.fxml.FXML;
@@ -14,7 +15,10 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class ChatWindow implements ChatView {
+    private String titleBase = "";
     @FXML private Stage stage;
     @FXML private ListView<ChatMessage> messagesListView;
     @FXML private TextArea messageTextArea;
@@ -58,6 +62,8 @@ public class ChatWindow implements ChatView {
             messageTextArea.clear();
             presenter.sendMessage(text);
         });
+
+        stage.setOnCloseRequest(event -> presenter.close());
     }
 
     @Override
@@ -67,7 +73,13 @@ public class ChatWindow implements ChatView {
 
     @Override
     public void setTitle(String title) {
+        titleBase = title;
         stage.setTitle(title);
+    }
+
+    @Override
+    public void displayChatMembers(List<User> members) {
+        stage.setTitle(titleBase + " (" +  String.join(", ", members.stream().map(User::name).sorted().toList()) + ")");
     }
 
     @Override

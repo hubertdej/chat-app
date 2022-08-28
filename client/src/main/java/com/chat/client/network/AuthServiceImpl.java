@@ -34,7 +34,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public CompletableFuture<Credentials> loginUserAsync(String username, String password) {
-        // TODO: replace dummy implementation
-        return CompletableFuture.supplyAsync(() -> new Credentials(username, password));
+        var request = httpRequestFactory.createPOSTRequest("/authenticate", Map.ofEntries(
+                Map.entry("username", username),
+                Map.entry("password", password)
+        ));
+
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(
+                response -> {
+                    System.out.println("Response body:\n" + response.body());
+                    System.out.println("Status: " + response.statusCode());
+
+                    if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                        throw new HttpException(response.statusCode());
+                    }
+
+                    return new Credentials(username, password);
+                }
+        );
     }
 }

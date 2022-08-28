@@ -6,6 +6,7 @@ import com.chat.client.presentation.ChatlistView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -23,7 +24,8 @@ public class ChatlistWindow implements ChatlistView {
     @FXML private Button createButton;
 
     private final ObservableList<Chat> chats = FXCollections.observableArrayList();
-    private final FilteredList<Chat> filteredChats = new FilteredList<>(chats, null);
+    private final SortedList<Chat> sortedChats = new SortedList<>(chats, Chat::compareTo);
+    private final FilteredList<Chat> filteredChats = new FilteredList<>(sortedChats, null);
 
     @Override
     public void initialize(ChatlistPresenter presenter) {
@@ -64,21 +66,18 @@ public class ChatlistWindow implements ChatlistView {
         // TODO: Disable the possibility of opening multiple windows of the same chat.
         createButton.setOnMouseClicked(event -> presenter.createChat());
 
-        stage.setOnCloseRequest(event -> {
-            event.consume();
-            presenter.close();
-        });
+        stage.setOnCloseRequest(event -> presenter.close());
     }
 
     @Override
     public void addChat(Chat chat) {
-        chats.add(0, chat);
+        chats.add(chat);
     }
 
     @Override
     public void updateChat(Chat chat) {
         chats.remove(chat);
-        chats.add(0, chat);
+        chats.add(chat);
     }
 
     @Override

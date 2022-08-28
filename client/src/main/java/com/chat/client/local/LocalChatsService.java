@@ -5,17 +5,23 @@ import com.chat.client.domain.User;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class LocalChatsService implements ChatsService {
     private final ConversationStorageFacade storageFacade;
-    public LocalChatsService(ConversationStorageFacade conversationStorageFacade) {
+    private final User localUser;
+
+    public LocalChatsService(ConversationStorageFacade conversationStorageFacade, User localUser) {
         this.storageFacade = conversationStorageFacade;
+        this.localUser = localUser;
     }
     @Override
-    public CompletableFuture<Chat> createChatAsync(String name, List<User> recipients) {
+    public CompletableFuture<Chat> createChatAsync(String name, List<User> friends) {
+        var recipients = new ArrayList<>(friends);
+        recipients.add(localUser);
         var uuid = storageFacade.add(name, recipients.stream().map(User::name).toList());
         return CompletableFuture.completedFuture(new Chat(uuid, name, recipients));
     }
