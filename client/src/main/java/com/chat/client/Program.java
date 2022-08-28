@@ -32,7 +32,7 @@ class Program {
     }
 
     private static void runClientWithServer() {
-        var engine = SqlEngineFactory.getDatabase("chat.db");
+        var engine = SqlEngineFactory.getDatabase("chat-client-with-server.db");
         var registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository(), engine);
         var authenticationFacade = new AuthenticationFacade(registrationFacade);
         var userConversationsFacade = new ListUserConversationsFacade(

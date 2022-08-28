@@ -107,6 +107,7 @@ public class SqlEngine implements ConversationsEngine, ConversationsLoader, User
                     "values (?, ?)");
             userInsert.setString(1, username);
             userInsert.setString(2, password);
+            userInsert.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -158,10 +159,10 @@ public class SqlEngine implements ConversationsEngine, ConversationsLoader, User
     @Override
     public void readConversation(ConversationsEngine.ConversationReader reader, UUID conversationId) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
-            PreparedStatement conversationSelect = connection.prepareStatement("select name from membership " +
+            PreparedStatement conversationSelect = connection.prepareStatement("select name from conversations " +
                     "where conversation_id = ?");
             conversationSelect.setString(1, conversationId.toString());
-            PreparedStatement membersSelect = connection.prepareStatement("select users from membership " +
+            PreparedStatement membersSelect = connection.prepareStatement("select username from membership " +
                     "where conversation_id = ?");
             membersSelect.setString(1, conversationId.toString());
             PreparedStatement messagesSelect = connection.prepareStatement("select * from messages");

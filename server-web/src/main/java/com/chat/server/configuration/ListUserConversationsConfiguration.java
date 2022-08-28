@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ListUserConversationsConfiguration {
-
     @Bean
-    ListUserConversationsFacade listUserConversationsFacade(ConversationStorageFacade conversationStorageFacade){
+    ListUserConversationsFacade listUserConversationsFacade() {
         return new ListUserConversationsFacade(new InMemoryUserConversationRepository());
     }
 }
