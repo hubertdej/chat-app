@@ -13,6 +13,7 @@ import com.chat.client.presentation.PresenterFactory;
 import com.chat.server.database.ConversationReader;
 import com.chat.server.database.ConversationsDatabase;
 import com.chat.server.database.ConversationsStorageFactory;
+import com.chat.server.database.FromDatabaseConversationsProvider;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
@@ -42,9 +43,8 @@ class Program {
                 .getConversationStorageFacade(
                         List.of(userConversationsFacade.conversationObserver()),
                         new ConversationsDatabase(engine),
-                        engine);
+                        new FromDatabaseConversationsProvider(engine));
         var sessionStorageFacade = new SessionStorageFacade(conversationStorageFacade);
-
 
         var messageReceiverFacade = new MessageReceiverFacade(
                 sessionStorageFacade,

@@ -1,8 +1,5 @@
 package com.chat.server.configuration;
 
-
-import com.chat.server.domain.authentication.AuthenticationFacade;
-import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.sql.SqlEngine;
 import com.chat.server.sql.SqlEngineFactory;
 import org.springframework.context.annotation.Bean;
