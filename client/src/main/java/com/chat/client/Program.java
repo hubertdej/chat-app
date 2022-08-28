@@ -10,10 +10,7 @@ import com.chat.client.local.LocalSessionFactory;
 import com.chat.client.network.AuthServiceImpl;
 import com.chat.client.network.SessionFactory;
 import com.chat.client.presentation.PresenterFactory;
-import com.chat.server.database.ConversationReader;
-import com.chat.server.database.ConversationsDatabase;
-import com.chat.server.database.ConversationsStorageFactory;
-import com.chat.server.database.FromDatabaseConversationsProvider;
+import com.chat.server.database.*;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
@@ -34,7 +31,10 @@ class Program {
 
     private static void runClientWithServer() {
         var engine = SqlEngineFactory.getDatabase("chat-client-with-server.db");
-        var registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository(), engine);
+        var registrationFacade = UsersStorageFactory.getRegistrationFacade(
+                new FromDatabaseUsersProvider(engine),
+                new UsersDatabase(engine)
+        );
         var authenticationFacade = new AuthenticationFacade(registrationFacade);
         var userConversationsFacade = new ListUserConversationsFacade(
                 new InMemoryUserConversationRepository()

@@ -2,13 +2,14 @@ package com.chat.server.sql;
 
 import com.chat.server.database.ConversationsEngine;
 import com.chat.server.database.ConversationsLoader;
-import com.chat.server.domain.registration.UsersEngine;
+import com.chat.server.database.UsersEngine;
+import com.chat.server.database.UsersLoader;
 
 import java.sql.*;
 import java.util.List;
 import java.util.UUID;
 
-public class SqlEngine implements ConversationsEngine, ConversationsLoader, UsersEngine {
+public class SqlEngine implements ConversationsEngine, ConversationsLoader, UsersEngine, UsersLoader {
     private final String path;
 
     SqlEngine(String path) {
@@ -189,7 +190,7 @@ public class SqlEngine implements ConversationsEngine, ConversationsLoader, User
         }
     }
 
-    public void readUsers(UsersEngine.UsersReader reader) {
+    public void readUsers(UsersLoader.UsersReader reader) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement usersSelect = connection.prepareStatement("select * from users");
             var users = usersSelect.executeQuery();

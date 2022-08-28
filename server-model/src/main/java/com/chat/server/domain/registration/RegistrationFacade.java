@@ -1,24 +1,32 @@
 package com.chat.server.domain.registration;
 
+import com.chat.server.database.UsersEngine;
+import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
+import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
+import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.registration.dto.UserDto;
 import com.chat.server.domain.registration.dto.UsernameTakenException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class RegistrationFacade {
     private final CredentialsRepository credentialsRepository;
-    private final UsersEngine engine;
-
-    public RegistrationFacade(CredentialsRepository credentialsRepository, UsersEngine engine) {
+    private final List<RegistrationObserver> observers = new ArrayList<>();
+    public RegistrationFacade(CredentialsRepository credentialsRepository) {
         this.credentialsRepository = credentialsRepository;
-        this.engine = engine;
-        engine.readUsers((username, password) -> credentialsRepository.save(new User(username, password)));
+    }
+    public void addObserver(RegistrationObserver observer) {
+        observers.add(observer);
+    }
+    public interface RegistrationObserver {
+        void notifyRegistered(UserDto user);
     }
 
     public void register(UserDto userDto) throws UsernameTakenException {
         credentialsRepository.save(new UserCreator().create(userDto));
-        engine.addUser(userDto.username(), userDto.password());
+        for (RegistrationObserver observer : observers) observer.notifyRegistered(userDto);
     }
     //TODO replace Optional with type containing error info
     public Optional<String> getCredentials(String username){
