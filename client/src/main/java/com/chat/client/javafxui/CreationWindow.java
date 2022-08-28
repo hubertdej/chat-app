@@ -81,6 +81,16 @@ public class CreationWindow implements CreationView {
     }
 
     @Override
+    public void lockChanges() {
+        stage.getScene().getRoot().setDisable(true);
+    }
+
+    @Override
+    public void unlockChanges() {
+        stage.getScene().getRoot().setDisable(false);
+    }
+
+    @Override
     public void enableCreation() {
         createButton.setDisable(false);
     }

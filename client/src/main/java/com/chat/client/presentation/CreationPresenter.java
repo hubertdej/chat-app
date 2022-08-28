@@ -55,15 +55,17 @@ public class CreationPresenter {
 
     public void createChat(String name) {
         var recipients = selectedUsers.stream().toList();
-
-        // TODO: Lock view.
+        view.lockChanges();
         callbackDispatcher.addCallback(
                 chatsService.createChatAsync(name, recipients),
                 chat -> {
                     chatsRepository.addChat(chat);
                     view.close();
                 },
-                $ -> view.indicateChatCreationFailed()
+                $ -> {
+                    view.indicateChatCreationFailed();
+                    view.unlockChanges();
+                }
         );
     }
 
