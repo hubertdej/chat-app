@@ -1,6 +1,6 @@
 package com.chat.server.persistency;
 
-
+import com.chat.server.domain.DatabaseEngine;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.registration.dto.UserDto;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Database {
+public class Database implements DatabaseEngine {
     private final String path;
 
     Database(String path) {
@@ -59,7 +59,7 @@ public class Database {
         }
     }
 
-    public void createConversation(UUID uuid, String name) {
+    public void addConversation(UUID uuid, String name) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement conversationsInsert = connection.prepareStatement("insert into conversations" +
                     "(conversation_id, name) " +
@@ -87,16 +87,28 @@ public class Database {
         }
     }
 
-    public void addMessage(MessageDto message) {
+    public void addMessage(String from, UUID to, String content, Timestamp timestamp) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement messageInsert = connection.prepareStatement("insert into messages" +
                     "(timestamp, sender, conversation_id, message_content) " +
                     "values (?, ?, ?, ?)");
-            messageInsert.setLong(1, message.timestamp().getTime());
-            messageInsert.setString(2, message.from());
-            messageInsert.setString(3, message.to().toString());
-            messageInsert.setString(4, message.content());
+            messageInsert.setLong(1, timestamp.getTime());
+            messageInsert.setString(2, from);
+            messageInsert.setString(3, to.toString());
+            messageInsert.setString(4, content);
             messageInsert.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addUser(UserDto user) {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
+            PreparedStatement userInsert = connection.prepareStatement("insert into users" +
+                    "(username, password) " +
+                    "values (?, ?)");
+            userInsert.setString(1, user.username());
+            userInsert.setString(2, user.password());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -122,18 +134,6 @@ public class Database {
         }
     }
 
-    public void saveUser(UserDto user) {
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
-            PreparedStatement userInsert = connection.prepareStatement("insert into users" +
-                    "(username, password) " +
-                    "values (?, ?)");
-            userInsert.setString(1, user.username());
-            userInsert.setString(2, user.password());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void removeMember(UUID conversationId, String username) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement membershipDelete = connection.prepareStatement("delete from membership " +
@@ -145,39 +145,21 @@ public class Database {
         }
     }
 
-    public List<UUID> readConversationIds() {
-        List<UUID> idsList = new ArrayList<>();
+    public void readConversationIds(DatabaseEngine.IdsReader reader) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement idsSelect = connection.prepareStatement("select conversation_id from conversations");
             var ids = idsSelect.executeQuery();
             while (ids.next()) {
                 UUID conversation_id = UUID.fromString(ids.getString("conversation_id"));
-                idsList.add(conversation_id);
+                reader.readId(conversation_id);
             }
-            return idsList;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<UserDto> readUsers() {
-        List<UserDto> usersList = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
-            PreparedStatement usersSelect = connection.prepareStatement("select * from users");
-            var users = usersSelect.executeQuery();
-            while (users.next()) {
-                String username = users.getString("username");
-                String password = users.getString("password");
-                usersList.add(new UserDto(username, password));
-            }
-            return usersList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public ConversationDto readConversation(UUID conversationId) {
-        String name = null;
+        String name;
         List<String> members = new ArrayList<>();
         List<MessageDto> messages = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
@@ -191,7 +173,7 @@ public class Database {
 
             var nameResult = conversationSelect.executeQuery();
             var membersResult = membersSelect.executeQuery();
-            var messagesResult = membersSelect.executeQuery();
+            var messagesResult = messagesSelect.executeQuery();
 
             nameResult.next();
             name = nameResult.getString("name");
@@ -200,7 +182,7 @@ public class Database {
                 members.add(username);
             }
             while (messagesResult.next()) {
-                Long timestamp = messagesResult.getLong("timestamp");
+                long timestamp = messagesResult.getLong("timestamp");
                 String sender = messagesResult.getString("sender");
                 UUID conversation_id = UUID.fromString(messagesResult.getString("conversation_id"));
                 String content = messagesResult.getString("message_content");
@@ -208,6 +190,20 @@ public class Database {
             }
 
             return new ConversationDto(conversationId, name, members, messages);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void readUsers(DatabaseEngine.UsersReader reader) {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
+            PreparedStatement usersSelect = connection.prepareStatement("select * from users");
+            var users = usersSelect.executeQuery();
+            while (users.next()) {
+                String username = users.getString("username");
+                String password = users.getString("password");
+                reader.readUser(username, password);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
