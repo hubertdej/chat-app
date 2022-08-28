@@ -1,6 +1,7 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
+import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.application.MessageSender;
 
 public class ChatPresenter {
@@ -18,15 +19,21 @@ public class ChatPresenter {
         messageSender.sendMessage(chat.getUUID(), text);
     }
 
+    private void addMessage(ChatMessage message) {
+        view.addMessage(message);
+    }
+
+    private final Chat.Observer chatObserver = this::addMessage;
+
     public void open() {
-        chat.addObserver(view::addMessage);
+        chat.addObserver(chatObserver);
         view.setTitle(chat.getName());
         view.displayChatMembers(chat.getMembers());
         view.open();
     }
 
     public void close() {
-        chat.removeObserver(view::addMessage);
+        chat.removeObserver(chatObserver);
         view.close();
     }
 }
