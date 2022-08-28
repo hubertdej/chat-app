@@ -1,13 +1,14 @@
-package com.chat.server.persistency;
+package com.chat.server.sql;
 
-import com.chat.server.domain.ConversationsEngine;
-import com.chat.server.domain.UsersEngine;
+import com.chat.server.database.ConversationsEngine;
+import com.chat.server.database.ConversationsLoader;
+import com.chat.server.domain.registration.UsersEngine;
 
 import java.sql.*;
 import java.util.List;
 import java.util.UUID;
 
-public class SqlEngine implements ConversationsEngine, UsersEngine {
+public class SqlEngine implements ConversationsEngine, ConversationsLoader, UsersEngine {
     private final String path;
 
     SqlEngine(String path) {
@@ -55,6 +56,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
         }
     }
 
+    @Override
     public void addConversation(UUID uuid, String name) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement conversationsInsert = connection.prepareStatement("insert into conversations" +
@@ -67,7 +69,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public void addMembers(UUID conversationId, List<String> members) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement membershipInsert = connection.prepareStatement("insert into membership" +
@@ -82,13 +84,13 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
-    public void addMessage(String from, UUID to, String content, Timestamp timestamp) {
+    @Override
+    public void addMessage(String from, UUID to, String content, long timestampValue) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement messageInsert = connection.prepareStatement("insert into messages" +
                     "(timestamp, sender, conversation_id, message_content) " +
                     "values (?, ?, ?, ?)");
-            messageInsert.setLong(1, timestamp.getTime());
+            messageInsert.setLong(1, timestampValue);
             messageInsert.setString(2, from);
             messageInsert.setString(3, to.toString());
             messageInsert.setString(4, content);
@@ -97,7 +99,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public void addUser(String username, String password) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement userInsert = connection.prepareStatement("insert into users" +
@@ -109,7 +111,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public void removeConversation(UUID conversationId) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement messagesDelete = connection.prepareStatement("delete from messages " +
@@ -129,7 +131,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public void removeMember(UUID conversationId, String username) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement membershipDelete = connection.prepareStatement("delete from membership " +
@@ -140,7 +142,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public void readConversationIds(ConversationsEngine.IdsReader reader) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement idsSelect = connection.prepareStatement("select conversation_id from conversations");
@@ -153,7 +155,7 @@ public class SqlEngine implements ConversationsEngine, UsersEngine {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public void readConversation(ConversationsEngine.ConversationReader reader, UUID conversationId) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement conversationSelect = connection.prepareStatement("select name from membership " +

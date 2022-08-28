@@ -18,7 +18,7 @@ public class ConversationStorageFacade {
     public ConversationStorageFacade(ConversationRepository conversationRepository) {
         this.conversationRepository = conversationRepository;
     }
-    public void initialize(ConversationObserver observer) {
+    public void addObserver(ConversationObserver observer) {
         convObservers.add(observer);
     }
     public interface ConversationObserver {
@@ -27,14 +27,15 @@ public class ConversationStorageFacade {
     }
 
     public UUID add(List<String> members){
-        return add(String.join(",", members), members);
+        UUID id = UUID.randomUUID();
+        add(id, String.join(",", members), members);
+        return id;
     }
 
-    public UUID add(String name, List<String> members){
-        Conversation conversation = new Conversation(UUID.randomUUID(), name, members, new ArrayList<>());
+    public void add(UUID id, String name, List<String> members){
+        Conversation conversation = new Conversation(id, name, members, new ArrayList<>());
         conversationRepository.save(conversation);
         publishConversationUpdatedEvent(conversation, null);
-        return conversation.conversationId();
     }
 
     public void add(UUID conversationId, MessageDto messageDto) throws NoSuchConversationException {

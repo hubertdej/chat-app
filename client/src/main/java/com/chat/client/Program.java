@@ -29,7 +29,7 @@ class Program {
         Gui.run(() -> {
             var registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository(), engine);
             var authenticationFacade = new AuthenticationFacade(registrationFacade);
-            var conversationStorageFacade = new ConversationStorageFacade(new InMemoryConversationRepository());
+            var conversationStorageFacade = new ConversationStorageFacade(new InMemoryConversationRepository(), engine);
             var sessionStorageFacade = new SessionStorageFacade(conversationStorageFacade);
 
             var userConversationsFacade = new ListUserConversationsFacade(

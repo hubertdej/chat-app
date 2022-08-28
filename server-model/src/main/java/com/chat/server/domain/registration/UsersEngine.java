@@ -1,4 +1,4 @@
-package com.chat.server.domain;
+package com.chat.server.domain.registration;
 
 public interface UsersEngine {
     interface UsersReader {
