@@ -66,10 +66,7 @@ public class ChatlistWindow implements ChatlistView {
         // TODO: Disable the possibility of opening multiple windows of the same chat.
         createButton.setOnMouseClicked(event -> presenter.createChat());
 
-        stage.setOnCloseRequest(event -> {
-            event.consume();
-            presenter.close();
-        });
+        stage.setOnCloseRequest(event -> presenter.close());
     }
 
     @Override

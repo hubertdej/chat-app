@@ -62,6 +62,8 @@ public class ChatWindow implements ChatView {
             messageTextArea.clear();
             presenter.sendMessage(text);
         });
+
+        stage.setOnCloseRequest(event -> presenter.close());
     }
 
     @Override

@@ -52,6 +52,8 @@ public class CreationWindow implements CreationView {
         createButton.setOnMouseClicked(event -> presenter.createChat(chatNameTextField.getText()));
 
         cancelButton.setOnMouseClicked(event -> presenter.close());
+
+        stage.setOnCloseRequest(event -> presenter.close());
     }
 
     @Override

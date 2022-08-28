@@ -31,6 +31,8 @@ public class AuthWindow implements AuthView {
             var password = registerPasswordTextField.getText();
             presenter.register(username, password);
         });
+
+        stage.setOnCloseRequest(event -> presenter.close());
     }
 
     @Override

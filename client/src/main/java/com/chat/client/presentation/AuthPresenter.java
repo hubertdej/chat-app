@@ -65,4 +65,8 @@ public class AuthPresenter {
                 }
         );
     }
+
+    public void close() {
+        view.close();
+    }
 }
