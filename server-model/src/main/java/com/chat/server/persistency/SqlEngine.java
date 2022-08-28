@@ -158,10 +158,7 @@ public class SqlEngine implements DatabaseEngine {
         }
     }
 
-    public ConversationDto readConversation(UUID conversationId) {
-        String name;
-        List<String> members = new ArrayList<>();
-        List<MessageDto> messages = new ArrayList<>();
+    public void readConversation(DatabaseEngine.ConversationReader reader, UUID conversationId) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement conversationSelect = connection.prepareStatement("select name from membership " +
                     "where conversation_id = ?");
@@ -176,20 +173,18 @@ public class SqlEngine implements DatabaseEngine {
             var messagesResult = messagesSelect.executeQuery();
 
             nameResult.next();
-            name = nameResult.getString("name");
+            reader.readName(nameResult.getString("name"));
             while (membersResult.next()) {
                 String username = membersResult.getString("username");
-                members.add(username);
+                reader.readMember(username);
             }
             while (messagesResult.next()) {
-                long timestamp = messagesResult.getLong("timestamp");
+                long timestampValue = messagesResult.getLong("timestamp");
                 String sender = messagesResult.getString("sender");
                 UUID conversation_id = UUID.fromString(messagesResult.getString("conversation_id"));
                 String content = messagesResult.getString("message_content");
-                messages.add(new MessageDto(sender, conversation_id, content, new Timestamp(timestamp)));
+                reader.readMessage(sender, conversation_id, content, timestampValue);
             }
-
-            return new ConversationDto(conversationId, name, members, messages);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

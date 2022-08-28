@@ -11,9 +11,13 @@ public interface DatabaseEngine {
     interface IdsReader {
         void readId(UUID id);
     }
-
     interface UsersReader {
         void readUser(String username, String password);
+    }
+    interface ConversationReader {
+        void readName(String name);
+        void readMember(String username);
+        void readMessage(String from, UUID to, String content, long timestampValue);
     }
     void addConversation(UUID uuid, String name);
     void addMembers(UUID conversationId, List<String> members);
@@ -22,6 +26,6 @@ public interface DatabaseEngine {
     void removeConversation(UUID conversationId);
     void removeMember(UUID conversationId, String username);
     void readConversationIds(DatabaseEngine.IdsReader reader);
-    ConversationDto readConversation(UUID conversationId);
+    void readConversation(DatabaseEngine.ConversationReader reader, UUID conversationId);
     void readUsers(DatabaseEngine.UsersReader reader);
 }
