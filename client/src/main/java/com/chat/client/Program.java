@@ -15,7 +15,6 @@ import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
-import com.chat.server.domain.listuserconversations.UserConversationRepository;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.registration.InMemoryCredentialsRepository;
 import com.chat.server.domain.registration.RegistrationFacade;
@@ -28,7 +27,7 @@ class Program {
 
     private static void runClientWithServer() {
         Gui.run(() -> {
-            var registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository());
+            var registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository(), engine);
             var authenticationFacade = new AuthenticationFacade(registrationFacade);
             var conversationStorageFacade = new ConversationStorageFacade(new InMemoryConversationRepository());
             var sessionStorageFacade = new SessionStorageFacade(conversationStorageFacade);

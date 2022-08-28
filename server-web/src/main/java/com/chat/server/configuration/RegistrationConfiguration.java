@@ -11,6 +11,6 @@ class RegistrationConfiguration {
     @Bean
     public RegistrationFacade registrationFacade(){
         CredentialsRepository credentialsRepository = new InMemoryCredentialsRepository();
-        return new RegistrationFacade(credentialsRepository);
+        return new RegistrationFacade(credentialsRepository, engine);
     }
 }

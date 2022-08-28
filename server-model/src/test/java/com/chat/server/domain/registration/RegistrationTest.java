@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegistrationTest {
-    RegistrationFacade registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository()); //TODO mock?
+    RegistrationFacade registrationFacade = new RegistrationFacade(new InMemoryCredentialsRepository(), engine); //TODO mock?
 
     @Test
     void listsAllRegisteredUsers(){

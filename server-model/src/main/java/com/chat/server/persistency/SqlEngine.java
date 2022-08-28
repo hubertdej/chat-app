@@ -1,22 +1,18 @@
 package com.chat.server.persistency;
 
-import com.chat.server.domain.DatabaseEngine;
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.registration.dto.UserDto;
+import com.chat.server.domain.ConversationsEngine;
+import com.chat.server.domain.UsersEngine;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SqlEngine implements DatabaseEngine {
+public class SqlEngine implements ConversationsEngine, UsersEngine {
     private final String path;
 
     SqlEngine(String path) {
         this.path = path;
     }
-
     void init() {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement enableForeignKeys = connection.prepareStatement(
@@ -102,13 +98,13 @@ public class SqlEngine implements DatabaseEngine {
         }
     }
 
-    public void addUser(UserDto user) {
+    public void addUser(String username, String password) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement userInsert = connection.prepareStatement("insert into users" +
                     "(username, password) " +
                     "values (?, ?)");
-            userInsert.setString(1, user.username());
-            userInsert.setString(2, user.password());
+            userInsert.setString(1, username);
+            userInsert.setString(2, password);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -145,7 +141,7 @@ public class SqlEngine implements DatabaseEngine {
         }
     }
 
-    public void readConversationIds(DatabaseEngine.IdsReader reader) {
+    public void readConversationIds(ConversationsEngine.IdsReader reader) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement idsSelect = connection.prepareStatement("select conversation_id from conversations");
             var ids = idsSelect.executeQuery();
@@ -158,7 +154,7 @@ public class SqlEngine implements DatabaseEngine {
         }
     }
 
-    public void readConversation(DatabaseEngine.ConversationReader reader, UUID conversationId) {
+    public void readConversation(ConversationsEngine.ConversationReader reader, UUID conversationId) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement conversationSelect = connection.prepareStatement("select name from membership " +
                     "where conversation_id = ?");
@@ -190,7 +186,7 @@ public class SqlEngine implements DatabaseEngine {
         }
     }
 
-    public void readUsers(DatabaseEngine.UsersReader reader) {
+    public void readUsers(UsersEngine.UsersReader reader) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement usersSelect = connection.prepareStatement("select * from users");
             var users = usersSelect.executeQuery();
