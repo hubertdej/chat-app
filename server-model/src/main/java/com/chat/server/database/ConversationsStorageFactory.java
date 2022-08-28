@@ -4,22 +4,27 @@ import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
+import com.chat.server.domain.conversationstorage.ConversationStorageFacade.ConversationObserver;
+
+import java.util.List;
 
 public class ConversationsStorageFactory {
-    public ConversationStorageFacade getConversationStorageFacade(ConversationsDatabase database,
-                                                                  ConversationsLoader loader,
-                                                                  ConversationReader reader) {
+    public static ConversationStorageFacade getConversationStorageFacade(
+            List<ConversationObserver> observers,
+            ConversationsDatabase database,
+            ConversationsLoader loader) {
         ConversationStorageFacade facade = new ConversationStorageFacade(
                 new InMemoryConversationRepository()
         );
-        loadConversations(facade, loader, reader);
+        for (ConversationObserver observer : observers) facade.addObserver(observer);
+        loadConversations(facade, loader);
         facade.addObserver(database);
         return facade;
     }
-    private void loadConversations(ConversationStorageFacade facade,
-                                   ConversationsLoader loader,
-                                   ConversationReader reader) {
+    private static void loadConversations(ConversationStorageFacade facade,
+                                   ConversationsLoader loader) {
         loader.readConversationIds(id -> {
+            var reader = new ConversationReader(id);
             loader.readConversation(reader, id);
             var dto = reader.build();
             facade.add(dto.getConversationId(), dto.getName(), dto.getMembers());

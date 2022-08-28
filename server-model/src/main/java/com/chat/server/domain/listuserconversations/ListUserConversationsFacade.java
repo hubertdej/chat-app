@@ -14,10 +14,8 @@ public class ListUserConversationsFacade {
     private final UserConversationRepository userConversationRepository;
 
     public ListUserConversationsFacade(
-            UserConversationRepository userConversationRepository,
-            ConversationStorageFacade conversationStorageFacade) {
+            UserConversationRepository userConversationRepository) {
         this.userConversationRepository = userConversationRepository;
-        conversationStorageFacade.addObserver(new ConversationEventHandler());
     }
 
     List<ConversationDto> listConversations(String username){
@@ -46,6 +44,8 @@ public class ListUserConversationsFacade {
         List<ConversationDto> conversationDtos = listConversations(listConversationsRequestDto);
         return conversationDtos.stream().map(ConversationDto::getMessages).flatMap(Collection::stream).toList();
     }
+
+    public ConversationStorageFacade.ConversationObserver conversationObserver() { return new ConversationEventHandler();}
 
     private List<MessageDto> getFromTimestamp(List<MessageDto> messageDtos, Timestamp timestamp) {
         int n = messageDtos.size();

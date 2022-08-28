@@ -15,7 +15,7 @@ public class ConversationReader implements ConversationsEngine.ConversationReade
     private List<String> members = new ArrayList<>();
     private List<MessageDto> messages = new ArrayList<>();
 
-    private ConversationReader(UUID id) {
+    public ConversationReader(UUID id) {
         this.id = id;
     }
     @Override

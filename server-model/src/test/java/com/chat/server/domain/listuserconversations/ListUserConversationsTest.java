@@ -18,14 +18,14 @@ import static org.mockito.Mockito.when;
 
 public class ListUserConversationsTest {
 
-    private ConversationStorageFacade conversationStorageFacade = mock(ConversationStorageFacade.class);
+//    private ConversationStorageFacade conversationStorageFacade = mock(ConversationStorageFacade.class);
     private ListUserConversationsFacade listUserConversationsFacade;
     private UserConversationRepository userConversationRepository = mock(UserConversationRepository.class);
     private final String john = "john";
 
     @BeforeEach
     void setup(){
-        listUserConversationsFacade = new ListUserConversationsFacade(userConversationRepository, conversationStorageFacade);
+        listUserConversationsFacade = new ListUserConversationsFacade(userConversationRepository);
     }
 
     @Test

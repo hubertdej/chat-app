@@ -12,6 +12,6 @@ public class ListUserConversationsConfiguration {
 
     @Bean
     ListUserConversationsFacade listUserConversationsFacade(ConversationStorageFacade conversationStorageFacade){
-        return new ListUserConversationsFacade(new InMemoryUserConversationRepository(), conversationStorageFacade);
+        return new ListUserConversationsFacade(new InMemoryUserConversationRepository());
     }
 }

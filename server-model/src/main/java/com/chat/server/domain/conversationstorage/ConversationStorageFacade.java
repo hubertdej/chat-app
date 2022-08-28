@@ -32,6 +32,11 @@ public class ConversationStorageFacade {
         return id;
     }
 
+    public UUID add(String name, List<String> members) {
+        UUID id = UUID.randomUUID();
+        add(id, name, members);
+        return id;
+    }
     public void add(UUID id, String name, List<String> members){
         Conversation conversation = new Conversation(id, name, members, new ArrayList<>());
         conversationRepository.save(conversation);
