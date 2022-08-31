@@ -36,4 +36,12 @@ public class RegistrationFacade {
     public List<String> listUsers(){
         return credentialsRepository.listUsers();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null) return false;
+        if (!(o instanceof RegistrationFacade facade)) return false;
+        return credentialsRepository.equals(facade.credentialsRepository);
+    }
 }

@@ -8,7 +8,7 @@ import com.chat.server.domain.conversationstorage.ConversationStorageFacade.Conv
 import java.util.List;
 
 public class ConversationsStorageFactory {
-    public static ConversationStorageFacade getConversationStorageFacade(
+    public ConversationStorageFacade getConversationStorageFacade(
             List<ConversationObserver> observers,
             ConversationsDatabase database,
             ConversationsProvider provider) {

@@ -1,8 +1,19 @@
 package com.chat.server.database;
 
+import com.chat.server.domain.conversationstorage.dto.ConversationDto;
+
 import java.util.UUID;
 
 public interface ConversationsLoader {
-    void readConversationIds(ConversationsEngine.IdsReader reader);
-    void readConversation(ConversationsEngine.ConversationReader reader, UUID conversationId);
+    interface IdsReader {
+        void readId(UUID id);
+    }
+    interface ConversationReader {
+        ConversationDto build();
+        void readMember(String username);
+        void readMessage(String from, UUID to, String content, long timestampValue);
+        void readName(String name);
+    }
+    void readConversationIds(IdsReader reader);
+    void readConversation(ConversationReader reader, UUID conversationId);
 }

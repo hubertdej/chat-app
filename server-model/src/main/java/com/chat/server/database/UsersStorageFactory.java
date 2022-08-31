@@ -5,9 +5,9 @@ import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.registration.UsersProvider;
 
 public class UsersStorageFactory {
-    public static RegistrationFacade getRegistrationFacade(UsersProvider provider, UsersDatabase database) {
+    public RegistrationFacade getRegistrationFacade(UsersProvider provider, UsersDatabase database) {
         var facade = new RegistrationFacade(new InMemoryCredentialsRepository());
-        provider.readUsers(facade);
+        provider.provideUsers(facade);
         facade.addObserver(database);
         return facade;
     }

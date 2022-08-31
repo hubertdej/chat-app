@@ -31,7 +31,7 @@ class Program {
 
     private static void runClientWithServer() {
         var engine = SqlEngineFactory.getDatabase("chat-client-with-server.db");
-        var registrationFacade = UsersStorageFactory.getRegistrationFacade(
+        var registrationFacade = new UsersStorageFactory().getRegistrationFacade(
                 new FromDatabaseUsersProvider(engine),
                 new UsersDatabase(engine)
         );
@@ -39,7 +39,7 @@ class Program {
         var userConversationsFacade = new ListUserConversationsFacade(
                 new InMemoryUserConversationRepository()
         );
-        var conversationStorageFacade = ConversationsStorageFactory
+        var conversationStorageFacade = new ConversationsStorageFactory()
                 .getConversationStorageFacade(
                         List.of(userConversationsFacade.conversationObserver()),
                         new ConversationsDatabase(engine),

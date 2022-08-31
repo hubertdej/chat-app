@@ -1,5 +1,7 @@
 package com.chat.server.domain.registration;
 
+import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
+import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.registration.dto.UsernameTakenException;
 
 import java.util.HashMap;
@@ -25,5 +27,13 @@ public class InMemoryCredentialsRepository implements CredentialsRepository {
     @Override
     public List<String> listUsers() {
         return storage.keySet().stream().toList();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null) return false;
+        if (!(o instanceof InMemoryCredentialsRepository repository)) return false;
+        return storage.equals(repository.storage);
     }
 }

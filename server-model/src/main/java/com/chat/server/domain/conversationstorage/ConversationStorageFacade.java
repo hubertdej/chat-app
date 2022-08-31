@@ -76,4 +76,12 @@ public class ConversationStorageFacade {
         );
         for (ConversationStorageFacade.ConversationObserver o : convObservers) o.notifyUpdate(conversationUpdatedEvent);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null) return false;
+        if (!(o instanceof ConversationStorageFacade facade)) return false;
+        return facade.conversationRepository.equals(conversationRepository);
+    }
 }

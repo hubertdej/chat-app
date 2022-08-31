@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 class RegistrationConfiguration {
     @Bean
     public RegistrationFacade registrationFacade(UsersLoader loader, UsersEngine engine) {
-        return UsersStorageFactory.getRegistrationFacade(
+        return new UsersStorageFactory().getRegistrationFacade(
                 new FromDatabaseUsersProvider(loader),
                 new UsersDatabase(engine)
         );

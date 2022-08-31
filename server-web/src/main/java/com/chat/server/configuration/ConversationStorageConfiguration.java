@@ -18,7 +18,7 @@ class ConversationStorageConfiguration {
     public ConversationStorageFacade conversationStorageFacade(
             ListUserConversationsFacade listUserConversationsFacade,
             SqlEngine engine) {
-        return ConversationsStorageFactory.getConversationStorageFacade(
+        return new ConversationsStorageFactory().getConversationStorageFacade(
                 List.of(listUserConversationsFacade.conversationObserver()),
                 new ConversationsDatabase(engine),
                 new FromDatabaseConversationsProvider(engine)

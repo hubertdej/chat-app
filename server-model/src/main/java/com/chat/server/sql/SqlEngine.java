@@ -145,7 +145,7 @@ public class SqlEngine implements ConversationsEngine, ConversationsLoader, User
         }
     }
     @Override
-    public void readConversationIds(ConversationsEngine.IdsReader reader) {
+    public void readConversationIds(ConversationsLoader.IdsReader reader) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement idsSelect = connection.prepareStatement("select conversation_id from conversations");
             var ids = idsSelect.executeQuery();
@@ -158,7 +158,7 @@ public class SqlEngine implements ConversationsEngine, ConversationsLoader, User
         }
     }
     @Override
-    public void readConversation(ConversationsEngine.ConversationReader reader, UUID conversationId) {
+    public void readConversation(ConversationsLoader.ConversationReader reader, UUID conversationId) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path)) {
             PreparedStatement conversationSelect = connection.prepareStatement("select name from conversations " +
                     "where conversation_id = ?");

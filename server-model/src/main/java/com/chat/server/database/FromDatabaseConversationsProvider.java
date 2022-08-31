@@ -14,7 +14,7 @@ public class FromDatabaseConversationsProvider implements ConversationsProvider 
 
     @Override
     public void provideConversations(ConversationStorageFacade destination) {
-        loader.readConversationIds(id -> {
+        ConversationsLoader.IdsReader idsReader = id -> {
             var reader = new ConversationReader(id);
             loader.readConversation(reader, id);
             var dto = reader.build();
@@ -26,6 +26,7 @@ public class FromDatabaseConversationsProvider implements ConversationsProvider 
                     throw new RuntimeException(e);
                 }
             }
-        });
+        };
+        loader.readConversationIds(idsReader);
     }
 }

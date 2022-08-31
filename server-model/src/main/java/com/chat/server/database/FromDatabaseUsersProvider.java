@@ -12,7 +12,7 @@ public class FromDatabaseUsersProvider implements UsersProvider {
     }
 
     @Override
-    public void readUsers(RegistrationFacade registrationFacade) {
+    public void provideUsers(RegistrationFacade registrationFacade) {
         loader.readUsers((username, password) ->
                 registrationFacade.register(new UserDto(username, password))
         );
