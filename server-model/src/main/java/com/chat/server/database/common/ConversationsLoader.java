@@ -1,4 +1,4 @@
-package com.chat.server.database;
+package com.chat.server.database.common;
 
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 

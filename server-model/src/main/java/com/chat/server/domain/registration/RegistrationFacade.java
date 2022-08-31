@@ -1,9 +1,5 @@
 package com.chat.server.domain.registration;
 
-import com.chat.server.database.UsersEngine;
-import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
-import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
-import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.registration.dto.UserDto;
 import com.chat.server.domain.registration.dto.UsernameTakenException;
 

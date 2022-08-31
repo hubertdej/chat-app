@@ -1,5 +1,6 @@
 package com.chat.server.database;
 
+import com.chat.server.database.common.ConversationsEngine;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
 import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;

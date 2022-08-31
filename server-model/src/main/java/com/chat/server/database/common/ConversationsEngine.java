@@ -1,6 +1,4 @@
-package com.chat.server.database;
-
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
+package com.chat.server.database.common;
 
 import java.util.List;
 import java.util.UUID;

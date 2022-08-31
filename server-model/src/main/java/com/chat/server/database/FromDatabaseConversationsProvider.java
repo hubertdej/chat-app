@@ -1,5 +1,7 @@
 package com.chat.server.database;
 
+import com.chat.server.database.common.ConversationReader;
+import com.chat.server.database.common.ConversationsLoader;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.ConversationsProvider;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;

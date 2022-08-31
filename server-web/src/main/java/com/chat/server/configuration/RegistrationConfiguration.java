@@ -1,10 +1,9 @@
 package com.chat.server.configuration;
 
 import com.chat.server.database.*;
-import com.chat.server.domain.registration.CredentialsRepository;
-import com.chat.server.domain.registration.InMemoryCredentialsRepository;
+import com.chat.server.database.common.UsersEngine;
+import com.chat.server.database.common.UsersLoader;
 import com.chat.server.domain.registration.RegistrationFacade;
-import com.chat.server.domain.registration.UsersProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

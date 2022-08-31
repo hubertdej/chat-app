@@ -1,9 +1,9 @@
 package com.chat.server.sql;
 
-import com.chat.server.database.ConversationsEngine;
-import com.chat.server.database.ConversationsLoader;
-import com.chat.server.database.UsersEngine;
-import com.chat.server.database.UsersLoader;
+import com.chat.server.database.common.ConversationsEngine;
+import com.chat.server.database.common.ConversationsLoader;
+import com.chat.server.database.common.UsersEngine;
+import com.chat.server.database.common.UsersLoader;
 
 import java.sql.*;
 import java.util.List;

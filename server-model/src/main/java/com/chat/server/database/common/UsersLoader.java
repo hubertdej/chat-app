@@ -1,4 +1,4 @@
-package com.chat.server.database;
+package com.chat.server.database.common;
 
 public interface UsersLoader {
     interface UsersReader {
