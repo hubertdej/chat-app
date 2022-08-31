@@ -41,11 +41,11 @@ class LocalSessionFactoryTest extends BaseTestCase {
         var username = "Alice";
         var password = "password";
         var credentials = new Credentials(username, password);
-
+        var expectedService = new LocalChatsService(conversationStorageFacade, new User(username));
 
         var service = factory.getChatsService(credentials);
 
-        assertEquals(new LocalChatsService(conversationStorageFacade, new User(username)), service);
+        assertEquals(expectedService, service);
     }
 
     @Test
@@ -53,10 +53,11 @@ class LocalSessionFactoryTest extends BaseTestCase {
         var username = "Alice";
         var password = "password";
         var credentials = new Credentials(username, password);
+        var expectedService = new LocalUsersService(registrationFacade, new User(username));
 
         var service = factory.getUsersService(credentials);
 
-        assertEquals(new LocalUsersService(registrationFacade, new User(username)), service);
+        assertEquals(expectedService, service);
     }
 
     @Test
@@ -67,10 +68,7 @@ class LocalSessionFactoryTest extends BaseTestCase {
         var user = new User(username);
         var chatsService = mock(ChatsService.class);
         var chatsRepository = mock(ChatsRepository.class);
-
-        var service = factory.getMessagingClient(user, credentials, chatsService, chatsRepository);
-
-        assertEquals(new LocalMessageClient(
+        var expectedClient = new LocalMessageClient(
                 user,
                 chatsRepository,
                 new MessageFactory(user),
@@ -78,6 +76,10 @@ class LocalSessionFactoryTest extends BaseTestCase {
                 sessionStorageFacade,
                 messageReceiverFacade,
                 listUserConversationsFacade
-        ), service);
+        );
+
+        var client = factory.getMessagingClient(user, credentials, chatsService, chatsRepository);
+
+        assertEquals(expectedClient, client);
     }
 }

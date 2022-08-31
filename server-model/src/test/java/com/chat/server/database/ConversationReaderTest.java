@@ -25,9 +25,12 @@ class ConversationReaderTest {
     @Test
     void testBuildEmptyConversation() {
         var chatName = "chat";
+        var expectedDto = new ConversationDto(id, chatName, List.of(), List.of());
+
         reader.readName(chatName);
         var dto = reader.build();
-        assertEquals(new ConversationDto(id, chatName, List.of(), List.of()), dto);
+
+        assertEquals(expectedDto, dto);
     }
 
     @Test
@@ -38,15 +41,15 @@ class ConversationReaderTest {
         var text = "hey";
         var timestamp = 1;
 
-        var expectedDto= new MessageDto(username, id, text, new Timestamp(timestamp));
+        var dto= new MessageDto(username, id, text, new Timestamp(timestamp));
+        var expectedConversationDto = new ConversationDto(id, chatName, List.of(username, friend), List.of(dto));
 
         reader.readName(chatName);
         reader.readMember(username);
         reader.readMember(friend);
         reader.readMessage(username, id, text, timestamp);
-        var dto = reader.build();
-        assertEquals(
-                new ConversationDto(id, chatName, List.of(username, friend), List.of(expectedDto)), dto
-        );
+        var builtDto = reader.build();
+
+        assertEquals(expectedConversationDto, builtDto);
     }
 }

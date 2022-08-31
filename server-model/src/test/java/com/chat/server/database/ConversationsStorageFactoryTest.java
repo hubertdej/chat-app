@@ -21,10 +21,11 @@ class ConversationsStorageFactoryTest {
         var database = mock(ConversationsDatabase.class);
         var provider = mock(ConversationsProvider.class);
         var factory = new ConversationsStorageFactory();
+        var expectedStorage = new ConversationStorageFacade(new InMemoryConversationRepository());
 
         var facade = factory.getConversationStorageFacade(preObservers, database, provider);
 
         then(provider).should().provideConversations(facade);
-        assertEquals(new ConversationStorageFacade(new InMemoryConversationRepository()), facade);
+        assertEquals(expectedStorage, facade);
     }
 }

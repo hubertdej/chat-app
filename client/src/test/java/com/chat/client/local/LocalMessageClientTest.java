@@ -43,11 +43,12 @@ class LocalMessageClientTest extends BaseTestCase {
         var text = "hey";
         var username = "Alice";
         given(localUser.name()).willReturn(username);
+        var expectedDto = new MessageReceivedDto(username, id, text);
 
         client.sendMessage(id, text);
 
 
-        then(messageReceiver).should().receiveMessage(new MessageReceivedDto(username, id, text));
+        then(messageReceiver).should().receiveMessage(expectedDto);
     }
 
     @Test
@@ -59,6 +60,7 @@ class LocalMessageClientTest extends BaseTestCase {
         doAnswer(invocation -> {throw new NoSuchConversationException();})
                 .when(messageReceiver)
                 .receiveMessage(any(MessageReceivedDto.class));
+        var expectedDto = new MessageReceivedDto(username, id, text);
 
         try {
             client.sendMessage(id, text);
@@ -66,7 +68,7 @@ class LocalMessageClientTest extends BaseTestCase {
             Assertions.assertThrows(NoSuchConversationException.class, () -> { throw e.getCause(); });
         }
 
-        then(messageReceiver).should().receiveMessage(new MessageReceivedDto(username, id, text));
+        then(messageReceiver).should().receiveMessage(expectedDto);
     }
 
     @Test
@@ -126,7 +128,6 @@ class LocalMessageClientTest extends BaseTestCase {
         var unwantedMessage = new ChatMessage(id, msg3, new User(friend), timestamp3, false);
         given(messageFactory.createMessage(id, msg2, friend, timestamp2)).willReturn(expectedMessage);
         given(messageFactory.createMessage(id, msg3, friend, timestamp3)).willReturn(unwantedMessage);
-
         var conversationStorage = mock(ConversationStorageFacade.class);
         var testSessionStorage = new SessionStorageFacade(conversationStorage);
         var testClient = new LocalMessageClient(
@@ -138,7 +139,6 @@ class LocalMessageClientTest extends BaseTestCase {
                 messageReceiver,
                 listUserConversationsFacade
         );
-
         given(conversationStorage.get(id)).willReturn(
                 Optional.of(new ConversationDto(id, chatName, List.of(username, friend), List.of()))
         );

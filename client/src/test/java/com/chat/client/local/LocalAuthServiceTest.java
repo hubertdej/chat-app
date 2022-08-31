@@ -32,10 +32,11 @@ class LocalAuthServiceTest extends BaseTestCase {
     void testSuccessfulRegistrationAsync() throws ExecutionException, InterruptedException {
         final var username = "Alice";
         final var password = "1234";
+        var expectedDto = new UserDto(username, password);
 
         localAuthService.registerUserAsync(username, password).get();
 
-        then(registrationFacade).should().register(new UserDto(username, password));
+        then(registrationFacade).should().register(expectedDto);
     }
 
     @Test
@@ -45,6 +46,7 @@ class LocalAuthServiceTest extends BaseTestCase {
         doAnswer(invocation -> {throw new UsernameTakenException();})
                 .when(registrationFacade)
                 .register(any(UserDto.class));
+        var expectedDto = new UserDto(username, password);
 
         try {
             localAuthService.registerUserAsync(username, password).get();
@@ -53,7 +55,7 @@ class LocalAuthServiceTest extends BaseTestCase {
             Assertions.assertThrows(AuthFailedException.class, () -> { throw e.getCause(); });
         }
 
-        then(registrationFacade).should().register(new UserDto(username, password));
+        then(registrationFacade).should().register(expectedDto);
     }
 
     @Test

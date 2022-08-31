@@ -30,7 +30,6 @@ class FromDatabaseConversationsProviderTest {
         var id = new UUID(12, 34);
         var id2 = new UUID(12, 35);
         var name1 = "chatName";
-
         var username = "Alice";
         var friend = "Bob";
         var name2 = "bff";
@@ -96,6 +95,7 @@ class FromDatabaseConversationsProviderTest {
             reader.readMessage(username, id, text, time);
             return null;
         }).when(loader).readConversation(any(), any());
+
         try {
             provider.provideConversations(facade);
         } catch (RuntimeException e) {

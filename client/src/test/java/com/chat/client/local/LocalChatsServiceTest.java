@@ -40,11 +40,12 @@ class LocalChatsServiceTest extends BaseTestCase {
         given(localUser.name()).willReturn(username);
         given(storageFacade.add(any(String.class), any(List.class))).willReturn(id);
         var members = List.of(bobUser, localUser);
+        var expectedChat = new Chat(id, chatName, members);
 
         var chat = service.createChatAsync(chatName, List.of(bobUser)).get();
 
         then(storageFacade).should().add(chatName, List.of(bob, username));
-        assertEquals(new Chat(id, chatName, members), chat);
+        assertEquals(expectedChat, chat);
     }
 
     @Test
@@ -58,11 +59,12 @@ class LocalChatsServiceTest extends BaseTestCase {
         var messages = List.of(new MessageDto(username, id, "hey", new Timestamp(1)));
         var optional = Optional.of(new ConversationDto(id, chatName, members, messages));
         given(storageFacade.get(id)).willReturn(optional);
+        var expectedChat = new Chat(id, chatName, membersAsUsers);
 
-        var chat = service.getChatDetails(id).get();
+                var chat = service.getChatDetails(id).get();
 
         then(storageFacade).should().get(id);
-        assertEquals(new Chat(id, chatName, membersAsUsers), chat);
+        assertEquals(expectedChat, chat);
     }
 
     @Test

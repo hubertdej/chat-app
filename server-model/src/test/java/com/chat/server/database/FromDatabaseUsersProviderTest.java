@@ -38,7 +38,6 @@ class FromDatabaseUsersProviderTest {
             return null;
         }).when(loader).readUsers(any());
 
-
         provider.provideUsers(facade);
 
         then(loader).should().readUsers(any(UsersLoader.UsersReader.class));
