@@ -22,4 +22,12 @@ public class LocalUsersService implements UsersService {
         users.remove(localUser);
         return CompletableFuture.completedFuture(users);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof LocalUsersService service)) return false;
+        return lister.equals(service.lister) && localUser.equals(service.localUser);
+    }
 }
