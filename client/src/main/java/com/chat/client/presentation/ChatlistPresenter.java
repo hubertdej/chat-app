@@ -45,7 +45,7 @@ public class ChatlistPresenter {
 
     private void addChat(Chat chat) {
         view.addChat(chat);
-        chat.addObserver(chatUpdateObserver);
+        chat.addObserver(chatUpdateObserver, true);
     }
 
     private void updateChat(ChatMessage message) {

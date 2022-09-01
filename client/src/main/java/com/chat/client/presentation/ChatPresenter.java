@@ -26,7 +26,7 @@ public class ChatPresenter extends ChatPresenterHandle {
     private final Chat.Observer chatObserver = this::addMessage;
 
     public void open() {
-        chat.addObserver(chatObserver);
+        chat.addObserver(chatObserver, true);
         view.setTitle(chat.getName());
         view.displayChatMembers(chat.getMembers());
         view.open();

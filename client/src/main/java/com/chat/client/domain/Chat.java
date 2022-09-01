@@ -12,9 +12,11 @@ public class Chat implements Comparable<Chat> {
 
     private final List<Observer> observers = new ArrayList<>();
 
-    public void addObserver(Observer observer) {
+    public void addObserver(Observer observer, boolean notifyCurrentState) {
         observers.add(observer);
-        for (var message : snapshot) { observer.notifyUpdate(message); }
+        if (notifyCurrentState) {
+            for (var message : snapshot) { observer.notifyUpdate(message); }
+        }
     }
 
     public void removeObserver(Observer observer) {

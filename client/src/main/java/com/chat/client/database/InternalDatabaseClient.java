@@ -55,6 +55,7 @@ public class InternalDatabaseClient implements MessagingClient {
                         )
                 );
             }
+            addedChat.addObserver(chatObserver, false);
             repository.addChat(addedChat);
         };
         loader.readConversationIds(idsReader);
@@ -75,7 +76,7 @@ public class InternalDatabaseClient implements MessagingClient {
     private void handleNewChat(Chat chat) {
         engine.addConversation(chat.getUUID(), chat.getName());
         engine.addMembers(chat.getUUID(), chat.getMembers().stream().map(User::name).toList());
-        chat.addObserver(chatObserver);
+        chat.addObserver(chatObserver, true);
     }
     private void handleChatUpdate(ChatMessage message) {
         engine.addMessage(message.sender().name(), message.chatUUID(), message.text(), message.timestamp().getTime());
