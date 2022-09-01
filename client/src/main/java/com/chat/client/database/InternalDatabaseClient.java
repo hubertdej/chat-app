@@ -16,7 +16,7 @@ public class InternalDatabaseClient implements MessagingClient {
     private final ChatsRepository repository;
     private final MessageFactory factory;
 
-    public InternalDatabaseClient(
+    InternalDatabaseClient(
             MessagingClient external,
             ConversationsLoader loader,
             ConversationsEngine engine,

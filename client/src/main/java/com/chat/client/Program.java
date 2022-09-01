@@ -12,15 +12,11 @@ import com.chat.client.network.SessionFactory;
 import com.chat.client.presentation.PresenterFactory;
 import com.chat.server.database.*;
 import com.chat.server.domain.authentication.AuthenticationFacade;
-import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
-import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
-import com.chat.server.domain.registration.InMemoryCredentialsRepository;
-import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
-import com.chat.server.sql.SqlEngineFactory;
+import com.chat.server.sql.SqlFactory;
 
 import java.util.List;
 
@@ -29,11 +25,15 @@ class Program {
         runClientWithServer();
     }
 
+    private static String localDatabasePath = "chat-client-with-server.db";
     private static void runClientWithServer() {
-        var engine = SqlEngineFactory.getDatabase("chat-client-with-server.db");
+        var conversationsEngine = SqlFactory.getConversationsEngine(localDatabasePath);
+        var conversationsLoader = SqlFactory.getConversationsLoader(localDatabasePath);
+        var usersManager = SqlFactory.getUsersManager(localDatabasePath);
+
         var registrationFacade = new UsersStorageFactory().getRegistrationFacade(
-                new FromDatabaseUsersProvider(engine),
-                new UsersDatabase(engine)
+                new FromDatabaseUsersProvider(usersManager),
+                new UsersDatabase(usersManager)
         );
         var authenticationFacade = new AuthenticationFacade(registrationFacade);
         var userConversationsFacade = new ListUserConversationsFacade(
@@ -42,8 +42,8 @@ class Program {
         var conversationStorageFacade = new ConversationsStorageFactory()
                 .getConversationStorageFacade(
                         List.of(userConversationsFacade.conversationObserver()),
-                        new ConversationsDatabase(engine),
-                        new FromDatabaseConversationsProvider(engine));
+                        new ConversationsDatabase(conversationsEngine),
+                        new FromDatabaseConversationsProvider(conversationsLoader));
         var sessionStorageFacade = new SessionStorageFacade(conversationStorageFacade);
 
         var messageReceiverFacade = new MessageReceiverFacade(

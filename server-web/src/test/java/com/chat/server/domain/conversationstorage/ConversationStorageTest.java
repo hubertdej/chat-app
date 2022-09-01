@@ -1,13 +1,8 @@
 package com.chat.server.domain.conversationstorage;
 
-import com.chat.server.configuration.ConversationStorageConfiguration;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
-import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
-import com.chat.server.sql.SqlEngine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+
 //TODO add mocks?
 public class ConversationStorageTest {
     ConversationStorageFacade conversationStorageFacade = new ConversationStorageFacade(
