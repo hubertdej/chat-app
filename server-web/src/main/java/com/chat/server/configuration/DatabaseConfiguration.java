@@ -1,7 +1,5 @@
 package com.chat.server.configuration;
 
-import com.chat.server.database.common.ConversationsEngine;
-import com.chat.server.database.common.ConversationsLoader;
 import com.chat.server.sql.SqlConversationsEngine;
 import com.chat.server.sql.SqlConversationsLoader;
 import com.chat.server.sql.SqlFactory;
@@ -10,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class ConversationsEngineConfiguration {
+class DatabaseConfiguration {
     private static String path = "chat-server.db";
     @Bean
     public SqlConversationsEngine engine() {

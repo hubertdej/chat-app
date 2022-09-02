@@ -7,6 +7,8 @@ import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.messagereceiver.dto.MessageReceivedDto;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.infrastructure.rest.IntegrationTest;
+import com.chat.server.testconfiguration.TestConversationStorageConfiguration;
+import com.chat.server.testconfiguration.TestRegistrationConfiguration;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
@@ -22,15 +25,14 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+@Import({TestConversationStorageConfiguration.class, TestRegistrationConfiguration.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PrivateChatIntegrationTest extends IntegrationTest {
 

@@ -10,8 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-//TODO add mocks?
 public class ConversationStorageTest {
     ConversationStorageFacade conversationStorageFacade = new ConversationStorageFacade(
             new InMemoryConversationRepository()
