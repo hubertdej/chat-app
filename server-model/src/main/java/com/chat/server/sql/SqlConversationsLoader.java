@@ -36,7 +36,11 @@ public class SqlConversationsLoader implements ConversationsLoader {
             PreparedStatement membersSelect = connection.prepareStatement("select username from membership " +
                     "where conversation_id = ?");
             membersSelect.setString(1, conversationId.toString());
-            PreparedStatement messagesSelect = connection.prepareStatement("select * from messages");
+            PreparedStatement messagesSelect = connection.prepareStatement("select * from messages " +
+                    "where conversation_id = ? " +
+                    "order by timestamp"
+            );
+            messagesSelect.setString(1, conversationId.toString());
 
             var nameResult = conversationSelect.executeQuery();
             var membersResult = membersSelect.executeQuery();

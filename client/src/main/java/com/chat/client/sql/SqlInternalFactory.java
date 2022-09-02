@@ -38,14 +38,14 @@ public class SqlInternalFactory implements InternalDatabaseFactory {
             );
             PreparedStatement createMembership = connection.prepareStatement(
                     "create table if not exists membership (" +
-                            "username text not null" +
+                            "username text not null," +
                             "conversation_id text not null references conversations(conversation_id)" +
                             ")"
             );
             PreparedStatement createMessages = connection.prepareStatement(
                     "create table if not exists messages (" +
                             "timestamp integer primary key, " +
-                            "sender text not null " +
+                            "sender text not null, " +
                             "conversation_id text not null references conversations(conversation_id), " +
                             "message_content text not null" +
                             ")"

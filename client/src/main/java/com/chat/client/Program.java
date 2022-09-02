@@ -1,5 +1,6 @@
 package com.chat.client;
 
+import com.chat.client.database.InternalDatabaseSessionFactory;
 import com.chat.client.domain.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.javafxui.Gui;
@@ -10,6 +11,7 @@ import com.chat.client.local.LocalSessionFactory;
 import com.chat.client.network.AuthServiceImpl;
 import com.chat.client.network.SessionFactory;
 import com.chat.client.presentation.PresenterFactory;
+import com.chat.client.sql.SqlInternalFactory;
 import com.chat.server.database.*;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
@@ -64,8 +66,12 @@ class Program {
                 userConversationsFacade
         );
 
+        var databaseFactory = new SqlInternalFactory();
+
+        var internalSessionFactory = new InternalDatabaseSessionFactory(sessionFactory, databaseFactory);
+
         var authService = new LocalAuthService(authenticationFacade, registrationFacade);
-        var sessionManager = new SessionManager(authService, sessionFactory);
+        var sessionManager = new SessionManager(authService, internalSessionFactory);
         var presenterFactory = new PresenterFactory(new WindowFactory(), sessionManager, callbackDispatcher);
         Gui.run(() -> {
             presenterFactory.openAuthView();
