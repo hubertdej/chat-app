@@ -53,7 +53,7 @@ class FromDatabaseConversationsProviderTest {
             reader.readName(name2);
             reader.readMember(username);
             reader.readMember(friend);
-            reader.readMessage(username, id2, text, time);
+            reader.readMessage(username, text, time);
             return null;
         }).when(loader).readConversation(any(), eq(id2));
 
@@ -92,7 +92,7 @@ class FromDatabaseConversationsProviderTest {
             reader.readName(name);
             reader.readMember(username);
             reader.readMember(friend);
-            reader.readMessage(username, id, text, time);
+            reader.readMessage(username, text, time);
             return null;
         }).when(loader).readConversation(any(), any());
 

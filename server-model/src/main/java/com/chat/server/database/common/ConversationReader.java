@@ -30,7 +30,7 @@ public class ConversationReader implements ConversationsLoader.ConversationReade
         members.add(username);
     }
     @Override
-    public void readMessage(String from, UUID to, String content, long timestampValue) {
-        messages.add(new MessageDto(from, to, content, new Timestamp(timestampValue)));
+    public void readMessage(String from, String content, long timestampValue) {
+        messages.add(new MessageDto(from, id, content, new Timestamp(timestampValue)));
     }
 };

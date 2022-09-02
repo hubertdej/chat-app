@@ -48,7 +48,7 @@ class ConversationReaderTest {
         reader.readName(chatName);
         reader.readMember(username);
         reader.readMember(friend);
-        reader.readMessage(username, id, text, timestamp);
+        reader.readMessage(username, text, timestamp);
         var builtDto = reader.build();
 
         assertEquals(expectedConversationDto, builtDto);

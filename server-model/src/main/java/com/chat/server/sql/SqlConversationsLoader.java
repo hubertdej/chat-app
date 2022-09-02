@@ -55,9 +55,8 @@ public class SqlConversationsLoader implements ConversationsLoader {
             while (messagesResult.next()) {
                 long timestampValue = messagesResult.getLong("timestamp");
                 String sender = messagesResult.getString("sender");
-                UUID conversation_id = UUID.fromString(messagesResult.getString("conversation_id"));
                 String content = messagesResult.getString("message_content");
-                reader.readMessage(sender, conversation_id, content, timestampValue);
+                reader.readMessage(sender, content, timestampValue);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

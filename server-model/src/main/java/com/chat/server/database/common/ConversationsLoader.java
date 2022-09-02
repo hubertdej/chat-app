@@ -11,7 +11,7 @@ public interface ConversationsLoader {
     interface ConversationReader {
         ConversationDto build();
         void readMember(String username);
-        void readMessage(String from, UUID to, String content, long timestampValue);
+        void readMessage(String from, String content, long timestampValue);
         void readName(String name);
     }
     void readConversationIds(IdsReader reader);
