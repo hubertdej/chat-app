@@ -9,17 +9,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.chat.Helper.assertListEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ConversationStorageTest {
     ConversationStorageFacade conversationStorageFacade = new ConversationStorageFacade(
             new InMemoryConversationRepository()
     );
-
-    public static void assertListEquals(List<?> first, List<?> second){
-        Assertions.assertEquals(first.size(), second.size());
-        assertTrue(first.containsAll(second));
-        assertTrue(second.containsAll(first));
-    }
 
     @Test
     void addConversation(){

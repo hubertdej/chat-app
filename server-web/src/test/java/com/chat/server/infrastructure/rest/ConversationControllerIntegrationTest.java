@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 import java.util.UUID;
 
-import static com.chat.server.domain.conversationstorage.ConversationStorageTest.assertListEquals;
+import static com.chat.Helper.assertListEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
