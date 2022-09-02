@@ -60,6 +60,7 @@ public class ListUserConversationsFacade {
             }
             else if(curTimestamp.compareTo(timestamp) < 0){
                 lo = m+1;
+                ans = m;
             }
             else{
                 hi = m-1;
