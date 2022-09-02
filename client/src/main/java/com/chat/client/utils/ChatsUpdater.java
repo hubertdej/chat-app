@@ -2,7 +2,6 @@ package com.chat.client.utils;
 
 import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.MessageFactory;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 

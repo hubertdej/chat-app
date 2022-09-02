@@ -6,22 +6,24 @@ import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
 
 public class InternalDatabaseSessionFactory implements SessionManager.Factory {
-    private final SessionManager.Factory external;
-    private final InternalDatabaseFactory factory;
+    private final SessionManager.Factory externalFactory;
+    private final InternalDatabaseFactory databaseFactory;
 
-    public InternalDatabaseSessionFactory(SessionManager.Factory external, InternalDatabaseFactory factory) {
-        this.external = external;
-        this.factory = factory;
+    public InternalDatabaseSessionFactory(
+            SessionManager.Factory sessionFactory,
+            InternalDatabaseFactory factory) {
+        this.externalFactory = sessionFactory;
+        this.databaseFactory = factory;
     }
 
     @Override
     public ChatsService getChatsService(Credentials credentials) {
-        return external.getChatsService(credentials);
+        return externalFactory.getChatsService(credentials);
     }
 
     @Override
     public UsersService getUsersService(Credentials credentials) {
-        return external.getUsersService(credentials);
+        return externalFactory.getUsersService(credentials);
     }
 
     @Override
@@ -32,11 +34,11 @@ public class InternalDatabaseSessionFactory implements SessionManager.Factory {
             ChatsRepository chatsRepository) {
         var messageFactory = new MessageFactory(localUser);
         return new InternalDatabaseClient(
-                external.getMessagingClient(localUser, credentials, chatsService, chatsRepository),
-                factory.getLoader(localUser.name()),
-                factory.getEngine(localUser.name()),
+                externalFactory.getMessagingClient(localUser, credentials, chatsService, chatsRepository),
+                databaseFactory.getLoader(localUser.name()),
+                databaseFactory.getEngine(localUser.name()),
                 chatsRepository,
                 messageFactory
-                );
+        );
     }
 }

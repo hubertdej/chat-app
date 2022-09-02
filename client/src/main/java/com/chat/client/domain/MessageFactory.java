@@ -1,7 +1,5 @@
 package com.chat.client.domain;
 
-import com.chat.client.local.LocalChatsService;
-
 import java.sql.Timestamp;
 import java.util.UUID;
 
