@@ -1,6 +1,6 @@
-package com.chat.server.sql;
+package com.chat.sql;
 
-import com.chat.server.database.common.ConversationsLoader;
+import com.chat.database.ConversationsLoader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -13,7 +13,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 class ConversationsStorageFactoryTest {
-    private ConversationsStorageFactory factory;
 
     @Test
     void testGetConversationStorage() {

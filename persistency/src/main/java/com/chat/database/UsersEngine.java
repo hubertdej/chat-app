@@ -1,4 +1,4 @@
-package com.chat.server.database.common;
+package com.chat.database;
 
 public interface UsersEngine {
     void addUser(String username, String password);

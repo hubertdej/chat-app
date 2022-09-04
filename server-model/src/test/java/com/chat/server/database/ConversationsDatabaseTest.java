@@ -1,6 +1,6 @@
 package com.chat.server.database;
 
-import com.chat.server.database.common.ConversationsEngine;
+import com.chat.database.ConversationsEngine;
 import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
 import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
+
 
 @ExtendWith(MockitoExtension.class)
 class ConversationsDatabaseTest {

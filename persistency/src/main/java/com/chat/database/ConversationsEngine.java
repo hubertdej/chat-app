@@ -1,4 +1,4 @@
-package com.chat.server.database.common;
+package com.chat.database;
 
 import java.util.List;
 import java.util.UUID;

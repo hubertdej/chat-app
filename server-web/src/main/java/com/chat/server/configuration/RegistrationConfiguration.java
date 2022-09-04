@@ -1,8 +1,8 @@
 package com.chat.server.configuration;
 
+import com.chat.database.UsersEngine;
+import com.chat.database.UsersLoader;
 import com.chat.server.database.*;
-import com.chat.server.database.common.UsersEngine;
-import com.chat.server.database.common.UsersLoader;
 import com.chat.server.domain.registration.RegistrationFacade;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

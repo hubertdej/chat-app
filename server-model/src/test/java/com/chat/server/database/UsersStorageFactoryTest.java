@@ -3,6 +3,7 @@ package com.chat.server.database;
 import com.chat.server.domain.registration.InMemoryCredentialsRepository;
 import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.registration.UsersProvider;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

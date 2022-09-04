@@ -1,10 +1,10 @@
 package com.chat.client.sql;
 
 import com.chat.client.database.InternalDatabaseFactory;
-import com.chat.server.database.common.ConversationsEngine;
-import com.chat.server.database.common.ConversationsLoader;
-import com.chat.server.sql.SqlConversationsEngine;
-import com.chat.server.sql.SqlConversationsLoader;
+import com.chat.database.ConversationsEngine;
+import com.chat.database.ConversationsLoader;
+import com.chat.sql.SqlConversationsEngine;
+import com.chat.sql.SqlConversationsLoader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

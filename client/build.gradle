@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(path: ':persistency')
     implementation project(path: ':server-model')
 
     implementation 'org.projectlombok:lombok:1.18.22'

@@ -1,5 +1,9 @@
 package com.chat.server.sql;
 
+import com.chat.sql.SqlConversationsEngine;
+import com.chat.sql.SqlConversationsLoader;
+import com.chat.sql.SqlUsersManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

@@ -2,16 +2,19 @@ package com.chat.client.database;
 
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.MessagingClient;
-import com.chat.server.database.common.ConversationDtoProvider;
-import com.chat.server.database.common.ConversationsEngine;
-import com.chat.server.database.common.ConversationsLoader;
+import com.chat.database.ConversationsEngine;
+import com.chat.database.ConversationsLoader;
+
+import com.chat.database.DatabaseConversationProvider;
+import com.chat.database.records.DatabaseMessage;
+import com.chat.server.domain.conversationstorage.ConversationsProvider;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 
 import java.util.UUID;
 
 public class InternalDatabaseClient implements MessagingClient {
     private final MessagingClient external;
-    private final ConversationDtoProvider provider;
+    private final DatabaseConversationProvider provider;
     private final ConversationsLoader loader;
     private final ConversationsEngine engine;
     private final ChatsRepository repository;
@@ -19,7 +22,7 @@ public class InternalDatabaseClient implements MessagingClient {
 
     InternalDatabaseClient(
             MessagingClient external,
-            ConversationDtoProvider provider,
+            DatabaseConversationProvider provider,
             ConversationsLoader loader,
             ConversationsEngine engine,
             ChatsRepository repository,
@@ -40,19 +43,15 @@ public class InternalDatabaseClient implements MessagingClient {
     @Override
     public void initialize() {
         ConversationsLoader.IdsReader idsReader = id -> {
-            var dto = provider.provideDto(loader, id);
+            var databaseConversation = provider.provideDatabaseConversation(loader, id);
             var addedChat = new Chat(
-                    dto.getConversationId(),
-                    dto.getName(),
-                    dto.getMembers().stream().map(User::new).toList());
-            for (MessageDto messageDto : dto.getMessages()) {
+                    databaseConversation.id(),
+                    databaseConversation.name(),
+                    databaseConversation.members().stream().map(User::new).toList());
+            for (DatabaseMessage message : databaseConversation.messages()) {
                 addedChat.addMessage(
-                        factory.createMessage(
-                            messageDto.to(),
-                            messageDto.content(),
-                            messageDto.from(),
-                            messageDto.timestamp()
-                        ));
+                        factory.createMessage(message.id(), message.content(), message.from(), message.timestamp())
+                );
             }
             addedChat.addObserver(chatObserver, false);
             repository.addChat(addedChat);

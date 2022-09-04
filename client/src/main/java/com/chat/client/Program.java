@@ -12,8 +12,8 @@ import com.chat.client.network.AuthServiceImpl;
 import com.chat.client.network.SessionFactory;
 import com.chat.client.presentation.PresenterFactory;
 import com.chat.client.sql.SqlInternalFactory;
+import com.chat.database.DatabaseConversationProvider;
 import com.chat.server.database.*;
-import com.chat.server.database.common.ConversationDtoProvider;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
@@ -33,7 +33,7 @@ class Program {
         var conversationsEngine = SqlFactory.getConversationsEngine(localDatabasePath);
         var conversationsLoader = SqlFactory.getConversationsLoader(localDatabasePath);
         var usersManager = SqlFactory.getUsersManager(localDatabasePath);
-        var dtoProvider = new ConversationDtoProvider();
+        var databaseConversationProvider = new DatabaseConversationProvider();
         var registrationFacade = new UsersStorageFactory().getRegistrationFacade(
                 new FromDatabaseUsersProvider(usersManager),
                 new UsersDatabase(usersManager)
@@ -46,7 +46,7 @@ class Program {
                 .getConversationStorageFacade(
                         List.of(userConversationsFacade.conversationObserver()),
                         new ConversationsDatabase(conversationsEngine),
-                        new FromDatabaseConversationsProvider(dtoProvider, conversationsLoader));
+                        new FromDatabaseConversationsProvider(databaseConversationProvider, conversationsLoader));
         var sessionStorageFacade = new SessionStorageFacade(conversationStorageFacade);
 
         var messageReceiverFacade = new MessageReceiverFacade(
@@ -69,7 +69,7 @@ class Program {
 
         var databaseFactory = new SqlInternalFactory();
 
-        var internalSessionFactory = new InternalDatabaseSessionFactory(sessionFactory, databaseFactory, dtoProvider);
+        var internalSessionFactory = new InternalDatabaseSessionFactory(sessionFactory, databaseFactory, databaseConversationProvider);
 
         var authService = new LocalAuthService(authenticationFacade, registrationFacade);
         var sessionManager = new SessionManager(authService, internalSessionFactory);

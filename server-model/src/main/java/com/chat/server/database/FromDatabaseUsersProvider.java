@@ -1,6 +1,6 @@
 package com.chat.server.database;
 
-import com.chat.server.database.common.UsersLoader;
+import com.chat.database.UsersLoader;
 import com.chat.server.domain.registration.RegistrationFacade;
 import com.chat.server.domain.registration.UsersProvider;
 import com.chat.server.domain.registration.dto.UserDto;

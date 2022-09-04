@@ -1,8 +1,9 @@
-package com.chat.server.database.common;
+package com.chat.database;
 
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
+import com.chat.database.records.DatabaseConversation;
+import com.chat.database.records.DatabaseMessage;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,12 +26,12 @@ class ConversationReaderTest {
     @Test
     void testBuildEmptyConversation() {
         var chatName = "chat";
-        var expectedDto = new ConversationDto(id, chatName, List.of(), List.of());
+        var expectedDto = new DatabaseConversation(id, chatName, List.of(), List.of());
 
         reader.readName(chatName);
         var dto = reader.build();
 
-        assertEquals(expectedDto, dto);
+        Assertions.assertEquals(expectedDto, dto);
     }
 
     @Test
@@ -41,8 +42,8 @@ class ConversationReaderTest {
         var text = "hey";
         var timestamp = 1;
 
-        var dto= new MessageDto(username, id, text, new Timestamp(timestamp));
-        var expectedConversationDto = new ConversationDto(id, chatName, List.of(username, friend), List.of(dto));
+        var dto= new DatabaseMessage(username, id, text, new Timestamp(timestamp));
+        var expectedConversationDto = new DatabaseConversation(id, chatName, List.of(username, friend), List.of(dto));
 
         reader.readName(chatName);
         reader.readMember(username);
@@ -50,6 +51,6 @@ class ConversationReaderTest {
         reader.readMessage(username, text, timestamp);
         var builtDto = reader.build();
 
-        assertEquals(expectedConversationDto, builtDto);
+        Assertions.assertEquals(expectedConversationDto, builtDto);
     }
 }

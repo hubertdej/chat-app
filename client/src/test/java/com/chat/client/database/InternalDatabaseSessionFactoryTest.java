@@ -5,9 +5,9 @@ import com.chat.client.domain.*;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
-import com.chat.server.database.common.ConversationDtoProvider;
-import com.chat.server.database.common.ConversationsEngine;
-import com.chat.server.database.common.ConversationsLoader;
+import com.chat.database.ConversationsEngine;
+import com.chat.database.ConversationsLoader;
+import com.chat.database.DatabaseConversationProvider;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.mock;
 class InternalDatabaseSessionFactoryTest extends BaseTestCase {
     @Mock private SessionManager.Factory externalFactory;
     @Mock private InternalDatabaseFactory databaseFactory;
-    @Mock private ConversationDtoProvider provider;
+    @Mock private DatabaseConversationProvider provider;
     @InjectMocks private InternalDatabaseSessionFactory factory;
 
     @Test

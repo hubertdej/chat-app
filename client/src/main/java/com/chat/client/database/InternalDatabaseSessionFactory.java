@@ -4,17 +4,17 @@ import com.chat.client.domain.*;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
-import com.chat.server.database.common.ConversationDtoProvider;
+import com.chat.database.DatabaseConversationProvider;
 
 public class InternalDatabaseSessionFactory implements SessionManager.Factory {
     private final SessionManager.Factory externalFactory;
     private final InternalDatabaseFactory databaseFactory;
-    private final ConversationDtoProvider provider;
+    private final DatabaseConversationProvider provider;
 
     public InternalDatabaseSessionFactory(
             SessionManager.Factory sessionFactory,
             InternalDatabaseFactory factory,
-            ConversationDtoProvider provider) {
+            DatabaseConversationProvider provider) {
         this.externalFactory = sessionFactory;
         this.databaseFactory = factory;
         this.provider = provider;

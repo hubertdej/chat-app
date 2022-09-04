@@ -1,9 +1,10 @@
 package com.chat.server.configuration;
 
-import com.chat.server.sql.SqlConversationsEngine;
-import com.chat.server.sql.SqlConversationsLoader;
 import com.chat.server.sql.SqlFactory;
-import com.chat.server.sql.SqlUsersManager;
+
+import com.chat.sql.SqlConversationsEngine;
+import com.chat.sql.SqlConversationsLoader;
+import com.chat.sql.SqlUsersManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

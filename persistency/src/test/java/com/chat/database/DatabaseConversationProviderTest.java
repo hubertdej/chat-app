@@ -1,28 +1,27 @@
-package com.chat.server.database.common;
+package com.chat.database;
 
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
+import com.chat.database.records.DatabaseConversation;
+import com.chat.database.records.DatabaseMessage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
+
 @ExtendWith(MockitoExtension.class)
-class ConversationDtoProviderTest {
-    @InjectMocks ConversationDtoProvider provider;
+class DatabaseConversationProviderTest {
+    @InjectMocks DatabaseConversationProvider provider;
     @Test
     void provideDto() {
         var id = new UUID(12, 34);
@@ -32,8 +31,8 @@ class ConversationDtoProviderTest {
         var text = "hey";
         var time = 1;
         var members = List.of(username, friend);
-        var messages = List.of(new MessageDto(username, id, text, new Timestamp(time)));
-        var expectedDto = new ConversationDto(id, chatName, members, messages);
+        var messages = List.of(new DatabaseMessage(username, id, text, new Timestamp(time)));
+        var expectedDatabaseConversation = new DatabaseConversation(id, chatName, members, messages);
         var loader = mock(ConversationsLoader.class);
         doAnswer(invocation -> {
             ConversationReader reader = invocation.getArgument(0);
@@ -43,9 +42,9 @@ class ConversationDtoProviderTest {
             return null;
         }).when(loader).readConversation(any(), any());
 
-        var dto = provider.provideDto(loader, id);
+        var dto = provider.provideDatabaseConversation(loader, id);
 
         then(loader).should().readConversation(any(), eq(id));
-        assertEquals(expectedDto, dto);
+        Assertions.assertEquals(expectedDatabaseConversation, dto);
     }
 }

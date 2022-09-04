@@ -3,17 +3,17 @@ package com.chat.client.database;
 import com.chat.client.BaseTestCase;
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.MessagingClient;
-import com.chat.server.database.common.ConversationDtoProvider;
-import com.chat.server.database.common.ConversationsEngine;
-import com.chat.server.database.common.ConversationsLoader;
-import com.chat.server.database.common.ConversationsLoader.IdsReader;
+import com.chat.database.ConversationsEngine;
+import com.chat.database.ConversationsLoader;
+import com.chat.database.DatabaseConversationProvider;
+import com.chat.database.records.DatabaseConversation;
+import com.chat.database.records.DatabaseMessage;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 class InternalDatabaseClientTest extends BaseTestCase {
     @Mock private MessagingClient external;
-    @Mock private ConversationDtoProvider provider;
+    @Mock private DatabaseConversationProvider provider;
     @Mock private ConversationsLoader loader;
     @Mock private ConversationsEngine engine;
     @Mock private ChatsRepository repository;
@@ -57,32 +57,32 @@ class InternalDatabaseClientTest extends BaseTestCase {
         var chat2 = new Chat(id2, name2, members.stream().map(User::new).toList());
         var timestamp  = new Timestamp(1);
         var text = "hey";
-        var messageDto = new MessageDto(username, id2, text, timestamp);
+        var message = new DatabaseMessage(username, id2, text, timestamp);
         doAnswer(invocation -> {
             ConversationsLoader.IdsReader reader = invocation.getArgument(0);
             reader.readId(id);
             reader.readId(id2);
             return null;
         }).when(loader).readConversationIds(any());
-        given(provider.provideDto(eq(loader), eq(id)))
-                .willReturn(new ConversationDto(id, name1, List.of(), List.of()));
-        given(provider.provideDto(eq(loader), eq(id2)))
-                .willReturn(new ConversationDto(id2, name2, members, List.of(messageDto)));
+        given(provider.provideDatabaseConversation(eq(loader), eq(id)))
+                .willReturn(new DatabaseConversation(id, name1, List.of(), List.of()));
+        given(provider.provideDatabaseConversation(eq(loader), eq(id2)))
+                .willReturn(new DatabaseConversation(id2, name2, members, List.of(message)));
         doAnswer(invocation -> {
             ConversationsLoader.IdsReader reader = invocation.getArgument(0);
             reader.readId(id);
             reader.readId(id2);
             return null;
-        }).when(loader).readConversationIds(any(IdsReader.class));
+        }).when(loader).readConversationIds(any(ConversationsLoader.IdsReader.class));
 
 
         internalDatabaseClient.initialize();
 
 
-        then(loader).should().readConversationIds(any(IdsReader.class));
+        then(loader).should().readConversationIds(any(ConversationsLoader.IdsReader.class));
         then(external).should().initialize();
-        then(provider).should(times(1)).provideDto(eq(loader), eq(id));
-        then(provider).should(times(1)).provideDto(eq(loader), eq(id2));
+        then(provider).should(times(1)).provideDatabaseConversation(eq(loader), eq(id));
+        then(provider).should(times(1)).provideDatabaseConversation(eq(loader), eq(id2));
         then(factory).should().createMessage(id2, text, username, timestamp);
         then(repository).should().addChat(chat1);
         then(repository).should().addChat(chat2);

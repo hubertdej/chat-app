@@ -23,6 +23,7 @@ ext {
 }
 
 dependencies {
+    implementation project(path: ':persistency')
     implementation project(path: ':server-model')
     testImplementation(testFixtures(project(":server-model")))
 

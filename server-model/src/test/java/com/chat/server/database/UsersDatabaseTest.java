@@ -1,6 +1,6 @@
 package com.chat.server.database;
 
-import com.chat.server.database.common.UsersEngine;
+import com.chat.database.UsersEngine;
 import com.chat.server.domain.registration.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,7 +1,8 @@
 package com.chat.client.database;
 
-import com.chat.server.database.common.ConversationsEngine;
-import com.chat.server.database.common.ConversationsLoader;
+
+import com.chat.database.ConversationsEngine;
+import com.chat.database.ConversationsLoader;
 
 public interface InternalDatabaseFactory {
     ConversationsEngine getEngine(String username);

@@ -1,7 +1,7 @@
-package com.chat.server.database.common;
+package com.chat.database;
 
-import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
+import com.chat.database.records.DatabaseConversation;
+import com.chat.database.records.DatabaseMessage;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ class ConversationReader implements ConversationsLoader.ConversationReader {
     private final UUID id;
     private String name;
     private List<String> members = new ArrayList<>();
-    private List<MessageDto> messages = new ArrayList<>();
+    private List<DatabaseMessage> messages = new ArrayList<>();
 
     public ConversationReader(UUID id) {
         this.id = id;
     }
     @Override
-    public ConversationDto build() {
-        return new ConversationDto(id, name, members, messages);
+    public DatabaseConversation build() {
+        return new DatabaseConversation(id, name, members, messages);
     }
     @Override
     public void readName(String name) {
@@ -31,6 +31,6 @@ class ConversationReader implements ConversationsLoader.ConversationReader {
     }
     @Override
     public void readMessage(String from, String content, long timestampValue) {
-        messages.add(new MessageDto(from, id, content, new Timestamp(timestampValue)));
+        messages.add(new DatabaseMessage(from, id, content, new Timestamp(timestampValue)));
     }
 };

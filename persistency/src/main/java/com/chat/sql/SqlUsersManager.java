@@ -1,14 +1,14 @@
-package com.chat.server.sql;
+package com.chat.sql;
 
-import com.chat.server.database.common.UsersEngine;
-import com.chat.server.database.common.UsersLoader;
+import com.chat.database.UsersEngine;
+import com.chat.database.UsersLoader;
 
 import java.sql.*;
 
 public class SqlUsersManager implements UsersEngine, UsersLoader {
     private final String url;
 
-    SqlUsersManager(String path) {
+    public SqlUsersManager(String path) {
         this.url = "jdbc:sqlite:" + path;
     }
     @Override
