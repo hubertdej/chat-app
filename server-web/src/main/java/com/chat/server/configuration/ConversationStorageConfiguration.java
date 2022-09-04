@@ -3,6 +3,7 @@ package com.chat.server.configuration;
 import com.chat.server.database.ConversationsDatabase;
 import com.chat.server.database.ConversationsStorageFactory;
 import com.chat.server.database.FromDatabaseConversationsProvider;
+import com.chat.server.database.common.ConversationDtoProvider;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.sql.SqlConversationsEngine;
@@ -23,7 +24,7 @@ class ConversationStorageConfiguration {
         return new ConversationsStorageFactory().getConversationStorageFacade(
                 List.of(listUserConversationsFacade.conversationObserver()),
                 new ConversationsDatabase(engine),
-                new FromDatabaseConversationsProvider(loader)
+                new FromDatabaseConversationsProvider(new ConversationDtoProvider(), loader)
         );
     }
 }

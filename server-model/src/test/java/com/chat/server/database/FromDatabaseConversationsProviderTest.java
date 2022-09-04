@@ -1,7 +1,9 @@
 package com.chat.server.database;
 
+import com.chat.server.database.common.ConversationDtoProvider;
 import com.chat.server.database.common.ConversationsLoader;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
+import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
@@ -23,8 +26,10 @@ import static org.mockito.Mockito.*;
 class FromDatabaseConversationsProviderTest {
     @Mock
     private ConversationsLoader loader;
+    @Mock
+    private ConversationDtoProvider dtoProvider;
     @InjectMocks
-    private FromDatabaseConversationsProvider provider;
+    private FromDatabaseConversationsProvider conversationsProvider;
     @Test
     void testProvideConversations() throws NoSuchConversationException {
         var id = new UUID(12, 34);
@@ -32,38 +37,30 @@ class FromDatabaseConversationsProviderTest {
         var name1 = "chatName";
         var username = "Alice";
         var friend = "Bob";
+        var members = List.of(username, friend);
         var name2 = "bff";
         var facade = mock(ConversationStorageFacade.class);
         var time = 1;
         var text = "hey";
-        var expectedDto = new MessageDto(username, id2, text, new Timestamp(time));
+        var messageDto = new MessageDto(username, id2, text, new Timestamp(time));
         doAnswer(invocation -> {
             ConversationsLoader.IdsReader reader = invocation.getArgument(0);
             reader.readId(id);
             reader.readId(id2);
             return null;
         }).when(loader).readConversationIds(any());
-        doAnswer(invocation -> {
-            ConversationsLoader.ConversationReader reader = invocation.getArgument(0);
-            reader.readName(name1);
-            return null;
-        }).when(loader).readConversation(any(), eq(id));
-        doAnswer(invocation -> {
-            ConversationsLoader.ConversationReader reader = invocation.getArgument(0);
-            reader.readName(name2);
-            reader.readMember(username);
-            reader.readMember(friend);
-            reader.readMessage(username, text, time);
-            return null;
-        }).when(loader).readConversation(any(), eq(id2));
+        given(dtoProvider.provideDto(eq(loader), eq(id)))
+                .willReturn(new ConversationDto(id, name1, List.of(), List.of()));
+        given(dtoProvider.provideDto(eq(loader), eq(id2)))
+                .willReturn(new ConversationDto(id2, name2, members, List.of(messageDto)));
 
-        provider.provideConversations(facade);
+        conversationsProvider.provideConversations(facade);
 
-        then(loader).should().readConversationIds(any(ConversationsLoader.IdsReader.class));
-        then(loader).should(times(2)).readConversation(any(), any());
+        then(loader).should().readConversationIds(any());
+        then(dtoProvider).should(times(2)).provideDto(eq(loader), any(UUID.class));
         then(facade).should().add(id, name1, List.of());
         then(facade).should().add(id2, name2, List.of(username, friend));
-        then(facade).should().add(id2, expectedDto);
+        then(facade).should().add(id2, messageDto);
     }
 
     @Test
@@ -71,11 +68,12 @@ class FromDatabaseConversationsProviderTest {
         var id = new UUID(12, 34);
         var username = "Alice";
         var friend = "Bob";
+        var members = List.of(username, friend);
         var name = "bff";
         var facade = mock(ConversationStorageFacade.class);
         var time = 1;
         var text = "hey";
-        var expectedDto = new MessageDto(username, id, text, new Timestamp(time));
+        var messageDto = new MessageDto(username, id, text, new Timestamp(time));
         doAnswer(invocation -> {
             ConversationsLoader.IdsReader reader = invocation.getArgument(0);
             reader.readId(id);
@@ -87,23 +85,16 @@ class FromDatabaseConversationsProviderTest {
         doAnswer(invocation -> {throw new NoSuchConversationException();})
                 .when(facade)
                 .add(any(), any(MessageDto.class));
-        doAnswer(invocation -> {
-            ConversationsLoader.ConversationReader reader = invocation.getArgument(0);
-            reader.readName(name);
-            reader.readMember(username);
-            reader.readMember(friend);
-            reader.readMessage(username, text, time);
-            return null;
-        }).when(loader).readConversation(any(), any());
+        given(dtoProvider.provideDto(eq(loader), eq(id)))
+                .willReturn(new ConversationDto(id, name, members, List.of(messageDto)));
 
         try {
-            provider.provideConversations(facade);
+            conversationsProvider.provideConversations(facade);
         } catch (RuntimeException e) {
             assertThrows(NoSuchConversationException.class, () -> { throw e.getCause(); });
         }
-
-        then(loader).should(times(1)).readConversation(any(), any());
+        then(dtoProvider).should(times(1)).provideDto(any(), any());
         then(facade).should().add(id, name, List.of(username, friend));
-        then(facade).should().add(id, expectedDto);
+        then(facade).should().add(id, messageDto);
     }
 }

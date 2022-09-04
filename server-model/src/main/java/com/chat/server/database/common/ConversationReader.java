@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ConversationReader implements ConversationsLoader.ConversationReader {
+class ConversationReader implements ConversationsLoader.ConversationReader {
     private final UUID id;
     private String name;
     private List<String> members = new ArrayList<>();
