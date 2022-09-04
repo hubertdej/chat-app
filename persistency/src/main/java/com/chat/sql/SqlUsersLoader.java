@@ -1,30 +1,18 @@
 package com.chat.sql;
 
-import com.chat.database.UsersEngine;
 import com.chat.database.UsersLoader;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-public class SqlUsersManager implements UsersEngine, UsersLoader {
+public class SqlUsersLoader implements UsersLoader {
     private final String url;
 
-    public SqlUsersManager(String path) {
+    public SqlUsersLoader(String path) {
         this.url = "jdbc:sqlite:" + path;
     }
-    @Override
-    public void addUser(String username, String password) {
-        try (Connection connection = DriverManager.getConnection(url)) {
-            PreparedStatement userInsert = connection.prepareStatement("insert into users" +
-                    "(username, password) " +
-                    "values (?, ?)");
-            userInsert.setString(1, username);
-            userInsert.setString(2, password);
-            userInsert.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public void readUsers(UsersLoader.UsersReader reader) {
         try (Connection connection = DriverManager.getConnection(url)) {

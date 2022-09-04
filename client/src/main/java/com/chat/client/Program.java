@@ -32,11 +32,12 @@ class Program {
     private static void runClientWithServer() {
         var conversationsEngine = SqlFactory.getConversationsEngine(localDatabasePath);
         var conversationsLoader = SqlFactory.getConversationsLoader(localDatabasePath);
-        var usersManager = SqlFactory.getUsersManager(localDatabasePath);
+        var usersEngine = SqlFactory.getUsersEngine(localDatabasePath);
+        var usersLoader = SqlFactory.getUsersLoader(localDatabasePath);
         var databaseConversationProvider = new DatabaseConversationProvider();
         var registrationFacade = new UsersStorageFactory().getRegistrationFacade(
-                new FromDatabaseUsersProvider(usersManager),
-                new UsersDatabase(usersManager)
+                new FromDatabaseUsersProvider(usersLoader),
+                new UsersDatabase(usersEngine)
         );
         var authenticationFacade = new AuthenticationFacade(registrationFacade);
         var userConversationsFacade = new ListUserConversationsFacade(
