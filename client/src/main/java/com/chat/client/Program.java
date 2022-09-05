@@ -86,11 +86,14 @@ class Program {
             var dispatcher = new GuiDispatcher();
             var callbackDispatcher = new CallbackDispatcher(dispatcher);
             var sessionFactory = new SessionFactory(dispatcher, callbackDispatcher);
-
+            var internalDatabaseSessionFactory = new InternalDatabaseSessionFactory(
+                    sessionFactory,
+                    new SqlInternalFactory(),
+                    new DatabaseConversationProvider()
+            );
             var authService = new AuthServiceImpl();
-            var sessionManager = new SessionManager(authService, sessionFactory);
+            var sessionManager = new SessionManager(authService, internalDatabaseSessionFactory);
             var presenterFactory = new PresenterFactory(new WindowFactory(), sessionManager, callbackDispatcher);
-
             presenterFactory.openAuthView();
             presenterFactory.openAuthView();
         });
