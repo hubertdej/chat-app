@@ -1,14 +1,13 @@
 package com.chat.server.infrastructure.rest;
 
+import com.chat.server.TestAppRunner;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
-import com.chat.server.testconfiguration.TestConversationStorageConfiguration;
-import com.chat.server.testconfiguration.TestRegistrationConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +16,7 @@ import static com.chat.Helper.assertListEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Import({TestConversationStorageConfiguration.class, TestRegistrationConfiguration.class})
+@ContextConfiguration(classes = TestAppRunner.class)
 public class ConversationControllerIntegrationTest extends IntegrationTest{
     @Autowired
     private ConversationStorageFacade conversationStorageFacade;
