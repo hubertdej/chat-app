@@ -1,8 +1,8 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
-import com.chat.client.domain.Message;
 import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;

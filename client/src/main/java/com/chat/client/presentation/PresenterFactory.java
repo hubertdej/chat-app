@@ -3,10 +3,10 @@ package com.chat.client.presentation;
 import com.chat.client.domain.Chat;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.User;
-import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.UsersService;
 
 public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresenter.Factory {

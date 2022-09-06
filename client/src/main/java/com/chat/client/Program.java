@@ -1,8 +1,8 @@
 package com.chat.client;
 
 import com.chat.client.database.InternalDatabaseSessionFactory;
-import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.javafxui.Gui;
 import com.chat.client.javafxui.GuiDispatcher;
 import com.chat.client.javafxui.WindowFactory;
@@ -13,7 +13,12 @@ import com.chat.client.network.SessionFactory;
 import com.chat.client.presentation.PresenterFactory;
 import com.chat.client.sql.SqlInternalFactory;
 import com.chat.database.DatabaseConversationProvider;
-import com.chat.server.database.*;
+import com.chat.server.database.ConversationsDatabase;
+import com.chat.server.database.ConversationsStorageFactory;
+import com.chat.server.database.FromDatabaseConversationsProvider;
+import com.chat.server.database.FromDatabaseUsersProvider;
+import com.chat.server.database.UsersDatabase;
+import com.chat.server.database.UsersStorageFactory;
 import com.chat.server.domain.authentication.AuthenticationFacade;
 import com.chat.server.domain.listuserconversations.InMemoryUserConversationRepository;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;

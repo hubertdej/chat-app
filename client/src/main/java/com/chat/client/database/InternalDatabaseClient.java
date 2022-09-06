@@ -1,14 +1,15 @@
 package com.chat.client.database;
 
-import com.chat.client.domain.*;
+import com.chat.client.domain.Chat;
+import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.Message;
+import com.chat.client.domain.MessageFactory;
+import com.chat.client.domain.User;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.database.ConversationsEngine;
 import com.chat.database.ConversationsLoader;
-
 import com.chat.database.DatabaseConversationProvider;
 import com.chat.database.records.DatabaseMessage;
-import com.chat.server.domain.conversationstorage.ConversationsProvider;
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
 
 import java.util.UUID;
 
