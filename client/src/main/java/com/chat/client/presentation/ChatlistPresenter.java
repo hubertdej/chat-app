@@ -8,7 +8,6 @@ import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +83,8 @@ public class ChatlistPresenter {
         view.open();
     }
 
-    private List<ChatPresenterHandle> getHandles() {
-        return new ArrayList<>(chatHandles.values());
+    private List<ChatPresenterHandle> getHandlesSnapshot() {
+        return List.copyOf(chatHandles.values());
     }
 
     public void close() {
@@ -93,7 +92,7 @@ public class ChatlistPresenter {
         chatsRepository.getChats().forEach(chat -> chat.removeObserver(chatUpdateObserver));
         messagingClient.close();
         factory.openAuthView();
-        getHandles().forEach(ChatPresenterHandle::close);
+        getHandlesSnapshot().forEach(ChatPresenterHandle::close);
         view.close();
     }
 }
