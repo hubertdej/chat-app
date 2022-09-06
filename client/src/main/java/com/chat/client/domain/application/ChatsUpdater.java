@@ -1,4 +1,4 @@
-package com.chat.client.utils;
+package com.chat.client.domain.application;
 
 import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.ChatsRepository;
@@ -7,7 +7,6 @@ import com.chat.client.domain.application.ChatsService;
 
 import java.util.UUID;
 
-// TODO: Move this code somewhere else?
 public class ChatsUpdater {
     private final ChatsService chatsService;
     private final CallbackDispatcher callbackDispatcher;

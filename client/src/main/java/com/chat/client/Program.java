@@ -1,7 +1,7 @@
 package com.chat.client;
 
 import com.chat.client.database.InternalDatabaseSessionFactory;
-import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.javafxui.Gui;
 import com.chat.client.javafxui.GuiDispatcher;

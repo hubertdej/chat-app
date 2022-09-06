@@ -2,7 +2,7 @@ package com.chat.client.local;
 
 import com.chat.client.BaseTestCase;
 import com.chat.client.domain.*;
-import com.chat.client.utils.ChatsUpdater;
+import com.chat.client.domain.application.ChatsUpdater;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;

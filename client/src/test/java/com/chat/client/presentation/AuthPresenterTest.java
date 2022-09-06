@@ -1,8 +1,8 @@
 package com.chat.client.presentation;
 
 import com.chat.client.BaseTestCase;
-import com.chat.client.domain.Session;
-import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.application.Session;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

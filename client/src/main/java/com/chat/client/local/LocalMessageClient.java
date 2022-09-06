@@ -5,7 +5,7 @@ import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.MessageFactory;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.MessagingClient;
-import com.chat.client.utils.ChatsUpdater;
+import com.chat.client.domain.application.ChatsUpdater;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
