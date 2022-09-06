@@ -1,7 +1,8 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.User;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -9,7 +10,7 @@ import com.chat.client.domain.application.UsersService;
 
 public class AuthPresenter {
     public interface Factory {
-        void openChatlistView(UsersService usersService, ChatsService chatsService, ChatsRepository chatsRepository, MessagingClient messagingClient);
+        void openChatlistView(User user, UsersService usersService, ChatsService chatsService, ChatsRepository chatsRepository, MessagingClient messagingClient);
     }
 
     private final AuthView view;
@@ -37,6 +38,7 @@ public class AuthPresenter {
                 sessionManager.createSessionAsync(username, password),
                 session -> {
                     factory.openChatlistView(
+                            session.localUser(),
                             session.usersService(),
                             session.chatsService(),
                             session.chatsRepository(),

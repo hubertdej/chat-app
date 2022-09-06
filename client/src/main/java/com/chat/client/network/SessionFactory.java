@@ -3,14 +3,14 @@ package com.chat.client.network;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.Credentials;
 import com.chat.client.domain.MessageFactory;
-import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.Dispatcher;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
-import com.chat.client.utils.ChatsUpdater;
+import com.chat.client.domain.application.ChatsUpdater;
 
 public class SessionFactory implements SessionManager.Factory {
     private final Dispatcher dispatcher;

@@ -5,7 +5,7 @@ import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.MessageFactory;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.MessagingClient;
-import com.chat.client.utils.ChatsUpdater;
+import com.chat.client.domain.application.ChatsUpdater;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
 import com.chat.server.domain.listuserconversations.dto.ListConversationsRequestDto;
@@ -87,19 +87,5 @@ public class LocalMessageClient implements MessagingClient {
 
                     chatsUpdater.handleMessages(chatUUID, repository, messages);
                 });
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof LocalMessageClient service)) return false;
-        return this.localUser.equals(service.localUser) &&
-                this.repository.equals(service.repository) &&
-                this.messageFactory.equals(service.messageFactory) &&
-                this.chatsUpdater.equals(service.chatsUpdater) &&
-                this.sessionStorage.equals(service.sessionStorage) &&
-                this.messageReceiver.equals(service.messageReceiver) &&
-                this.listUserConversationsFacade.equals(service.listUserConversationsFacade);
     }
 }

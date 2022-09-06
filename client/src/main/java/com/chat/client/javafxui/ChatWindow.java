@@ -1,7 +1,7 @@
 package com.chat.client.javafxui;
 
 
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.User;
 import com.chat.client.presentation.ChatPresenter;
 import com.chat.client.presentation.ChatView;
@@ -20,7 +20,7 @@ import java.util.List;
 public class ChatWindow implements ChatView {
     private String titleBase = "";
     @FXML private Stage stage;
-    @FXML private ListView<ChatMessage> messagesListView;
+    @FXML private ListView<Message> messagesListView;
     @FXML private TextArea messageTextArea;
     @FXML private Button sendButton;
 
@@ -28,7 +28,7 @@ public class ChatWindow implements ChatView {
     public void initialize(ChatPresenter presenter) {
         messagesListView.setCellFactory(listView -> new ListCell<>() {
             @Override
-            protected void updateItem(ChatMessage message, boolean empty) {
+            protected void updateItem(Message message, boolean empty) {
                 super.updateItem(message, empty);
                 if (empty || message == null) {
                     this.setGraphic(null);
@@ -67,7 +67,7 @@ public class ChatWindow implements ChatView {
     }
 
     @Override
-    public void addMessage(ChatMessage message) {
+    public void addMessage(Message message) {
         messagesListView.getItems().add(message);
     }
 

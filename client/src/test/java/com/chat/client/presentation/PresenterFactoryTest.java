@@ -3,7 +3,8 @@ package com.chat.client.presentation;
 import com.chat.client.BaseTestCase;
 import com.chat.client.domain.Chat;
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.User;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -55,6 +56,7 @@ class PresenterFactoryTest extends BaseTestCase {
         given(viewFactory.createChatlistView()).willReturn(view);
 
         presenterFactory.openChatlistView(
+                mock(User.class),
                 mock(UsersService.class),
                 mock(ChatsService.class),
                 mock(ChatsRepository.class),

@@ -2,7 +2,7 @@ package com.chat.client.presentation;
 
 import com.chat.client.BaseTestCase;
 import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -41,9 +41,9 @@ class ChatlistPresenterTest extends BaseTestCase {
 
         presenter.open();
         chatsRepository.addChat(chat);
-        chat.addMessage(new ChatMessage(chat.getUUID(), "", null, null, false));
+        chat.addMessage(new Message(chat.getUUID(), "", null, null, false));
         presenter.close();
-        chat.addMessage(new ChatMessage(chat.getUUID(), "", null, null, false));
+        chat.addMessage(new Message(chat.getUUID(), "", null, null, false));
 
         then(view).should(times(1)).updateChat(chat);
     }

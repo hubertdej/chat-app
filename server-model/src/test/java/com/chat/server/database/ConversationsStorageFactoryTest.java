@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
@@ -20,11 +20,10 @@ class ConversationsStorageFactoryTest {
         var database = mock(ConversationsDatabase.class);
         var provider = mock(ConversationsProvider.class);
         var factory = new ConversationsStorageFactory();
-        var expectedStorage = new ConversationStorageFacade(new InMemoryConversationRepository());
 
         var facade = factory.getConversationStorageFacade(preObservers, database, provider);
 
         then(provider).should().provideConversations(facade);
-        assertEquals(expectedStorage, facade);
+        assertNotNull(facade);
     }
 }

@@ -2,7 +2,8 @@ package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.SessionManager;
+import com.chat.client.domain.User;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -43,13 +44,14 @@ public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresente
 
     @Override
     public void openChatlistView(
+            User user,
             UsersService usersService,
             ChatsService chatsService,
             ChatsRepository chatsRepository,
             MessagingClient messagingClient
     ) {
         var view = viewFactory.createChatlistView();
-        var presenter = new ChatlistPresenter(view, this, usersService, chatsService, chatsRepository, messagingClient);
+        var presenter = new ChatlistPresenter(view, this, user, usersService, chatsService, chatsRepository, messagingClient);
         view.initialize(presenter);
         presenter.open();
     }

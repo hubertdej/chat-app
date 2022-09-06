@@ -33,12 +33,4 @@ public class LocalChatsService implements ChatsService {
             return new Chat(dto.getConversationId(), dto.getName(), dto.getMembers().stream().map(User::new).toList());
         });
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (!(o instanceof LocalChatsService service)) return false;
-        return storageFacade.equals(service.storageFacade) && localUser.equals(service.localUser);
-    }
 }

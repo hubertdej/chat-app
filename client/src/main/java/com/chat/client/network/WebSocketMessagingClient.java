@@ -7,7 +7,7 @@ import com.chat.client.domain.MessageFactory;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.Dispatcher;
 import com.chat.client.domain.application.MessagingClient;
-import com.chat.client.utils.ChatsUpdater;
+import com.chat.client.domain.application.ChatsUpdater;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

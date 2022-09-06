@@ -1,11 +1,10 @@
 package com.chat.server.infrastructure.rest;
 
-import com.chat.server.testconfiguration.TestConversationStorageConfiguration;
-import com.chat.server.testconfiguration.TestRegistrationConfiguration;
+import com.chat.server.TestAppRunner;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -13,7 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
-@Import({TestConversationStorageConfiguration.class, TestRegistrationConfiguration.class})
+@ContextConfiguration(classes = TestAppRunner.class)
 public class UserListIntegrationTest extends IntegrationTest{
 
     ResultActions listUsers() throws Exception {

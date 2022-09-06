@@ -1,17 +1,15 @@
 package com.chat.server.infrastructure.rest;
 
-import com.chat.server.testconfiguration.TestConversationStorageConfiguration;
-import com.chat.server.testconfiguration.TestRegistrationConfiguration;
+import com.chat.server.TestAppRunner;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@Import({TestConversationStorageConfiguration.class, TestRegistrationConfiguration.class})
+@ContextConfiguration(classes = TestAppRunner.class)
 public class AuthenticationControllerTest extends IntegrationTest {
     private final String username = "john";
     private final String password = "pwd";
@@ -40,6 +38,4 @@ public class AuthenticationControllerTest extends IntegrationTest {
         resultActions.andExpect(status().isForbidden());
 
     }
-
-
 }

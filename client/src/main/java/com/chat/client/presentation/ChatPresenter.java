@@ -1,7 +1,7 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.application.MessageSender;
 
 public class ChatPresenter extends ChatPresenterHandle {
@@ -19,7 +19,7 @@ public class ChatPresenter extends ChatPresenterHandle {
         messageSender.sendMessage(chat.getUUID(), text);
     }
 
-    private void addMessage(ChatMessage message) {
+    private void addMessage(Message message) {
         view.addMessage(message);
     }
 

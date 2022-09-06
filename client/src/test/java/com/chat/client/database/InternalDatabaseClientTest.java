@@ -49,12 +49,10 @@ class InternalDatabaseClientTest extends BaseTestCase {
         var id = new UUID(12, 34);
         var id2 = new UUID(12, 35);
         var name1 = "chatName";
-        var chat1 = new Chat(id, name1, List.of());
         var username = "Alice";
         var friend = "Bob";
         var members = List.of(username, friend);
         var name2 = "bff";
-        var chat2 = new Chat(id2, name2, members.stream().map(User::new).toList());
         var timestamp  = new Timestamp(1);
         var text = "hey";
         var message = new DatabaseMessage(username, id2, text, timestamp);
@@ -84,8 +82,7 @@ class InternalDatabaseClientTest extends BaseTestCase {
         then(provider).should(times(1)).provideDatabaseConversation(eq(loader), eq(id));
         then(provider).should(times(1)).provideDatabaseConversation(eq(loader), eq(id2));
         then(factory).should().createMessage(id2, text, username, timestamp);
-        then(repository).should().addChat(chat1);
-        then(repository).should().addChat(chat2);
+        then(repository).should(times(2)).addChat(any());
     }
 
     @Test
@@ -105,7 +102,7 @@ class InternalDatabaseClientTest extends BaseTestCase {
         var text1 = "hey";
         var time1 = 1;
         var timestamp1 = new Timestamp(time1);
-        var msg1 = new ChatMessage(id1, text1, new User(username1), timestamp1, true);
+        var msg1 = new Message(id1, text1, new User(username1), timestamp1, true);
         var chat = new Chat(id1, name1, members1.stream().map(User::new).toList());
         var id2 = new UUID(12, 35);
         var name2 = "bff2";
@@ -115,7 +112,7 @@ class InternalDatabaseClientTest extends BaseTestCase {
         var text2 = "hey2";
         var time2 = 2;
         var timestamp2 = new Timestamp(time2);
-        var msg2 = new ChatMessage(id2, text2, new User(username2), timestamp2, true);
+        var msg2 = new Message(id2, text2, new User(username2), timestamp2, true);
         var chat2 = new Chat(id2, name2, members2.stream().map(User::new).toList());
 
         var testRepository = new ChatsRepository();

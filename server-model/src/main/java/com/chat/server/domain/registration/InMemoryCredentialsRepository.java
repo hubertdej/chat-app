@@ -28,12 +28,4 @@ public class InMemoryCredentialsRepository implements CredentialsRepository {
     public List<String> listUsers() {
         return storage.keySet().stream().toList();
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof InMemoryCredentialsRepository repository)) return false;
-        return storage.equals(repository.storage);
-    }
 }

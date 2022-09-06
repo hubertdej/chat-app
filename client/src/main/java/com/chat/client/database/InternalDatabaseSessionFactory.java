@@ -3,6 +3,7 @@ package com.chat.client.database;
 import com.chat.client.domain.*;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
+import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.UsersService;
 import com.chat.database.DatabaseConversationProvider;
 

@@ -1,13 +1,13 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.ChatsRepository;
+import com.chat.client.domain.User;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.UsersService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,7 @@ public class ChatlistPresenter {
 
     private final ChatlistView view;
     private final Factory factory;
+    private final User user;
     private final UsersService usersService;
     private final ChatsService chatsService;
     private final ChatsRepository chatsRepository;
@@ -28,12 +29,14 @@ public class ChatlistPresenter {
 
     public ChatlistPresenter(ChatlistView view,
                              Factory factory,
+                             User user,
                              UsersService usersService,
                              ChatsService chatsService,
                              ChatsRepository chatsRepository,
                              MessagingClient messagingClient) {
         this.view = view;
         this.factory = factory;
+        this.user = user;
         this.usersService = usersService;
         this.chatsService = chatsService;
         this.chatsRepository = chatsRepository;
@@ -48,7 +51,7 @@ public class ChatlistPresenter {
         chat.addObserver(chatUpdateObserver, true);
     }
 
-    private void updateChat(ChatMessage message) {
+    private void updateChat(Message message) {
         var chat = chatsRepository.getByUUID(message.chatUUID()).orElseThrow();
         view.updateChat(chat);
     }
@@ -76,11 +79,12 @@ public class ChatlistPresenter {
     public void open() {
         chatsRepository.addObserver(chatsRepositoryObserver);
         messagingClient.initialize();
+        view.displayWelcomeMessage(user);
         view.open();
     }
 
-    private List<ChatPresenterHandle> getHandles() {
-        return new ArrayList<>(chatHandles.values());
+    private List<ChatPresenterHandle> getHandlesSnapshot() {
+        return List.copyOf(chatHandles.values());
     }
 
     public void close() {
@@ -88,7 +92,7 @@ public class ChatlistPresenter {
         chatsRepository.getChats().forEach(chat -> chat.removeObserver(chatUpdateObserver));
         messagingClient.close();
         factory.openAuthView();
-        getHandles().forEach(ChatPresenterHandle::close);
+        getHandlesSnapshot().forEach(ChatPresenterHandle::close);
         view.close();
     }
 }

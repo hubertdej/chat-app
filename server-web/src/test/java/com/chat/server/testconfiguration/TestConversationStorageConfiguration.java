@@ -3,11 +3,13 @@ package com.chat.server.testconfiguration;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.listuserconversations.ListUserConversationsFacade;
+import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
-@TestConfiguration
+@TestComponent
 public
 class TestConversationStorageConfiguration {
     @Bean
