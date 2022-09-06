@@ -21,6 +21,7 @@ import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.sql.SqlFactory;
 
+import java.util.HashMap;
 import java.util.List;
 
 class Program {
@@ -28,7 +29,7 @@ class Program {
         runClientWithServer();
     }
 
-    private static String localDatabasePath = "chat-client-with-server.db";
+    private final static String localDatabasePath = "chat-client-with-server.db";
     private static void runClientWithServer() {
         var conversationsEngine = SqlFactory.getConversationsEngine(localDatabasePath);
         var conversationsLoader = SqlFactory.getConversationsLoader(localDatabasePath);
@@ -41,7 +42,7 @@ class Program {
         );
         var authenticationFacade = new AuthenticationFacade(registrationFacade);
         var userConversationsFacade = new ListUserConversationsFacade(
-                new InMemoryUserConversationRepository()
+                new InMemoryUserConversationRepository(new HashMap<>())
         );
         var conversationStorageFacade = new ConversationsStorageFactory()
                 .getConversationStorageFacade(

@@ -8,10 +8,6 @@ import java.util.*;
 public class InMemoryUserConversationRepository implements UserConversationRepository {
     private final Map<String, Map<UUID, ConversationDto>> storage;
 
-    public InMemoryUserConversationRepository(){
-        storage = new HashMap<>();
-    }
-
     public InMemoryUserConversationRepository(Map<String, Map<UUID, ConversationDto>> storage){
        this.storage = storage;
     }
