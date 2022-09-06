@@ -75,12 +75,4 @@ public class Chat implements Comparable<Chat> {
         }
         return other.getLastMessage().timestamp().compareTo(this.getLastMessage().timestamp());
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof Chat chat)) return false;
-        return uuid.equals(chat.uuid) && name.equals(chat.name) && members.equals(chat.members);
-    }
 }

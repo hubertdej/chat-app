@@ -14,6 +14,7 @@ import org.mockito.Mock;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -60,23 +61,16 @@ class InternalDatabaseSessionFactoryTest extends BaseTestCase {
         var client = mock(MessagingClient.class);
         var engine = mock(ConversationsEngine.class);
         var loader = mock(ConversationsLoader.class);
-        var msgFactory = new MessageFactory(new User(username));
+
         given(externalFactory.getMessagingClient(any(), any(), any(), any())).willReturn(client);
         given(databaseFactory.getEngine(any())).willReturn(engine);
         given(databaseFactory.getLoader(any())).willReturn(loader);
-        var internalDatabaseClient = new InternalDatabaseClient(
-                client,
-                provider,
-                loader,
-                engine,
-                chatsRepository,
-                msgFactory
-        );
+
         var actualClient = factory.getMessagingClient(localUser, credentials, chatsService, chatsRepository);
 
         then(externalFactory).should().getMessagingClient(localUser, credentials, chatsService, chatsRepository);
         then(databaseFactory).should().getEngine(eq(username));
         then(databaseFactory).should().getLoader(eq(username));
-        assertEquals(internalDatabaseClient, actualClient);
+        assertTrue(actualClient instanceof InternalDatabaseClient);
     }
 }

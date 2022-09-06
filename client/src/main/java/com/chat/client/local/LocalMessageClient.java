@@ -88,18 +88,4 @@ public class LocalMessageClient implements MessagingClient {
                     chatsUpdater.handleMessages(chatUUID, repository, messages);
                 });
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof LocalMessageClient service)) return false;
-        return this.localUser.equals(service.localUser) &&
-                this.repository.equals(service.repository) &&
-                this.messageFactory.equals(service.messageFactory) &&
-                this.chatsUpdater.equals(service.chatsUpdater) &&
-                this.sessionStorage.equals(service.sessionStorage) &&
-                this.messageReceiver.equals(service.messageReceiver) &&
-                this.listUserConversationsFacade.equals(service.listUserConversationsFacade);
-    }
 }

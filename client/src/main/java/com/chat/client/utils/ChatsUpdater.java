@@ -34,12 +34,4 @@ public class ChatsUpdater {
                 }
         );
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof ChatsUpdater updater)) return false;
-        return chatsService.equals(updater.chatsService) && callbackDispatcher.equals(updater.callbackDispatcher);
-    }
 }

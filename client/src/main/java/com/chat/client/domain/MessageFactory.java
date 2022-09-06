@@ -13,12 +13,4 @@ public class MessageFactory {
     public ChatMessage createMessage(UUID chatUUID, String text, String username, Timestamp timestamp) {
         return new ChatMessage(chatUUID, text, new User(username), timestamp, username.equals(user.name()));
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof MessageFactory factory)) return false;
-        return user.equals(factory.user);
-    }
 }

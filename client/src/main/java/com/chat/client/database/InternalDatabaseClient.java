@@ -79,18 +79,4 @@ public class InternalDatabaseClient implements MessagingClient {
     private void handleChatUpdate(ChatMessage message) {
         engine.addMessage(message.sender().name(), message.chatUUID(), message.text(), message.timestamp().getTime());
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof  InternalDatabaseClient client)) return false;
-
-        return  client.external.equals(external) &&
-                client.provider.equals(provider) &&
-                client.loader.equals(loader) &&
-                client.engine.equals(engine) &&
-                client.repository.equals(repository) &&
-                client.factory.equals(factory);
-    }
 }

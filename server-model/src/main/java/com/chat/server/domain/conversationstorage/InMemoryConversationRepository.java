@@ -30,12 +30,4 @@ public class InMemoryConversationRepository implements ConversationRepository {
     public Optional<Conversation> get(UUID conversationId) {
         return Optional.ofNullable(storage.get(conversationId));
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (!(o instanceof InMemoryConversationRepository repository)) return false;
-        return repository.storage.equals(storage);
-    }
 }
