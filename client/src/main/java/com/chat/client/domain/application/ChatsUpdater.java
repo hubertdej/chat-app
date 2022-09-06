@@ -1,9 +1,7 @@
 package com.chat.client.domain.application;
 
-import com.chat.client.domain.Message;
 import com.chat.client.domain.ChatsRepository;
-import com.chat.client.domain.application.CallbackDispatcher;
-import com.chat.client.domain.application.ChatsService;
+import com.chat.client.domain.Message;
 
 import java.util.UUID;
 
