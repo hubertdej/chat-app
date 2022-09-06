@@ -58,8 +58,7 @@ class Program {
 
         var messageReceiverFacade = new MessageReceiverFacade(
                 sessionStorageFacade,
-                conversationStorageFacade,
-                userConversationsFacade
+                conversationStorageFacade
         );
 
         var dispatcher = new GuiDispatcher();
