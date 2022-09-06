@@ -1,16 +1,14 @@
 package com.chat.server.domain.registration;
 
-import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
-import com.chat.server.domain.conversationstorage.InMemoryConversationRepository;
 import com.chat.server.domain.registration.dto.UsernameTakenException;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryCredentialsRepository implements CredentialsRepository {
-    Map<String, String> storage = new HashMap<>();
+    Map<String, String> storage = new ConcurrentHashMap<>();
 
     @Override
     public void save(User user) {

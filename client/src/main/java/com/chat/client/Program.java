@@ -26,8 +26,8 @@ import com.chat.server.domain.messagereceiver.MessageReceiverFacade;
 import com.chat.server.domain.sessionstorage.SessionStorageFacade;
 import com.chat.server.sql.SqlFactory;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 class Program {
     public static void main(String[] args) {
@@ -47,7 +47,7 @@ class Program {
         );
         var authenticationFacade = new AuthenticationFacade(registrationFacade);
         var userConversationsFacade = new ListUserConversationsFacade(
-                new InMemoryUserConversationRepository(new HashMap<>())
+                new InMemoryUserConversationRepository(new ConcurrentHashMap<>())
         );
         var conversationStorageFacade = new ConversationsStorageFactory()
                 .getConversationStorageFacade(

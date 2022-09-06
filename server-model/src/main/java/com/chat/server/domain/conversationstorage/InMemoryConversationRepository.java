@@ -3,9 +3,10 @@ package com.chat.server.domain.conversationstorage;
 import com.chat.server.domain.conversationstorage.dto.NoSuchConversationException;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryConversationRepository implements ConversationRepository {
-    Map<UUID, Conversation> storage = new HashMap<>();
+    Map<UUID, Conversation> storage = new ConcurrentHashMap<>();
 
     @Override
     public void addMessage(UUID conversationId, Message message) throws NoSuchConversationException {
@@ -23,8 +24,7 @@ public class InMemoryConversationRepository implements ConversationRepository {
 
     @Override
     public Conversation remove(UUID conversationId) {
-        Conversation conversation = storage.remove(conversationId);
-        return conversation;
+        return storage.remove(conversationId);
     }
 
     public Optional<Conversation> get(UUID conversationId) {

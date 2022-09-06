@@ -33,13 +33,12 @@ public class SessionStorageFacade {
     public void propagate(MessageDto messageDto) {
         Optional<ConversationDto> conversationDtoOptional = conversationStorageFacade.get(messageDto.to());
         if (conversationDtoOptional.isEmpty())
-            throw new RuntimeException(new NoSuchConversationException()); // imo to powinno rozszerzac RuntimeException
+            throw new RuntimeException(new NoSuchConversationException());
 
         List<String> members = conversationDtoOptional.get().getMembers();
         for (String member : members) {
             for (var observer : observers.getOrDefault(member, List.of())) {
                 observer.notifyNewMessage(List.of(messageDto));
-//                System.out.println("propagating message to " + member);
             }
         }
     }

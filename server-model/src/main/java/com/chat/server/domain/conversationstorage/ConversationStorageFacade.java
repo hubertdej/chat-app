@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ConversationStorageFacade {
     private final ConversationRepository conversationRepository;
-    private final List<ConversationObserver> convObservers = new ArrayList<>();
+    private final List<ConversationObserver> convObservers = new CopyOnWriteArrayList<>();
 
     public ConversationStorageFacade(ConversationRepository conversationRepository) {
         this.conversationRepository = conversationRepository;
