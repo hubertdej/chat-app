@@ -1,6 +1,7 @@
 package com.chat.server.domain.listuserconversations;
 
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
+import com.chat.server.domain.conversationstorage.dto.ConversationRemovedEvent;
 import com.chat.server.domain.conversationstorage.dto.ConversationUpdatedEvent;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,27 @@ public class ConversationEventHandlerTest {
         verify(userConversationRepository, times(1)).add(eq(BARRY),
                 argThat(conv -> conv.getConversationId() == conversationId));
     }
+
+    @Test
+    void removedConversationEventHandlerRemovesConversationFromAllMembers(){
+        //given: conversationObserver observes listUserConversationsFacade
+        ConversationStorageFacade.ConversationObserver conversationObserver = listUserConversationsFacade
+                .conversationObserver();
+
+        UUID conversationId = UUID.randomUUID();
+        ConversationRemovedEvent conversationRemovedEvent = new ConversationRemovedEvent(
+                conversationId,
+                List.of(JOHN, BARRY)
+        );
+        //when: observer is notified of ConversationUpdatedEvent indicating
+        // a removal of conversation between John And Barry
+        conversationObserver.notifyRemove(conversationRemovedEvent);
+
+        //then: John and Barry entries in userConversationRepository have the conversation removed from them
+        verify(userConversationRepository, times(1)).remove(eq(JOHN), eq(conversationId));
+        verify(userConversationRepository, times(1)).remove(eq(BARRY), eq(conversationId));
+    }
+
     @Test
     void newMessageIsPropagatedAmongUsersStorages(){
         //given: conversationObserver observes listUserConversationsFacade
@@ -50,17 +72,17 @@ public class ConversationEventHandlerTest {
 
         UUID conversationId = UUID.randomUUID();
         String messageContent = "Hi Barry";
-        ConversationUpdatedEvent newConversationEvent = new ConversationUpdatedEvent(
+        ConversationUpdatedEvent newMessageEvent = new ConversationUpdatedEvent(
                 conversationId,
                 "foo",
                 List.of(JOHN, BARRY),
                 new MessageDto(JOHN, conversationId, messageContent, new Timestamp(System.currentTimeMillis()))
         );
         //when: observer is notified of ConversationUpdatedEvent indicating
-        // a new conversation between John and Barry
-        conversationObserver.notifyUpdate(newConversationEvent);
+        // a new message from John to Barry
+        conversationObserver.notifyUpdate(newMessageEvent);
 
-        //then: John and Barry entries in userConversationRepository have the new conversation added to them
+        //then: John and Barry entries in userConversationRepository have the new message added to them
         verify(userConversationRepository, times(1)).addMessage(
                 argThat(messageDto -> messageDto.content().equals(messageContent)),
                 eq(JOHN));
