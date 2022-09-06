@@ -27,7 +27,7 @@ public class SessionStorageFacade {
         observers.get(username).add(observer);
     }
     public void removeObserver(String username, Observer observer) {
-        observers.get(username).remove(observer); // NullPointerException if there are no observers for the username
+        observers.getOrDefault(username, new ArrayList<>()).remove(observer);
     }
 
     public void propagate(MessageDto messageDto) {
