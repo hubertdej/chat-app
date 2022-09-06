@@ -1,7 +1,7 @@
 package com.chat.client.presentation;
 
 import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
@@ -48,7 +48,7 @@ public class ChatlistPresenter {
         chat.addObserver(chatUpdateObserver, true);
     }
 
-    private void updateChat(ChatMessage message) {
+    private void updateChat(Message message) {
         var chat = chatsRepository.getByUUID(message.chatUUID()).orElseThrow();
         view.updateChat(chat);
     }

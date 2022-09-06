@@ -102,7 +102,7 @@ class InternalDatabaseClientTest extends BaseTestCase {
         var text1 = "hey";
         var time1 = 1;
         var timestamp1 = new Timestamp(time1);
-        var msg1 = new ChatMessage(id1, text1, new User(username1), timestamp1, true);
+        var msg1 = new Message(id1, text1, new User(username1), timestamp1, true);
         var chat = new Chat(id1, name1, members1.stream().map(User::new).toList());
         var id2 = new UUID(12, 35);
         var name2 = "bff2";
@@ -112,7 +112,7 @@ class InternalDatabaseClientTest extends BaseTestCase {
         var text2 = "hey2";
         var time2 = 2;
         var timestamp2 = new Timestamp(time2);
-        var msg2 = new ChatMessage(id2, text2, new User(username2), timestamp2, true);
+        var msg2 = new Message(id2, text2, new User(username2), timestamp2, true);
         var chat2 = new Chat(id2, name2, members2.stream().map(User::new).toList());
 
         var testRepository = new ChatsRepository();

@@ -37,8 +37,8 @@ public class ChatTest extends BaseTestCase {
 
     @Test
     void testAddMessage() {
-        var message1 = mock(ChatMessage.class);
-        var message2 = mock(ChatMessage.class);
+        var message1 = mock(Message.class);
+        var message2 = mock(Message.class);
 
         chat.addMessage(message1);
         chat.addMessage(message2);
@@ -50,9 +50,9 @@ public class ChatTest extends BaseTestCase {
     @Test
     void testObserverWithInitialValues() {
         var observer = mock(Chat.Observer.class);
-        var messageBeforeAdd = mock(ChatMessage.class);
-        var messageAfterAdd = mock(ChatMessage.class);
-        var messageAfterRemove = mock(ChatMessage.class);
+        var messageBeforeAdd = mock(Message.class);
+        var messageAfterAdd = mock(Message.class);
+        var messageAfterRemove = mock(Message.class);
 
         chat.addMessage(messageBeforeAdd);
         chat.addObserver(observer, true);
@@ -68,9 +68,9 @@ public class ChatTest extends BaseTestCase {
     @Test
     void testObserverWithoutInitialValues() {
         var observer = mock(Chat.Observer.class);
-        var messageBeforeAdd = mock(ChatMessage.class);
-        var messageAfterAdd = mock(ChatMessage.class);
-        var messageAfterRemove = mock(ChatMessage.class);
+        var messageBeforeAdd = mock(Message.class);
+        var messageAfterAdd = mock(Message.class);
+        var messageAfterRemove = mock(Message.class);
 
         chat.addMessage(messageBeforeAdd);
         chat.addObserver(observer, false);
@@ -99,7 +99,7 @@ public class ChatTest extends BaseTestCase {
         var chat1 = new Chat(uuid, name, members);
         var chat2 = new Chat(uuid, name, members);
 
-        chat2.addMessage(mock(ChatMessage.class));
+        chat2.addMessage(mock(Message.class));
 
         assertThat(chat1.compareTo(chat2)).isLessThan(0);
         assertThat(chat2.compareTo(chat1)).isGreaterThan(0);
@@ -111,10 +111,10 @@ public class ChatTest extends BaseTestCase {
         var chat1 = new Chat(uuid, name, members);
         var chat2 = new Chat(uuid, name, members);
 
-        var message1 = mock(ChatMessage.class);
+        var message1 = mock(Message.class);
         given(message1.timestamp()).willReturn(new Timestamp(1));
 
-        var message2 = mock(ChatMessage.class);
+        var message2 = mock(Message.class);
         given(message2.timestamp()).willReturn(new Timestamp(2));
 
         chat1.addMessage(message1);

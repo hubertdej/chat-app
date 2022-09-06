@@ -2,7 +2,7 @@ package com.chat.client.presentation;
 
 import com.chat.client.BaseTestCase;
 import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.User;
 import com.chat.client.domain.application.MessageSender;
 import org.junit.jupiter.api.Test;
@@ -61,8 +61,8 @@ public class ChatPresenterTest extends BaseTestCase {
 
     @Test
     void testChatIsObserved() {
-        var message1 = mock(ChatMessage.class);
-        var message2 = mock(ChatMessage.class);
+        var message1 = mock(Message.class);
+        var message2 = mock(Message.class);
 
         presenter.open();
         chat.addMessage(message1);

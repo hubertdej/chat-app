@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class Chat implements Comparable<Chat> {
     public interface Observer {
-        void notifyUpdate(ChatMessage message);
+        void notifyUpdate(Message message);
     }
 
     private final List<Observer> observers = new ArrayList<>();
@@ -23,9 +23,9 @@ public class Chat implements Comparable<Chat> {
         observers.remove(observer);
     }
 
-    private final List<ChatMessage> snapshot = new ArrayList<>();
+    private final List<Message> snapshot = new ArrayList<>();
 
-    public void addMessage(ChatMessage message) {
+    public void addMessage(Message message) {
         snapshot.add(message);
         for (var observer : observers) {
             observer.notifyUpdate(message);
@@ -54,7 +54,7 @@ public class Chat implements Comparable<Chat> {
         return !snapshot.isEmpty();
     }
 
-    public ChatMessage getLastMessage() {
+    public Message getLastMessage() {
         return snapshot.get(snapshot.size() - 1);
     }
 

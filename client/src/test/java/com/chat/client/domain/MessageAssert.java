@@ -6,16 +6,16 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ChatMessageAssert extends AbstractAssert<ChatMessageAssert, ChatMessage> {
-    private ChatMessageAssert(ChatMessage ChatMessage) {
-        super(ChatMessage, ChatMessageAssert.class);
+public class MessageAssert extends AbstractAssert<MessageAssert, Message> {
+    private MessageAssert(Message Message) {
+        super(Message, MessageAssert.class);
     }
     
-    public static ChatMessageAssert assertThat(ChatMessage ChatMessage) {
-        return new ChatMessageAssert(ChatMessage);
+    public static MessageAssert assertThat(Message Message) {
+        return new MessageAssert(Message);
     }
 
-    public ChatMessageAssert hasData(UUID uuid, String text, User user, Timestamp timestamp, boolean sentByLocalUser) {
+    public MessageAssert hasData(UUID uuid, String text, User user, Timestamp timestamp, boolean sentByLocalUser) {
         if (!Objects.equals(actual.chatUUID(), uuid)) {
             failWithMessage("Expecting ChatMessage's chatUUID to be <%s> but was <%s>", actual.chatUUID(), uuid);
         }

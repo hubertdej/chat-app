@@ -10,7 +10,7 @@ public class MessageFactory {
         this.user = user;
     }
 
-    public ChatMessage createMessage(UUID chatUUID, String text, String username, Timestamp timestamp) {
-        return new ChatMessage(chatUUID, text, new User(username), timestamp, username.equals(user.name()));
+    public Message createMessage(UUID chatUUID, String text, String username, Timestamp timestamp) {
+        return new Message(chatUUID, text, new User(username), timestamp, username.equals(user.name()));
     }
 }

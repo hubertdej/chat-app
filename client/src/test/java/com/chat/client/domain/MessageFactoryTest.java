@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import static com.chat.client.domain.ChatMessageAssert.assertThat;
+import static com.chat.client.domain.MessageAssert.assertThat;
 
 public class MessageFactoryTest extends BaseTestCase {
     @Test

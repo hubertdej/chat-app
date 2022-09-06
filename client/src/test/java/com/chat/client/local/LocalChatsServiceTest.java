@@ -1,25 +1,19 @@
 package com.chat.client.local;
 
 import com.chat.client.BaseTestCase;
-import com.chat.client.domain.Chat;
-import com.chat.client.domain.ChatMessage;
 import com.chat.client.domain.User;
 import com.chat.server.domain.conversationstorage.ConversationStorageFacade;
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.registration.dto.UserDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;

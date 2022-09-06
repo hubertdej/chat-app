@@ -79,7 +79,7 @@ class LocalMessageClientTest extends BaseTestCase {
         var members = List.of(new User(friend), new User(username));
         var chat = new Chat(id, chatName, members);
         var timestamp = new Timestamp(1);
-        chat.addMessage(new ChatMessage(id, "hey", localUser, timestamp, true));
+        chat.addMessage(new Message(id, "hey", localUser, timestamp, true));
         var chats = List.of(chat);
         given(localUser.name()).willReturn(username);
         given(repository.getChats()).willReturn(chats);
@@ -87,7 +87,7 @@ class LocalMessageClientTest extends BaseTestCase {
         var responseTimestamp = new Timestamp(2);
         var responseList = List.of(new MessageDto(friend, id, response, responseTimestamp));
         given(listUserConversationsFacade.listMessages(any())).willReturn(responseList);
-        var processedMessage = new ChatMessage(id, response, new User(friend), responseTimestamp, false);
+        var processedMessage = new Message(id, response, new User(friend), responseTimestamp, false);
         var processedList = List.of(processedMessage);
         var testClient = new LocalMessageClient(
                 localUser,
@@ -113,7 +113,7 @@ class LocalMessageClientTest extends BaseTestCase {
         var chatName = "bff";
         var members = List.of(new User(friend), new User(username));
         var chat = new Chat(id, chatName, members);
-        chat.addMessage(new ChatMessage(id, username, new User(username), new Timestamp(1), true));
+        chat.addMessage(new Message(id, username, new User(username), new Timestamp(1), true));
         var timestamp2 = new Timestamp(2);
         var msg2 = "hi";
         var dto = new MessageDto(friend, id, msg2, timestamp2);
@@ -123,8 +123,8 @@ class LocalMessageClientTest extends BaseTestCase {
         var chats = List.of(chat);
         given(localUser.name()).willReturn(username);
         given(repository.getChats()).willReturn(chats);
-        var expectedMessage = new ChatMessage(id, msg2, new User(friend), timestamp2, false);
-        var unwantedMessage = new ChatMessage(id, msg3, new User(friend), timestamp3, false);
+        var expectedMessage = new Message(id, msg2, new User(friend), timestamp2, false);
+        var unwantedMessage = new Message(id, msg3, new User(friend), timestamp3, false);
         given(messageFactory.createMessage(id, msg2, friend, timestamp2)).willReturn(expectedMessage);
         given(messageFactory.createMessage(id, msg3, friend, timestamp3)).willReturn(unwantedMessage);
         var conversationStorage = mock(ConversationStorageFacade.class);

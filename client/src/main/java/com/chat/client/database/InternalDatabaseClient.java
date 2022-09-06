@@ -76,7 +76,7 @@ public class InternalDatabaseClient implements MessagingClient {
         engine.addMembers(chat.getUUID(), chat.getMembers().stream().map(User::name).toList());
         chat.addObserver(chatObserver, true);
     }
-    private void handleChatUpdate(ChatMessage message) {
+    private void handleChatUpdate(Message message) {
         engine.addMessage(message.sender().name(), message.chatUUID(), message.text(), message.timestamp().getTime());
     }
 }

@@ -38,8 +38,8 @@ public class ChatsUpdaterTest extends BaseTestCase {
         var chatsRepository = mock(ChatsRepository.class);
         given(chatsRepository.getByUUID(uuid)).willReturn(Optional.of(chat));
 
-        var message1 = mock(ChatMessage.class);
-        var message2 = mock(ChatMessage.class);
+        var message1 = mock(Message.class);
+        var message2 = mock(Message.class);
 
         chatsUpdater.handleMessages(uuid, chatsRepository, List.of(message1, message2));
 
@@ -58,8 +58,8 @@ public class ChatsUpdaterTest extends BaseTestCase {
 
         given(chatsService.getChatDetails(uuid)).willReturn(CompletableFuture.completedFuture(chat));
 
-        var message1 = mock(ChatMessage.class);
-        var message2 = mock(ChatMessage.class);
+        var message1 = mock(Message.class);
+        var message2 = mock(Message.class);
 
         chatsUpdater.handleMessages(uuid, chatsRepository, List.of(message1, message2));
 
@@ -79,8 +79,8 @@ public class ChatsUpdaterTest extends BaseTestCase {
 
         given(chatsService.getChatDetails(uuid)).willReturn(CompletableFuture.failedFuture(new Exception()));
 
-        var message1 = mock(ChatMessage.class);
-        var message2 = mock(ChatMessage.class);
+        var message1 = mock(Message.class);
+        var message2 = mock(Message.class);
 
         chatsUpdater.handleMessages(uuid, chatsRepository, List.of(message1, message2));
         then(chat).shouldHaveNoInteractions();

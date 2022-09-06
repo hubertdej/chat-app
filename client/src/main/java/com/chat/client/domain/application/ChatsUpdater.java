@@ -1,6 +1,6 @@
 package com.chat.client.domain.application;
 
-import com.chat.client.domain.ChatMessage;
+import com.chat.client.domain.Message;
 import com.chat.client.domain.ChatsRepository;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
@@ -16,7 +16,7 @@ public class ChatsUpdater {
         this.callbackDispatcher = callbackDispatcher;
     }
 
-    public void handleMessages(UUID chatUUID, ChatsRepository repository, Iterable<ChatMessage> messages) {
+    public void handleMessages(UUID chatUUID, ChatsRepository repository, Iterable<Message> messages) {
         var optional = repository.getByUUID(chatUUID);
         if (optional.isPresent()) {
             messages.forEach(message -> optional.get().addMessage(message));
