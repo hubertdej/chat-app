@@ -1,6 +1,6 @@
 package com.chat.server.infrastructure.websocket;
 
-import com.chat.server.domain.messagereceiver.ListConversationsResponse;
+import com.chat.server.domain.messagereceiver.dto.ListConversationsResponse;
 import com.chat.server.domain.sessionstorage.ConversationsRequester;
 import com.chat.server.domain.sessionstorage.MessagingSessionException;
 import com.fasterxml.jackson.databind.ObjectMapper;

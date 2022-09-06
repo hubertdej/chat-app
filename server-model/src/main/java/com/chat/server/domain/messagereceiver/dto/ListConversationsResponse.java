@@ -1,4 +1,4 @@
-package com.chat.server.domain.messagereceiver;
+package com.chat.server.domain.messagereceiver.dto;
 
 import com.chat.server.domain.conversationstorage.dto.ConversationDto;
 

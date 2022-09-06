@@ -1,7 +1,6 @@
 package com.chat.server.domain.sessionstorage;
 
-import com.chat.server.domain.conversationstorage.dto.MessageDto;
-import com.chat.server.domain.messagereceiver.ListConversationsResponse;
+import com.chat.server.domain.messagereceiver.dto.ListConversationsResponse;
 
 
 public interface ConversationsRequester {
