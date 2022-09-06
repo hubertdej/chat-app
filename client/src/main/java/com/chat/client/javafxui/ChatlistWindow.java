@@ -1,6 +1,7 @@
 package com.chat.client.javafxui;
 
 import com.chat.client.domain.Chat;
+import com.chat.client.domain.User;
 import com.chat.client.presentation.ChatlistPresenter;
 import com.chat.client.presentation.ChatlistView;
 import javafx.collections.FXCollections;
@@ -82,6 +83,11 @@ public class ChatlistWindow implements ChatlistView {
     @Override
     public void filterChats(String filter) {
         filteredChats.setPredicate(chat -> chat.getName().toLowerCase().contains(filter.toLowerCase()));
+    }
+
+    @Override
+    public void displayWelcomeMessage(User user) {
+        stage.setTitle("Welcome " + user.name() + "!");
     }
 
     @Override

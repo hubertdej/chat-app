@@ -72,7 +72,7 @@ class AuthPresenterTest extends BaseTestCase {
         presenter.login(username, password);
 
         then(sessionManager).should().createSessionAsync(username, password);
-        then(factory).should().openChatlistView(any(), any(), any(), any());
+        then(factory).should().openChatlistView(any(), any(), any(), any(), any());
         then(view).should().close();
     }
 
