@@ -50,7 +50,7 @@ public class ListUserConversationsFacade {
     private List<MessageDto> getFromTimestamp(List<MessageDto> messageDtos, Timestamp timestamp) {
         int n = messageDtos.size();
         int lo = 0;
-        int hi = n-1;
+        int hi = n;
         int ans = -1;
         while(lo < hi){
             int m = (lo + hi) / 2;
@@ -60,14 +60,13 @@ public class ListUserConversationsFacade {
             }
             else if(curTimestamp.compareTo(timestamp) < 0){
                 lo = m+1;
-                ans = m;
             }
-            else{
-                hi = m-1;
+            else if(curTimestamp.compareTo(timestamp) > 0){
+                hi = m;
                 ans = m;
             }
         }
-        return ans+1 < n-1 ? messageDtos.subList(ans+1, n-1) : List.of();
+        return messageDtos.subList(ans, n);
     }
 
     private void add(String username, ConversationDto conversationDto){
