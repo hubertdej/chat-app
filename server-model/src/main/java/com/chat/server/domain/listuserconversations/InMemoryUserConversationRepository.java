@@ -6,7 +6,15 @@ import com.chat.server.domain.conversationstorage.dto.MessageDto;
 import java.util.*;
 
 public class InMemoryUserConversationRepository implements UserConversationRepository {
-    Map<String, Map<UUID, ConversationDto>> storage = new HashMap<>();
+    private final Map<String, Map<UUID, ConversationDto>> storage;
+
+    public InMemoryUserConversationRepository(){
+        storage = new HashMap<>();
+    }
+
+    public InMemoryUserConversationRepository(Map<String, Map<UUID, ConversationDto>> storage){
+       this.storage = storage;
+    }
 
     @Override
     public void add(String username, ConversationDto conversationDto) {
