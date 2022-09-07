@@ -106,8 +106,8 @@ public class CreationWindow implements CreationView {
     }
 
     @Override
-    public void indicateChatCreationFailed() {
-        new Alert(Alert.AlertType.ERROR, "Unable to create chat.").showAndWait();
+    public void indicateChatCreationFailed(String message) {
+        new Alert(Alert.AlertType.ERROR, "Unable to create chat. " + message).showAndWait();
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface CreationView {
     void enableCreation();
     void disableCreation();
     void indicateLoadingUsersFailed();
-    void indicateChatCreationFailed();
+    void indicateChatCreationFailed(String message);
     void open();
     void close();
 }

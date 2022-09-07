@@ -6,7 +6,7 @@ public interface AuthView {
     void close();
     void lockChanges();
     void unlockChanges();
-    void indicateLoginFailed();
+    void indicateLoginFailed(String message);
     void indicateRegistrationSuccessful();
-    void indicateRegistrationFailed();
+    void indicateRegistrationFailed(String message);
 }

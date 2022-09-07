@@ -4,22 +4,37 @@ import com.chat.client.BaseTestCase;
 import com.chat.client.domain.application.Session;
 import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.CallbackDispatcher;
+import com.chat.client.domain.application.Session;
+import com.chat.client.domain.application.SessionManager;
+import com.chat.client.validators.ValidationException;
+import com.chat.client.validators.Validator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.BDDMockito.*;
 
-class AuthPresenterTest extends BaseTestCase {
-    @Mock private AuthView view;
-    @Mock private AuthPresenter.Factory factory;
-    @Mock private SessionManager sessionManager;
-    @Spy private final CallbackDispatcher callbackDispatcher = new CallbackDispatcher(Runnable::run);
+class AuthPresenterTest {
+    private AuthView view;
+    private AuthPresenter.Factory factory;
+    private SessionManager sessionManager;
+    private CallbackDispatcher callbackDispatcher = new CallbackDispatcher(Runnable::run);
+    private Validator<String> usernameValidator;
+    private Validator<String> passwordValidator;
 
-    @InjectMocks private AuthPresenter presenter;
+    private AuthPresenter presenter;
+
+    @BeforeEach
+    void setup() {
+        view = mock(AuthView.class);
+        factory = mock(AuthPresenter.Factory.class);
+        sessionManager = mock(SessionManager.class);
+        callbackDispatcher = spy(new CallbackDispatcher(Runnable::run));
+        usernameValidator = mock(Validator.class);
+        passwordValidator = mock(Validator.class);
+        presenter = new AuthPresenter(view, factory, sessionManager, callbackDispatcher, usernameValidator, passwordValidator);
+    }
 
     @Test
     void testOpen() {
@@ -58,7 +73,7 @@ class AuthPresenterTest extends BaseTestCase {
         presenter.register(username, password);
 
         then(sessionManager).should().registerUserAsync(username, password);
-        then(view).should().indicateRegistrationFailed();
+        then(view).should().indicateRegistrationFailed(any());
     }
 
     @Test
@@ -86,6 +101,46 @@ class AuthPresenterTest extends BaseTestCase {
         presenter.login(username, password);
 
         then(sessionManager).should().createSessionAsync(username, password);
-        then(view).should().indicateLoginFailed();
+        then(view).should().indicateLoginFailed(any());
+    }
+
+    @Test
+    void testRegisterWithInvalidUsername() {
+        willThrow(ValidationException.class).given(usernameValidator).validate(any());
+
+        presenter.register("username", "password");
+
+        then(view).should().indicateRegistrationFailed(any());
+        then(sessionManager).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void testRegisterWithInvalidPassword() {
+        willThrow(ValidationException.class).given(passwordValidator).validate(any());
+
+        presenter.register("username", "password");
+
+        then(view).should().indicateRegistrationFailed(any());
+        then(sessionManager).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void testLoginWithInvalidUsername() {
+        willThrow(ValidationException.class).given(usernameValidator).validate(any());
+
+        presenter.login("username", "password");
+
+        then(view).should().indicateLoginFailed(any());
+        then(sessionManager).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void testLoginWithInvalidPassword() {
+        willThrow(ValidationException.class).given(passwordValidator).validate(any());
+
+        presenter.login("username", "password");
+
+        then(view).should().indicateLoginFailed(any());
+        then(sessionManager).shouldHaveNoInteractions();
     }
 }

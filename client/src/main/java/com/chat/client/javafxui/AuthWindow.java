@@ -46,8 +46,8 @@ public class AuthWindow implements AuthView {
     }
 
     @Override
-    public void indicateLoginFailed() {
-        new Alert(Alert.AlertType.ERROR, "Login failed.").showAndWait();
+    public void indicateLoginFailed(String message) {
+        new Alert(Alert.AlertType.ERROR, "Login failed. " + message).showAndWait();
     }
 
     @Override
@@ -56,8 +56,8 @@ public class AuthWindow implements AuthView {
     }
 
     @Override
-    public void indicateRegistrationFailed() {
-        new Alert(Alert.AlertType.ERROR, "Registration failed.").showAndWait();
+    public void indicateRegistrationFailed(String message) {
+        new Alert(Alert.AlertType.ERROR, "Registration failed. " + message).showAndWait();
     }
 
     @Override

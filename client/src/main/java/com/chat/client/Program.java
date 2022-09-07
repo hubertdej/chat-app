@@ -12,6 +12,9 @@ import com.chat.client.network.AuthServiceImpl;
 import com.chat.client.network.SessionFactory;
 import com.chat.client.presentation.PresenterFactory;
 import com.chat.client.sql.SqlInternalFactory;
+import com.chat.client.validators.ChatNameValidator;
+import com.chat.client.validators.PasswordValidator;
+import com.chat.client.validators.UsernameValidator;
 import com.chat.database.DatabaseConversationProvider;
 import com.chat.server.database.ConversationsDatabase;
 import com.chat.server.database.ConversationsStorageFactory;
@@ -74,12 +77,23 @@ class Program {
         );
 
         var databaseFactory = new SqlInternalFactory();
-
         var internalSessionFactory = new InternalDatabaseSessionFactory(sessionFactory, databaseFactory, databaseConversationProvider);
 
         var authService = new LocalAuthService(authenticationFacade, registrationFacade);
         var sessionManager = new SessionManager(authService, internalSessionFactory);
-        var presenterFactory = new PresenterFactory(new WindowFactory(), sessionManager, callbackDispatcher);
+        var usernameValidator = new UsernameValidator();
+        var passwordValidator = new PasswordValidator();
+        var chatNameValidator = new ChatNameValidator();
+
+        var presenterFactory = new PresenterFactory(
+                new WindowFactory(),
+                sessionManager,
+                callbackDispatcher,
+                usernameValidator,
+                passwordValidator,
+                chatNameValidator
+        );
+
         Gui.run(() -> {
             presenterFactory.openAuthView();
             presenterFactory.openAuthView();
@@ -96,9 +110,22 @@ class Program {
                     new SqlInternalFactory(),
                     new DatabaseConversationProvider()
             );
+
             var authService = new AuthServiceImpl();
             var sessionManager = new SessionManager(authService, internalDatabaseSessionFactory);
-            var presenterFactory = new PresenterFactory(new WindowFactory(), sessionManager, callbackDispatcher);
+            var usernameValidator = new UsernameValidator();
+            var passwordValidator = new PasswordValidator();
+            var chatNameValidator = new ChatNameValidator();
+
+            var presenterFactory = new PresenterFactory(
+                    new WindowFactory(),
+                    sessionManager,
+                    callbackDispatcher,
+                    usernameValidator,
+                    passwordValidator,
+                    chatNameValidator
+            );
+
             presenterFactory.openAuthView();
             presenterFactory.openAuthView();
         });

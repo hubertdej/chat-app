@@ -7,6 +7,8 @@ import com.chat.client.domain.User;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.UsersService;
+import com.chat.client.validators.ValidationException;
+import com.chat.client.validators.Validator;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,6 +26,7 @@ class CreationPresenterTest extends BaseTestCase {
     @Mock private ChatsService chatsService;
     @Mock private ChatsRepository chatsRepository;
     @Spy private final CallbackDispatcher callbackDispatcher = new CallbackDispatcher(Runnable::run);
+    @Mock private Validator<String> chatNameValidator;
 
     @InjectMocks private CreationPresenter presenter;
 
@@ -83,10 +86,10 @@ class CreationPresenterTest extends BaseTestCase {
     @Test
     void testCreationPossibility() {
         var user = new User("");
-        
+
         presenter.selectUser(user);
         presenter.unselectUser(user);
-        
+
         then(view).should(inOrder(view)).enableCreation();
         then(view).should(inOrder(view)).disableCreation();
     }
@@ -114,7 +117,17 @@ class CreationPresenterTest extends BaseTestCase {
         presenter.createChat(name);
 
         then(chatsService).should().createChatAsync(eq(name), any());
-        then(view).should().indicateChatCreationFailed();
+        then(view).should().indicateChatCreationFailed(any());
+    }
+
+    @Test
+    void testCreationWithInvalidName() {
+        willThrow(ValidationException.class).given(chatNameValidator).validate(any());
+
+        presenter.createChat("name");
+
+        then(view).should().indicateChatCreationFailed(any());
+        then(chatsService).shouldHaveNoInteractions();
     }
 
     @Test

@@ -5,6 +5,8 @@ import com.chat.client.domain.User;
 import com.chat.client.domain.application.CallbackDispatcher;
 import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.UsersService;
+import com.chat.client.validators.ValidationException;
+import com.chat.client.validators.Validator;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -16,17 +18,20 @@ public class CreationPresenter {
     private final ChatsService chatsService;
     private final ChatsRepository chatsRepository;
     private final CallbackDispatcher callbackDispatcher;
+    private final Validator<String> chatNameValidator;
 
     public CreationPresenter(CreationView view,
                              UsersService usersService,
                              ChatsService chatsService,
                              ChatsRepository chatsRepository,
-                             CallbackDispatcher callbackDispatcher) {
+                             CallbackDispatcher callbackDispatcher,
+                             Validator<String> chatNameValidator) {
         this.view = view;
         this.usersService = usersService;
         this.chatsService = chatsService;
         this.chatsRepository = chatsRepository;
         this.callbackDispatcher = callbackDispatcher;
+        this.chatNameValidator = chatNameValidator;
     }
 
     public void filterUsers(String filter) {
@@ -54,6 +59,14 @@ public class CreationPresenter {
     }
 
     public void createChat(String name) {
+        try {
+            chatNameValidator.validate(name);
+        } catch (ValidationException e) {
+            view.indicateChatCreationFailed(e.getMessage());
+            view.unlockChanges();
+            return;
+        }
+
         var recipients = selectedUsers.stream().toList();
         view.lockChanges();
         callbackDispatcher.addCallback(
@@ -63,7 +76,7 @@ public class CreationPresenter {
                     view.close();
                 },
                 $ -> {
-                    view.indicateChatCreationFailed();
+                    view.indicateChatCreationFailed("");
                     view.unlockChanges();
                 }
         );

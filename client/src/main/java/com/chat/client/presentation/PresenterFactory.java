@@ -8,24 +8,34 @@ import com.chat.client.domain.application.ChatsService;
 import com.chat.client.domain.application.MessagingClient;
 import com.chat.client.domain.application.SessionManager;
 import com.chat.client.domain.application.UsersService;
+import com.chat.client.validators.Validator;
 
 public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresenter.Factory {
     private final ViewFactory viewFactory;
     private final SessionManager sessionManager;
     private final CallbackDispatcher callbackDispatcher;
+    private final Validator<String> usernameValidator;
+    private final Validator<String> passwordValidator;
+    private final Validator<String> chatNameValidator;
 
     public PresenterFactory(ViewFactory viewFactory,
                             SessionManager sessionManager,
-                            CallbackDispatcher callbackDispatcher) {
+                            CallbackDispatcher callbackDispatcher,
+                            Validator<String> usernameValidator,
+                            Validator<String> passwordValidator,
+                            Validator<String> chatNameValidator) {
         this.viewFactory = viewFactory;
         this.sessionManager = sessionManager;
         this.callbackDispatcher = callbackDispatcher;
+        this.usernameValidator = usernameValidator;
+        this.passwordValidator = passwordValidator;
+        this.chatNameValidator = chatNameValidator;
     }
 
     @Override
     public void openAuthView() {
         var view = viewFactory.createAuthView();
-        var presenter = new AuthPresenter(view, this, sessionManager, callbackDispatcher);
+        var presenter = new AuthPresenter(view, this, sessionManager, callbackDispatcher, usernameValidator, passwordValidator);
         view.initialize(presenter);
         presenter.open();
     }
@@ -37,7 +47,7 @@ public class PresenterFactory implements AuthPresenter.Factory, ChatlistPresente
             ChatsRepository chatsRepository
     ) {
         var view = viewFactory.createCreationView();
-        var presenter = new CreationPresenter(view, usersService, chatsService, chatsRepository, callbackDispatcher);
+        var presenter = new CreationPresenter(view, usersService, chatsService, chatsRepository, callbackDispatcher, chatNameValidator);
         view.initialize(presenter);
         presenter.open();
     }
